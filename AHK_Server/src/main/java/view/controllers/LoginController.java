@@ -7,11 +7,18 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
+import main.MainApp;
 
 public class LoginController {
 
@@ -43,13 +50,44 @@ public class LoginController {
 	/**
 	 * This method verifies the credentials
 	 */
-	private void login() {
+	private void login(ActionEvent event) {
+		// If the fields are fill
 		if(filledFields()) {
-			if(!checkCredentials()) {
-				errorLabel.setText("Invalid credentials");
-			}else {
+			// And the credentials are good:
+			if(checkCredentials()) {
 				errorLabel.setText("Wellcome back");
+				changeView(event);
 			}
+			// If the credentials don´t match
+			else {
+				errorLabel.setText("Invalid credentials");
+			}
+		}
+	}
+
+	/**
+	 * This method is used to change the screen
+	 * @param event
+	 */
+	private void changeView(ActionEvent event) {
+		// Get the screen information
+		Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		try {
+			// Define the window
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainApp.class.getResource("../view/controllers/PrincipalPage.fxml"));
+			// This was to check if the path was good
+			//System.out.println(MainApp.class.getResource("../view/controllers/PrincipalPage.fxml"));
+			Parent root = loader.load();
+			Scene scene = new Scene(root);
+
+			// Load the app
+			stage.setTitle("PrincipalPage");
+			stage.setScene(scene);
+			stage.show();
+		} catch (Exception e) {
+			errorLabel.setText("Can´t login");
+			e.printStackTrace();
 		}
 	}
 	
