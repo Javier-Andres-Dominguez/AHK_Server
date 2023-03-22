@@ -13,20 +13,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Category implements Serializable{
+public class Category implements Serializable {
 
 	@Id
 	@Column(name = "CatId")
 	private int catId;
 	@Column(name = "CatName")
 	private String catName;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "user")
+	@JoinColumn(name = "UserId")
 	private User user;
-	@OneToMany(mappedBy="category",cascade= CascadeType.ALL)
-	private Set <Subcategory> subcategory = new HashSet<Subcategory>(0);
-	
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+	private Set<Subcategory> subcategory = new HashSet<Subcategory>(0);
+
 	public Category() {
 
 	}
@@ -76,5 +76,5 @@ public class Category implements Serializable{
 	public void setSubcategory(Set<Subcategory> subcategory) {
 		this.subcategory = subcategory;
 	}
-	
+
 }
