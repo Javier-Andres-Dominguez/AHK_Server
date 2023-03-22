@@ -48,7 +48,7 @@
   <children>
       <HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="900.0">
          <children>
-            <Button fx:id="logoutButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" />
+            <Button fx:id="logoutButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#logout" />
          </children>
       </HBox>
     <SplitPane dividerPositions="0.2505567928730512, 0.7505567928730512" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
