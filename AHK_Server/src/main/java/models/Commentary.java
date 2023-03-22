@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Commentary implements Serializable{
+public class Commentary implements Serializable {
 
 	@Id
 	@Column(name = "ComId")
@@ -18,14 +18,14 @@ public class Commentary implements Serializable{
 	private String comDes;
 	@Column(name = "Rate")
 	private int rate;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "user")
+	@JoinColumn(name = "UserId")
 	private User user;
 	@ManyToOne
-	@JoinColumn(name = "user")
+	@JoinColumn(name = "FileId")
 	private File file;
-	
+
 	public Commentary() {
 
 	}
