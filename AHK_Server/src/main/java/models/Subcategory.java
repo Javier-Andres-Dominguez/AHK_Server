@@ -13,23 +13,23 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Subcategory implements Serializable{
+public class Subcategory implements Serializable {
 
 	@Id
 	@Column(name = "SubId")
 	private int subId;
 	@Column(name = "SubName")
 	private String subName;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "user")
+	@JoinColumn(name = "UserId")
 	private User user;
 	@ManyToOne
-	@JoinColumn(name = "category")
+	@JoinColumn(name = "CatId")
 	private Category category;
-	@OneToMany(mappedBy="subcategory",cascade= CascadeType.ALL)
-	private Set <File> file = new HashSet<File>(0);
-	
+	@OneToMany(mappedBy = "subcategory", cascade = CascadeType.ALL)
+	private Set<File> file = new HashSet<File>(0);
+
 	public Subcategory() {
 
 	}
@@ -88,5 +88,5 @@ public class Subcategory implements Serializable{
 	public void setFile(Set<File> file) {
 		this.file = file;
 	}
-	
+
 }
