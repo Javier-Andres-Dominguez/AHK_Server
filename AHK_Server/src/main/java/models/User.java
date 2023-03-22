@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class User implements Serializable{
+public class User implements Serializable {
 
 	@Id
 	@Column(name = "UserId")
@@ -22,15 +22,15 @@ public class User implements Serializable{
 	private String userPas;
 	@Column(name = "UserGma")
 	private String userGma;
-	
-	@OneToMany(mappedBy = "user",cascade= CascadeType.ALL)
-	private Set <Commentary> commentary = new HashSet<Commentary>(0);
-	@OneToMany(mappedBy = "user",cascade= CascadeType.ALL)
-	private Set <File> file = new HashSet<File>(0);
-	@OneToMany(mappedBy = "user",cascade= CascadeType.ALL)
-	private Set <Category> category = new HashSet<Category>(0);
-	@OneToMany(mappedBy = "user",cascade= CascadeType.ALL)
-	private Set <Subcategory> subcategory = new HashSet<Subcategory>(0);
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<Commentary> commentary = new HashSet<Commentary>(0);
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<File> file = new HashSet<File>(0);
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<Category> category = new HashSet<Category>(0);
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<Subcategory> subcategory = new HashSet<Subcategory>(0);
 
 	public User() {
 
