@@ -5,24 +5,18 @@
 	
 		<!-- SETTINGS -->
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="connection.url">jdbc:mysql://localhost/Ahk_Server</property>
+		<property name="connection.url">jdbc:mysql://localhost/AHK_Server</property>
 <!--		<property name="hibernate.hbm2ddl.auto">update</property>-->
 		<property name="connection.username">root</property>
 		<property name="connection.password">1234</property>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
 		
 		<!-- MAPPING -->
-		<!--<mapping class="ch.makery.address.models.Cliente" />
-		<mapping class="ch.makery.address.models.Concesionario" />
-		<mapping class="ch.makery.address.models.Empleado" />
-		<mapping class="ch.makery.address.models.Especialidad" />
-		<mapping class="ch.makery.address.models.Mecanico" />
-		<mapping class="ch.makery.address.models.Mecanico_Tiene_Especialidad" />
-		<mapping class="ch.makery.address.models.Mecanico_Tiene_Tarea" />
-		<mapping class="ch.makery.address.models.Tarea" />
-		<mapping class="ch.makery.address.models.Vehiculo" />
-		<mapping class="ch.makery.address.models.Ventas" />
-		<mapping class="ch.makery.address.models.Ventas_Vende_Vehiculo" />-->
+		<mapping class="models.Category" />
+		<mapping class="models.Commentary" />
+		<mapping class="models.File" />
+		<mapping class="models.Subcategory" />
+		<mapping class="models.User" />
 
 	</session-factory>
 </hibernate-configuration>
