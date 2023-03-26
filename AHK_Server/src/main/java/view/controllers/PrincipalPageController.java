@@ -27,10 +27,16 @@ public class PrincipalPageController {
 		Image logoutImage = new Image(getClass().getResourceAsStream("../images/logoutbutton.png"));
 		// This was to check if the path was good
 		//System.out.println(PrincipalPageController.class.getResource("../images/logoutbutton.png"));
+		// Define the ImageView to resize it
+		ImageView imageView = new ImageView(logoutImage);
+		imageView.setFitHeight(50);
+		imageView.setFitWidth(50);
 		// Load the image into the button
-		logoutButton.setGraphic(new ImageView(logoutImage));
+		logoutButton.setGraphic(imageView);
 		// Resize the button
+		logoutButton.setMinSize(50, 50);
 		logoutButton.setMaxSize(50, 50);
+		logoutButton.setPrefSize(50, 50);
 	}
 	
 	@FXML

@@ -54,7 +54,7 @@
   <children>
       <HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="900.0">
          <children>
-            <Button fx:id="logoutButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#logout" styleClass="logoutButton" stylesheets="@../css/AHK_Server.css" />
+            <Button fx:id="logoutButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#logout" styleClass="logoutButton" stylesheets="@../../css/AHK_Server.css" />
          </children>
       </HBox>
     <SplitPane dividerPositions="0.33, 0.67" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
@@ -64,7 +64,7 @@
                   <Label minHeight="50.0" text="Your files" />
                   <ScrollPane prefHeight="1000.0" prefWidth="200.0">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="500.0"  styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="500.0"  styleClass="principalPagePane" stylesheets="@../../css/AHK_Server.css" />
                     </content>
                   </ScrollPane>
                </children>
@@ -74,7 +74,7 @@
                   <Label minHeight="50.0" text="Common" />
                   <ScrollPane prefHeight="1000.0" prefWidth="200.0">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="500.0"  styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="500.0"  styleClass="principalPagePane" stylesheets="@../../css/AHK_Server.css" />
                     </content>
                   </ScrollPane>
                </children>
@@ -84,7 +84,7 @@
                   <Label minHeight="50.0" text="Subscription" />
                   <ScrollPane prefHeight="1000.0" prefWidth="200.0">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="500.0"  styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="500.0"  styleClass="principalPagePane" stylesheets="@../../css/AHK_Server.css" />
                     </content>
                   </ScrollPane>
                </children>
