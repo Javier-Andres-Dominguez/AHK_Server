@@ -5,7 +5,6 @@ import java.util.List;
 import org.hibernate.Session;
 
 import models.Category;
-import models.User;
 
 public class CategoryDao {
 
