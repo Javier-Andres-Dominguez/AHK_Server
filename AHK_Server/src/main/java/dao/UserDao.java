@@ -19,20 +19,20 @@ public class UserDao {
 		return session.createQuery("FROM User").list();
 	}
 
-	public User getCliente(int id) {
+	public User getUser(int id) {
 		return session.get(User.class, id);
 	}
 
-	public void insertCliente(User user) {
+	public void insertUser(User user) {
 		session.save(user);
 	}
 
-	public void updateCliente(User user) {
+	public void updateUser(User user) {
 		session.update(user);
 	}
 
 	@SuppressWarnings("unchecked")
-	public void deleteCliente(User user) {
+	public void deleteUser(User user) {
 		((List<models.User>) session).remove(user);
 	}
 	
