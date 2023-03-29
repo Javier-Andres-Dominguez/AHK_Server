@@ -25,7 +25,12 @@
                   <Label text="Password" />
                   <TextField fx:id="passwordField" />
                   <Label fx:id="errorLabel" textFill="RED" />
-                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="60.0" text="Login" />
+                  <VBox alignment="CENTER" spacing="20.0">
+                     <children>
+                        <Button fx:id="createUserButton" mnemonicParsing="false" onAction="#createUser" prefHeight="25.0" prefWidth="60.0" text="Register" />
+                        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="60.0" text="Login" />
+                     </children>
+                  </VBox>
                </children>
             </VBox>
          </children>

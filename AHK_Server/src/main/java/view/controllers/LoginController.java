@@ -32,6 +32,8 @@ public class LoginController {
 	private Label errorLabel;
 	@FXML
 	private Button loginButton;
+	@FXML
+	private Button createUserButton;
 	// Define this cod user to prove if the credentials are correct
 	private int userId = -1;
 	
@@ -62,6 +64,40 @@ public class LoginController {
 			else {
 				errorLabel.setText("Invalid credentials");
 			}
+		}
+	}
+	
+	@FXML
+	/**
+	 * This method verifies the credentials
+	 */
+	private void createUser(ActionEvent event) {
+		signUpView(event);
+	}
+
+	/**
+	 * This method is used to change the screen
+	 * @param event
+	 */
+	private void signUpView(ActionEvent event) {
+		// Get the screen information
+		Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		try {
+			// Define the window
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainApp.class.getResource("../view/controllers/RegisterPage.fxml"));
+			// This was to check if the path was good
+			System.out.println(MainApp.class.getResource("../view/controllers/RegisterPage.fxml"));
+			Parent root = loader.load();
+			Scene scene = new Scene(root);
+
+			// Load the app
+			stage.setTitle("RegisterPage");
+			stage.setScene(scene);
+			stage.show();
+		} catch (Exception e) {
+			errorLabel.setText("Can´t register");
+			e.printStackTrace();
 		}
 	}
 

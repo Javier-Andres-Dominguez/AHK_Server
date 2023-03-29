@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.RegisterPageController">
+   <children>
+      <VBox alignment="CENTER" layoutX="-3.319999933242798" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label text="Register">
+               <font>
+                  <Font name="Ink Free" size="20.0" />
+               </font>
+               <padding>
+                  <Insets bottom="20.0" />
+               </padding>
+            </Label>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+               <children>
+                  <Label text="Username" />
+                  <TextField fx:id="usernameField" maxWidth="300.0" />
+                  <Label text="Password" />
+                  <TextField fx:id="userPasswordField" maxWidth="300.0" />
+                  <Label text="Gmail" />
+                  <TextField fx:id="userGmailField" maxWidth="300.0" />
+               </children>
+            </VBox>
+            <Label fx:id="errorLabel" textFill="RED" />
+            <HBox alignment="CENTER" spacing="20.0">
+               <children>
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#goBack" text="Go back" />
+                  <Button fx:id="registerButton" mnemonicParsing="false" onAction="#register" text="Register" />
+               </children>
+               <padding>
+                  <Insets top="20.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
