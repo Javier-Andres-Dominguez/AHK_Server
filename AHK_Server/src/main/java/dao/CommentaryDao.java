@@ -4,9 +4,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import models.Category;
 import models.Commentary;
-import models.User;
 
 public class CommentaryDao {
 
