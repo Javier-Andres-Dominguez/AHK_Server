@@ -36,9 +36,9 @@ public class LoginController {
 	private Button createUserButton;
 	// Define this cod user to prove if the credentials are correct
 	private int userId = -1;
-	
+
 	public LoginController() {
-		
+
 	}
 
 	@FXML
@@ -47,16 +47,16 @@ public class LoginController {
 		loginImage.setFitHeight(300);
 		loginImage.setPreserveRatio(false);
 	}
-	
+
 	@FXML
 	/**
 	 * This method verifies the credentials
 	 */
 	private void login(ActionEvent event) {
 		// If the fields are fill
-		if(filledFields()) {
+		if (filledFields()) {
 			// And the credentials are good:
-			if(checkCredentials()) {
+			if (checkCredentials()) {
 				errorLabel.setText("Wellcome back");
 				changeView(event);
 			}
@@ -66,7 +66,7 @@ public class LoginController {
 			}
 		}
 	}
-	
+
 	@FXML
 	/**
 	 * This method verifies the credentials
@@ -77,6 +77,7 @@ public class LoginController {
 
 	/**
 	 * This method is used to change the screen
+	 * 
 	 * @param event
 	 */
 	private void signUpView(ActionEvent event) {
@@ -103,6 +104,7 @@ public class LoginController {
 
 	/**
 	 * This method is used to change the screen
+	 * 
 	 * @param event
 	 */
 	private void changeView(ActionEvent event) {
@@ -113,7 +115,7 @@ public class LoginController {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("../view/controllers/PrincipalPage.fxml"));
 			// This was to check if the path was good
-			//System.out.println(MainApp.class.getResource("../view/controllers/PrincipalPage.fxml"));
+			// System.out.println(MainApp.class.getResource("../view/controllers/PrincipalPage.fxml"));
 			Parent root = loader.load();
 			Scene scene = new Scene(root);
 
@@ -126,19 +128,20 @@ public class LoginController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * This method checks if all the fields are filled
+	 * 
 	 * @return
 	 */
 	private boolean filledFields() {
 		// The first field is the username, so if that field is empty:
-		if(usernameField.getText().equals("")) {
+		if (usernameField.getText().equals("")) {
 			errorLabel.setText("Username empty");
 			return false;
 		}
 		// Else if the password field is empty:
-		else if(passwordField.getText().equals("")){
+		else if (passwordField.getText().equals("")) {
 			errorLabel.setText("Password empty");
 			return false;
 		}
@@ -147,9 +150,10 @@ public class LoginController {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * This method check if the credentials input are correct
+	 * 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -167,8 +171,14 @@ public class LoginController {
 
 			// Save the result in a list
 			List<Integer> queryResult = query.list();
-			// Assign the list information
-			userId = queryResult.get(0);
+			// If it is null make sure to be invalid
+			if (queryResult.isEmpty()) {
+				// Assign the list information
+				userId = 0;
+			}else {
+				// Assign the list information
+				userId = queryResult.get(0);
+			}
 
 		}
 		// If there is any error Inform in the screen
@@ -182,12 +192,13 @@ public class LoginController {
 			session.close();
 			sf.close();
 		}
-		// If the userId is not changed means that there is no credentials in the database with those values
+		// If the userId is not changed means that there is no credentials in the
+		// database with those values
 		if (userId <= 0) {
 			return false;
 		} else {
 			return true;
 		}
 	}
-	
+
 }
