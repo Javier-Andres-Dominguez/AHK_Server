@@ -32,9 +32,9 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Subcategory> subcategory = new HashSet<Subcategory>(0);
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<User> userSubscribed = new HashSet<User>(0);
+	private Set<User_Subscribe_User> subscribedUser = new HashSet<User_Subscribe_User>(0);
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<User> subscribedToUser = new HashSet<User>(0);
+	private Set<User_Subscribe_User> subscribedToUser = new HashSet<User_Subscribe_User>(0);
 
 	public User() {
 
@@ -49,7 +49,7 @@ public class User implements Serializable {
 	}
 
 	public User(int userId, String userName, String userPas, String userGma, Set<Commentary> commentary, Set<File> file,
-			Set<Category> category, Set<Subcategory> subcategory, Set<User> userSubscribed, Set<User> subscribedToUser) {
+			Set<Category> category, Set<Subcategory> subcategory, Set<User_Subscribe_User> subscribedUser, Set<User_Subscribe_User> subscribedToUser) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -59,7 +59,7 @@ public class User implements Serializable {
 		this.file = file;
 		this.category = category;
 		this.subcategory = subcategory;
-		this.userSubscribed = userSubscribed;
+		this.subscribedUser = subscribedUser;
 		this.subscribedToUser = subscribedToUser;
 	}
 
@@ -127,19 +127,19 @@ public class User implements Serializable {
 		this.subcategory = subcategory;
 	}
 
-	public Set<User> getUserSubscribed() {
-		return userSubscribed;
+	public Set<User_Subscribe_User> getSubscribedUser() {
+		return subscribedUser;
 	}
 
-	public void setUserSubscribed(Set<User> userSubscribed) {
-		this.userSubscribed = userSubscribed;
+	public void setSubscribedUser(Set<User_Subscribe_User> subscribedUser) {
+		this.subscribedUser = subscribedUser;
 	}
 
-	public Set<User> getSubscribedToUser() {
+	public Set<User_Subscribe_User> getSubscribedToUser() {
 		return subscribedToUser;
 	}
 
-	public void setSubscribedToUser(Set<User> subscribedToUser) {
+	public void setSubscribedToUser(Set<User_Subscribe_User> subscribedToUser) {
 		this.subscribedToUser = subscribedToUser;
 	}
 }
