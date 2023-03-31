@@ -31,6 +31,10 @@ public class User implements Serializable {
 	private Set<Category> category = new HashSet<Category>(0);
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Subcategory> subcategory = new HashSet<Subcategory>(0);
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<User> userSubscribed = new HashSet<User>(0);
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<User> subscribedToUser = new HashSet<User>(0);
 
 	public User() {
 
@@ -45,7 +49,7 @@ public class User implements Serializable {
 	}
 
 	public User(int userId, String userName, String userPas, String userGma, Set<Commentary> commentary, Set<File> file,
-			Set<Category> category, Set<Subcategory> subcategory) {
+			Set<Category> category, Set<Subcategory> subcategory, Set<User> userSubscribed, Set<User> subscribedToUser) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -55,6 +59,8 @@ public class User implements Serializable {
 		this.file = file;
 		this.category = category;
 		this.subcategory = subcategory;
+		this.userSubscribed = userSubscribed;
+		this.subscribedToUser = subscribedToUser;
 	}
 
 	public int getUserId() {
@@ -119,5 +125,21 @@ public class User implements Serializable {
 
 	public void setSubcategory(Set<Subcategory> subcategory) {
 		this.subcategory = subcategory;
+	}
+
+	public Set<User> getUserSubscribed() {
+		return userSubscribed;
+	}
+
+	public void setUserSubscribed(Set<User> userSubscribed) {
+		this.userSubscribed = userSubscribed;
+	}
+
+	public Set<User> getSubscribedToUser() {
+		return subscribedToUser;
+	}
+
+	public void setSubscribedToUser(Set<User> subscribedToUser) {
+		this.subscribedToUser = subscribedToUser;
 	}
 }
