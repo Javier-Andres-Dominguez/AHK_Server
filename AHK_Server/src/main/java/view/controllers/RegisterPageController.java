@@ -1,8 +1,5 @@
 package view.controllers;
 
-import java.util.List;
-
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -16,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import main.MainApp;
@@ -26,7 +24,7 @@ public class RegisterPageController {
 	@FXML
 	private TextField usernameField;
 	@FXML
-	private TextField userPasswordField;
+	private PasswordField userPasswordField;
 	@FXML
 	private TextField userGmailField;
 	@FXML
