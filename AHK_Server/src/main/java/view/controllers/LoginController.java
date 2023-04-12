@@ -1,5 +1,10 @@
 package view.controllers;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -37,7 +42,7 @@ public class LoginController {
 	private Button createUserButton;
 	// Define this cod user to prove if the credentials are correct
 	private int userId = -1;
-
+	
 	public LoginController() {
 
 	}
@@ -59,6 +64,26 @@ public class LoginController {
 			// And the credentials are good:
 			if (checkCredentials()) {
 				errorLabel.setText("Wellcome back");
+				// Define the new file
+				File file = new File("Extra-files/Temporal");
+				try {
+					// When creating the new file:
+					if(file.createNewFile()) {
+						System.out.println("Creating UserId file");
+						// Define the reader
+						BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+						// Write
+						bw.write(Integer.toString(userId));
+						// Upload the written string
+						bw.flush();
+						// Close the writer
+						bw.close();
+					}else {
+						System.out.println("Error while creating UserId file");
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 				changeView(event);
 			}
 			// If the credentials don´t match
