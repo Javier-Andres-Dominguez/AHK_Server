@@ -22,6 +22,8 @@ public class File implements Serializable {
 	private String fileName;
 	@Column(name = "FilePath")
 	private String filePath;
+	@Column(name = "Views")
+	private int views;
 
 	@ManyToOne
 	@JoinColumn(name = "UserId")
@@ -73,6 +75,14 @@ public class File implements Serializable {
 
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+	}
+
+	public int getViews() {
+		return views;
+	}
+
+	public void setViews(int views) {
+		this.views = views;
 	}
 
 	public User getUser() {
