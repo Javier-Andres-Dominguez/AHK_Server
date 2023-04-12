@@ -5,14 +5,14 @@ import java.io.Serializable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
-@Entity(name = "user_subscribe_user")
+@Entity
 public class User_Subscribe_User implements Serializable{
 
 	@EmbeddedId
 	private User_Subscribe_UserId id;
 
 	public User_Subscribe_User() {
-
+		
 	}
 
 	public User_Subscribe_User(User_Subscribe_UserId user_Subscribe_UserId) {

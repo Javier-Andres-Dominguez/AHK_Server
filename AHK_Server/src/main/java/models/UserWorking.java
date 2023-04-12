@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class User implements Serializable {
+public class UserWorking implements Serializable {
 
 	@Id
 	@Column(name = "UserId")
@@ -31,16 +31,16 @@ public class User implements Serializable {
 	private Set<Category> category = new HashSet<Category>(0);
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Subcategory> subcategory = new HashSet<Subcategory>(0);
-	/*@OneToMany(mappedBy = "user.userSubscribed", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<User_Subscribe_User> subscribedUser = new HashSet<User_Subscribe_User>(0);
-	@OneToMany(mappedBy = "user.subscribedToUser", cascade = CascadeType.ALL)
-	private Set<User_Subscribe_User> subscribedToUser = new HashSet<User_Subscribe_User>(0);*/
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<User_Subscribe_User> subscribedToUser = new HashSet<User_Subscribe_User>(0);
 
-	public User() {
+	public UserWorking() {
 
 	}
 
-	public User(int userId, String userName, String userPas, String userGma) {
+	public UserWorking(int userId, String userName, String userPas, String userGma) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -48,8 +48,8 @@ public class User implements Serializable {
 		this.userGma = userGma;
 	}
 
-	public User(int userId, String userName, String userPas, String userGma, Set<Commentary> commentary, Set<File> file,
-			Set<Category> category, Set<Subcategory> subcategory/*, Set<User_Subscribe_User> subscribedUser, Set<User_Subscribe_User> subscribedToUser*/) {
+	public UserWorking(int userId, String userName, String userPas, String userGma, Set<Commentary> commentary, Set<File> file,
+			Set<Category> category, Set<Subcategory> subcategory, Set<User_Subscribe_User> subscribedUser, Set<User_Subscribe_User> subscribedToUser) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -58,9 +58,9 @@ public class User implements Serializable {
 		this.commentary = commentary;
 		this.file = file;
 		this.category = category;
-		this.subcategory = subcategory;/*
+		this.subcategory = subcategory;
 		this.subscribedUser = subscribedUser;
-		this.subscribedToUser = subscribedToUser;*/
+		this.subscribedToUser = subscribedToUser;
 	}
 
 	public int getUserId() {
@@ -127,7 +127,7 @@ public class User implements Serializable {
 		this.subcategory = subcategory;
 	}
 
-	/*public Set<User_Subscribe_User> getSubscribedUser() {
+	public Set<User_Subscribe_User> getSubscribedUser() {
 		return subscribedUser;
 	}
 
@@ -141,5 +141,5 @@ public class User implements Serializable {
 
 	public void setSubscribedToUser(Set<User_Subscribe_User> subscribedToUser) {
 		this.subscribedToUser = subscribedToUser;
-	}*/
+	}
 }
