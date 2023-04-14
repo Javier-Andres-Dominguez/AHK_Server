@@ -95,7 +95,7 @@ public class PrincipalPageController {
 			List<models.File> files = query.list();
 
 			// Define the root item of treeview
-			TreeItem<String> rootItem = new TreeItem<>("Categories:");
+			TreeItem<String> rootItem = new TreeItem<>("Categories:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 			ArrayList<Category> categories = new ArrayList<>();
 			ArrayList<Subcategory> subcategories = new ArrayList<>();
 			// If it is null make sure to be invalid
@@ -148,13 +148,13 @@ public class PrincipalPageController {
 			}
 			// For all categories:
 			for (int i = 0; i < categories.size(); i++) {
-				TreeItem<String> treeCategory = new TreeItem<String>(categories.get(i).getCatName());
+				TreeItem<String> treeCategory = new TreeItem<String>(categories.get(i).getCatName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 				// For all subcategories:
 				for (int n = 0; n < subcategories.size(); n++) {
-					TreeItem<String> treeSubcategory = new TreeItem<String>(subcategories.get(n).getSubName());
+					TreeItem<String> treeSubcategory = new TreeItem<String>(subcategories.get(n).getSubName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 					// For all files:
 					for (int j = 0; j < files.size(); j++) {
-						TreeItem<String> treeFile = new TreeItem<String>(files.get(j).getFileName());
+						TreeItem<String> treeFile = new TreeItem<String>(files.get(j).getFileName(), new ImageView(new Image(getClass().getResourceAsStream("ahk.png"))));
 						// Add the files to the subcategories
 						treeSubcategory.getChildren().add(treeFile);
 					}
@@ -163,8 +163,8 @@ public class PrincipalPageController {
 				}
 				// Add the categories to the tree view
 				rootItem.getChildren().add(treeCategory);
-			yourFilesTree.setRoot(rootItem);
 			}
+			yourFilesTree.setRoot(rootItem);
 		}
 		// If there is any error Inform in the screen
 		catch (Exception e) {
