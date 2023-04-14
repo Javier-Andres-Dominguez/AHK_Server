@@ -125,21 +125,21 @@ public class PrincipalPageController {
 					}
 				}
 				// Get the categories
-				for (int i = 0; i < categories.size(); i++) {
+				for (int i = 0; i < subcategories.size(); i++) {
 					// Do not check the first category
 					if (i == 0) {
 						// Add the category
-						categories.add(files.get(i).getSubcategory().getCategory());
+						categories.add(subcategories.get(i).getCategory());
 					} else {
 						// Compare with all categories saved
 						for (int n = 0; n < categories.size(); n++) {
-							if (files.get(i).getSubcategory().getCategory().equals(categories.get(n))) {
+							if (subcategories.get(i).getCategory().equals(categories.get(n))) {
 								repeated = true;
 							}
 						}
 						// If after all the check it is not repeated, add it
 						if (!repeated) {
-							categories.add(files.get(i).getSubcategory().getCategory());
+							categories.add(subcategories.get(i).getCategory());
 						}
 						// Reset the value
 						repeated = false;
@@ -163,9 +163,8 @@ public class PrincipalPageController {
 				}
 				// Add the categories to the tree view
 				rootItem.getChildren().add(treeCategory);
-			}
 			yourFilesTree.setRoot(rootItem);
-
+			}
 		}
 		// If there is any error Inform in the screen
 		catch (Exception e) {
