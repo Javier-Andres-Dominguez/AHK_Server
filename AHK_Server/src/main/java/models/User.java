@@ -31,10 +31,10 @@ public class User implements Serializable {
 	private Set<Category> category = new HashSet<Category>(0);
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Subcategory> subcategory = new HashSet<Subcategory>(0);
-	/*@OneToMany(mappedBy = "user.userSubscribed", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "id.userSubscribed", cascade = CascadeType.ALL)
 	private Set<User_Subscribe_User> subscribedUser = new HashSet<User_Subscribe_User>(0);
-	@OneToMany(mappedBy = "user.subscribedToUser", cascade = CascadeType.ALL)
-	private Set<User_Subscribe_User> subscribedToUser = new HashSet<User_Subscribe_User>(0);*/
+	@OneToMany(mappedBy = "id.subscribedToUser", cascade = CascadeType.ALL)
+	private Set<User_Subscribe_User> subscribedToUser = new HashSet<User_Subscribe_User>(0);
 
 	public User() {
 
