@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -21,8 +22,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -30,18 +34,21 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import main.MainApp;
+import models.Category;
+import models.Subcategory;
 
 public class PrincipalPageController {
 
 	@FXML
 	private Button logoutButton;
+	// The tree view implementation was easier thanks to: https://www.youtube.com/watch?v=CNLHTrY3Nh8&ab_channel=BroCode
 	@FXML
-	private VBox yourFilesVBox;
-	
+	private TreeView yourFilesTree;
+
 	private int userId;
-	
+
 	public PrincipalPageController() {
-		
+
 	}
 
 	@FXML
@@ -49,7 +56,7 @@ public class PrincipalPageController {
 		// Define the button image
 		Image logoutImage = new Image(getClass().getResourceAsStream("../images/logoutbutton.png"));
 		// This was to check if the path was good
-		//System.out.println(PrincipalPageController.class.getResource("../images/logoutbutton.png"));
+		// System.out.println(PrincipalPageController.class.getResource("../images/logoutbutton.png"));
 		// Define the ImageView to resize it
 		ImageView imageView = new ImageView(logoutImage);
 		imageView.setFitHeight(50);
@@ -66,14 +73,14 @@ public class PrincipalPageController {
 			userId = Integer.parseInt(br.readLine());
 			br.close();
 			file.delete();
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		fillYourFiles();
 	}
-	
+
 	private void fillYourFiles() {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
@@ -81,24 +88,83 @@ public class PrincipalPageController {
 		try {
 			// Execute the query and get the result
 			session.getTransaction().begin();
-			//String hql = "SELECT f.views, f.fileName FROM File f WHERE f.user.userId=" + userId;
+
 			String hql = "FROM File f WHERE f.user.userId=" + userId;
-
 			query = session.createQuery(hql);
-
 			// Save the result in a list
-			List<models.File> queryResult = query.list();
-			System.out.println(queryResult);
+			List<models.File> files = query.list();
+
+			// Define the root item of treeview
+			TreeItem<String> rootItem = new TreeItem<>("Categories:");
+			ArrayList<Category> categories = new ArrayList<>();
+			ArrayList<Subcategory> subcategories = new ArrayList<>();
 			// If it is null make sure to be invalid
-			if (queryResult.isEmpty()) {
+			if (files.isEmpty()) {
 				System.out.println("It is empty");
-			}else {
-				// Se pasa la información a una lista diferente
-				ObservableList<models.File> array = FXCollections.observableArrayList(queryResult);
-				// Assign the list information
-				Label label = new Label();
-				label.setText(array.get(0).toString());
+			} else {
+				boolean repeated = false;
+				// Get the subcategories
+				for (int i = 0; i < files.size(); i++) {
+					// Do not check the first subcategory
+					if (i == 0) {
+						// Add the subcategory
+						subcategories.add(files.get(i).getSubcategory());
+					} else {
+						// Compare with all subcategories saved
+						for (int n = 0; n < subcategories.size(); n++) {
+							if (files.get(i).getSubcategory().equals(subcategories.get(n))) {
+								repeated = true;
+							}
+						}
+						// If after all the check it is not repeated, add it
+						if (!repeated) {
+							subcategories.add(files.get(i).getSubcategory());
+						}
+						// Reset the value
+						repeated = false;
+					}
+				}
+				// Get the categories
+				for (int i = 0; i < categories.size(); i++) {
+					// Do not check the first category
+					if (i == 0) {
+						// Add the category
+						categories.add(files.get(i).getSubcategory().getCategory());
+					} else {
+						// Compare with all categories saved
+						for (int n = 0; n < categories.size(); n++) {
+							if (files.get(i).getSubcategory().getCategory().equals(categories.get(n))) {
+								repeated = true;
+							}
+						}
+						// If after all the check it is not repeated, add it
+						if (!repeated) {
+							categories.add(files.get(i).getSubcategory().getCategory());
+						}
+						// Reset the value
+						repeated = false;
+					}
+				}
 			}
+			// For all categories:
+			for (int i = 0; i < categories.size(); i++) {
+				TreeItem<String> treeCategory = new TreeItem<String>(categories.get(i).getCatName());
+				// For all subcategories:
+				for (int n = 0; n < subcategories.size(); n++) {
+					TreeItem<String> treeSubcategory = new TreeItem<String>(subcategories.get(n).getSubName());
+					// For all files:
+					for (int j = 0; j < files.size(); j++) {
+						TreeItem<String> treeFile = new TreeItem<String>(files.get(j).getFileName());
+						// Add the files to the subcategories
+						treeSubcategory.getChildren().add(treeFile);
+					}
+					// Add the subcategories to the category
+					treeCategory.getChildren().add(treeSubcategory);
+				}
+				// Add the categories to the tree view
+				rootItem.getChildren().add(treeCategory);
+			}
+			yourFilesTree.setRoot(rootItem);
 
 		}
 		// If there is any error Inform in the screen
@@ -111,10 +177,23 @@ public class PrincipalPageController {
 			sf.close();
 		}
 	}
-	
+
+	@FXML
+	/**
+	 * This method is called when you select an item from the treeview
+	 */
+	private void selectItem() {
+		TreeItem<String> item = (TreeItem<String>) yourFilesTree.getSelectionModel().getSelectedItem();
+		
+		if(item != null) {
+			System.out.println(item.getValue());
+		}
+	}
+
 	@FXML
 	/**
 	 * This method is used to logout
+	 * 
 	 * @param event
 	 */
 	private void logout(ActionEvent event) {
@@ -125,7 +204,7 @@ public class PrincipalPageController {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("../view/controllers/Login.fxml"));
 			// This was to check if the path was good
-			//System.out.println(MainApp.class.getResource("../view/controllers/Login.fxml"));
+			// System.out.println(MainApp.class.getResource("../view/controllers/Login.fxml"));
 			Parent root = loader.load();
 			Scene scene = new Scene(root);
 
@@ -134,9 +213,8 @@ public class PrincipalPageController {
 			stage.setScene(scene);
 			stage.show();
 		} catch (Exception e) {
-			//errorLabel.setText("Can´t login");
 			e.printStackTrace();
 		}
 	}
-	
+
 }
