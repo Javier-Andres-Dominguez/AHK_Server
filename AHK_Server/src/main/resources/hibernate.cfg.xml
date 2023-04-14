@@ -17,8 +17,8 @@
 		<mapping class="models.File" />
 		<mapping class="models.Subcategory" />
 		<mapping class="models.User" />
-		<!--<mapping class="models.User_Subscribe_User" />
-		<mapping class="models.User_Subscribe_UserId" />-->
+		<mapping class="models.User_Subscribe_User" />
+		<mapping class="models.User_Subscribe_UserId" />
 
 	</session-factory>
 </hibernate-configuration>
