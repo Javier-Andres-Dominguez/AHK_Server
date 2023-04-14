@@ -41,7 +41,8 @@ public class PrincipalPageController {
 
 	@FXML
 	private Button logoutButton;
-	// The tree view implementation was easier thanks to: https://www.youtube.com/watch?v=CNLHTrY3Nh8&ab_channel=BroCode
+	// The tree view implementation was easier thanks to:
+	// https://www.youtube.com/watch?v=CNLHTrY3Nh8&ab_channel=BroCode
 	@FXML
 	private TreeView yourFilesTree;
 
@@ -146,20 +147,30 @@ public class PrincipalPageController {
 					}
 				}
 			}
+
 			// For all categories:
-			for (int i = 0; i < categories.size(); i++) {
+			for(int i = 0; i < categories.size(); i++) {
+				// Create the tree category
 				TreeItem<String> treeCategory = new TreeItem<String>(categories.get(i).getCatName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
-				// For all subcategories:
-				for (int n = 0; n < subcategories.size(); n++) {
-					TreeItem<String> treeSubcategory = new TreeItem<String>(subcategories.get(n).getSubName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
-					// For all files:
-					for (int j = 0; j < files.size(); j++) {
-						TreeItem<String> treeFile = new TreeItem<String>(files.get(j).getFileName(), new ImageView(new Image(getClass().getResourceAsStream("ahk.png"))));
-						// Add the files to the subcategories
-						treeSubcategory.getChildren().add(treeFile);
+				// Check all the subcategories:
+				for(int n = 0; n < subcategories.size(); n++) {
+					// If any belongs to the current category:
+					if(subcategories.get(n).getCategory().equals(categories.get(i))) {
+						// Create the tree subcategory
+						TreeItem<String> treeSubcategory = new TreeItem<String>(subcategories.get(n).getSubName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+						// Check all the files:
+						for(int j = 0; j < files.size(); j++) {
+							// If any belongs to the current subcategory:
+							if(files.get(j).getSubcategory().equals(subcategories.get(n))) {
+								// Create the tree file
+								TreeItem<String> treeFile = new TreeItem<String>(files.get(j).getFileName(), new ImageView(new Image(getClass().getResourceAsStream("ahk.png"))));
+								// Add the file to the subcategory
+								treeSubcategory.getChildren().add(treeFile);
+							}
+						}
+						// Add the subcategory to the category
+						treeCategory.getChildren().add(treeSubcategory);
 					}
-					// Add the subcategories to the category
-					treeCategory.getChildren().add(treeSubcategory);
 				}
 				// Add the categories to the tree view
 				rootItem.getChildren().add(treeCategory);
@@ -183,8 +194,8 @@ public class PrincipalPageController {
 	 */
 	private void selectItem() {
 		TreeItem<String> item = (TreeItem<String>) yourFilesTree.getSelectionModel().getSelectedItem();
-		
-		if(item != null) {
+
+		if (item != null) {
 			System.out.println(item.getValue());
 		}
 	}
