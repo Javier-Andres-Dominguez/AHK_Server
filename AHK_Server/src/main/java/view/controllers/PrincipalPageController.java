@@ -1,9 +1,5 @@
 package view.controllers;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,41 +8,28 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import main.MainApp;
 import models.Category;
 import models.Subcategory;
+import models.User;
 
 public class PrincipalPageController {
 
 	@FXML
-	private Button logoutButton;
-	// The tree view implementation was easier thanks to:
-	// https://www.youtube.com/watch?v=CNLHTrY3Nh8&ab_channel=BroCode
-	@FXML
-	private TreeView yourFilesTree;
+	private TreeView<String> yourFilesTree;
 
-	private int userId;
+	private User user;
 
 	public PrincipalPageController() {
 
@@ -54,31 +37,9 @@ public class PrincipalPageController {
 
 	@FXML
 	private void initialize() {
-		// Define the button image
-		Image logoutImage = new Image(getClass().getResourceAsStream("../images/logoutbutton.png"));
-		// This was to check if the path was good
-		// System.out.println(PrincipalPageController.class.getResource("../images/logoutbutton.png"));
-		// Define the ImageView to resize it
-		ImageView imageView = new ImageView(logoutImage);
-		imageView.setFitHeight(50);
-		imageView.setFitWidth(50);
-		// Load the image into the button
-		logoutButton.setGraphic(imageView);
-		// Resize the button
-		logoutButton.setMinSize(50, 50);
-		logoutButton.setMaxSize(50, 50);
-		logoutButton.setPrefSize(50, 50);
-		try {
-			File file = new File("Extra-files/Temporal");
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			userId = Integer.parseInt(br.readLine());
-			br.close();
-			file.delete();
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// Get the information of the user that logs in
+		ToolBarController toolBarController = new ToolBarController();
+		user = toolBarController.getUserInfo();
 		fillYourFiles();
 	}
 
@@ -90,9 +51,10 @@ public class PrincipalPageController {
 			// Execute the query and get the result
 			session.getTransaction().begin();
 
-			String hql = "FROM File f WHERE f.user.userId=" + userId;
+			String hql = "FROM File f WHERE f.user.userId=" + user.getUserId();
 			query = session.createQuery(hql);
 			// Save the result in a list
+			@SuppressWarnings("unchecked")
 			List<models.File> files = query.list();
 
 			// Define the root item of treeview

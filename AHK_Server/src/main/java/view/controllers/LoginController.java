@@ -23,6 +23,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import main.MainApp;
+import models.User;
 
 public class LoginController {
 
@@ -40,6 +41,7 @@ public class LoginController {
 	private Button createUserButton;
 	// Define this cod user to prove if the credentials are correct
 	private int userId = -1;
+	private User user;
 	
 	public LoginController() {
 
@@ -62,26 +64,9 @@ public class LoginController {
 			// And the credentials are good:
 			if (checkCredentials()) {
 				errorLabel.setText("Wellcome back");
-				// Define the new file
-				File file = new File("Extra-files/Temporal");
-				try {
-					// When creating the new file:
-					if(file.createNewFile()) {
-						System.out.println("Creating UserId file");
-						// Define the reader
-						BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-						// Write
-						bw.write(Integer.toString(userId));
-						// Upload the written string
-						bw.flush();
-						// Close the writer
-						bw.close();
-					}else {
-						System.out.println("Error while creating UserId file");
-					}
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
+				user = new User();
+				user.setUserId(userId);
+				user.setUserName(usernameField.getText());
 				changeView(event);
 			}
 			// If the credentials don´t match
@@ -137,12 +122,16 @@ public class LoginController {
 		try {
 			// Define the window
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("../view/controllers/PrincipalPage.fxml"));
+			loader.setLocation(MainApp.class.getResource("../view/controllers/Toolbar.fxml"));
 			// This was to check if the path was good
 			// System.out.println(MainApp.class.getResource("../view/controllers/PrincipalPage.fxml"));
 			Parent root = loader.load();
 			Scene scene = new Scene(root);
 
+			stage.setUserData(user);
+			ToolBarController controller = loader.getController();
+			controller.recoverUserInfo(stage);
+			
 			// Load the app
 			stage.setTitle("PrincipalPage");
 			stage.setScene(scene);

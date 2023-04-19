@@ -33,7 +33,6 @@
 -->
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
@@ -47,11 +46,6 @@
 
 <VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.PrincipalPageController">
   <children>
-      <HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="900.0">
-         <children>
-            <Button fx:id="logoutButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#logout" styleClass="logoutButton" stylesheets="@../css/AHK_Server.css" />
-         </children>
-      </HBox>
     <SplitPane dividerPositions="0.33, 0.67" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
          <items>
             <VBox prefHeight="200.0" prefWidth="100.0">
