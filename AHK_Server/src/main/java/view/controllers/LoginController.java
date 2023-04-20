@@ -1,8 +1,5 @@
 package view.controllers;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -97,7 +94,7 @@ public class LoginController {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("../view/controllers/RegisterPage.fxml"));
 			// This was to check if the path was good
-			System.out.println(MainApp.class.getResource("../view/controllers/RegisterPage.fxml"));
+			// System.out.println(MainApp.class.getResource("../view/controllers/RegisterPage.fxml"));
 			Parent root = loader.load();
 			Scene scene = new Scene(root);
 
