@@ -20,6 +20,8 @@ public class File implements Serializable {
 	private int fileId;
 	@Column(name = "FileName")
 	private String fileName;
+	@Column(name = "FileDes")
+	private String fileDes;
 	@Column(name = "FilePath")
 	private String filePath;
 	@Column(name = "Views")
@@ -37,16 +39,18 @@ public class File implements Serializable {
 	public File() {
 	}
 
-	public File(int fileId, String fileName, String filePath) {
+	public File(int fileId, String fileName, String fileDes, String filePath) {
 		this.fileId = fileId;
 		this.fileName = fileName;
+		this.fileDes = fileDes;
 		this.filePath = filePath;
 	}
 
-	public File(int fileId, String fileName, String filePath, User user, Subcategory subcategory,
+	public File(int fileId, String fileName, String fileDes, String filePath, User user, Subcategory subcategory,
 			Set<Commentary> commentary) {
 		this.fileId = fileId;
 		this.fileName = fileName;
+		this.fileDes = fileDes;
 		this.filePath = filePath;
 		this.user = user;
 		this.subcategory = subcategory;
@@ -67,6 +71,14 @@ public class File implements Serializable {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	public String getFileDes() {
+		return fileDes;
+	}
+
+	public void setFileDes(String fileDes) {
+		this.fileDes = fileDes;
 	}
 
 	public String getFilePath() {
