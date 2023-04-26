@@ -63,10 +63,13 @@
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label minHeight="50.0" text="Common" />
+                  <Label minHeight="50.0" text="Most Popular" />
                   <ScrollPane prefHeight="1000.0" prefWidth="200.0">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="900.0" styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="900.0" styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css">
+                           <children>
+                              <TreeView fx:id="popularFilesTree" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children></AnchorPane>
                     </content>
                   </ScrollPane>
                </children>
@@ -76,7 +79,10 @@
                   <Label minHeight="50.0" text="Subscription" />
                   <ScrollPane prefHeight="1000.0" prefWidth="200.0">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="900.0" styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="900.0" styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css">
+                           <children>
+                              <TreeView fx:id="subscriptionFilesTree" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children></AnchorPane>
                     </content>
                   </ScrollPane>
                </children>

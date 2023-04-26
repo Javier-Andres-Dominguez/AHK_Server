@@ -14,10 +14,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import main.MainApp;
 import models.Category;
@@ -28,6 +31,10 @@ public class PrincipalPageController {
 
 	@FXML
 	private TreeView<String> yourFilesTree;
+	@FXML
+	private TreeView<String> subscriptionFilesTree;
+	@FXML
+	private TreeView<String> popularFilesTree;
 
 	private User user;
 
@@ -41,8 +48,13 @@ public class PrincipalPageController {
 		ToolBarController toolBarController = new ToolBarController();
 		user = toolBarController.getUserInfo();
 		fillYourFiles();
+		fillPopularFiles();
+		fillSubscriptionFiles();
 	}
 
+	/**
+	 * This method fills your files pane with files, subcategories and categories
+	 */
 	private void fillYourFiles() {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
@@ -150,6 +162,83 @@ public class PrincipalPageController {
 		}
 	}
 
+	/**
+	 * This method fills the popular files pane with files
+	 */
+	private void fillPopularFiles() {
+		SessionFactory sf = new Configuration().configure().buildSessionFactory();
+		Session session = sf.openSession();
+		Query query = null;
+		//query.setMaxResults(10);
+		
+		try {
+			// Execute the query and get the result
+			session.getTransaction().begin();
+
+			String hql = "FROM File f" + user.getUserId();
+			query = session.createQuery(hql);
+			// Save the result in a list
+			@SuppressWarnings("unchecked")
+			List<models.File> files = query.list();
+			
+			// Define the root item of treeview
+			TreeItem<String> rootItem = new TreeItem<>("Popular files:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+			// Assign the root item to the treeview
+			popularFilesTree.setRoot(rootItem);
+			// For all files from the result do:
+			for(int i = 0; i < files.size();i++) {
+				// Add them to the treeview
+				rootItem.getChildren().add(new TreeItem<String>(files.get(i).getFileName(), new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		// At the end:
+		finally {
+			session.close();
+			sf.close();
+		}
+	}
+
+	/**
+	 * This method fills the popular files pane with files
+	 */
+	private void fillSubscriptionFiles() {
+		SessionFactory sf = new Configuration().configure().buildSessionFactory();
+		Session session = sf.openSession();
+		Query query = null;
+		//query.setMaxResults(10);
+		
+		try {
+			// Execute the query and get the result
+			session.getTransaction().begin();
+			String hql = "SELECT u.id.userSubscribed.userId FROM User_Subscribe_User u WHERE u.id.subscribedToUser.userId =" + user.getUserId();
+			query = session.createQuery(hql);
+			// Save the result in a list
+			@SuppressWarnings("unchecked")
+			//List<models.File> files = query.list();
+			List<models.User> users = query.list();
+			System.out.println(users);
+			// Define the root item of treeview
+			TreeItem<String> rootItem = new TreeItem<>("Popular files:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+			// Assign the root item to the treeview
+			popularFilesTree.setRoot(rootItem);
+			// For all files from the result do:
+			for(int i = 0; i < users.size();i++) {
+				// Add them to the treeview
+				//rootItem.getChildren().add(new TreeItem<String>(files.get(i).getFileName(), new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
+				rootItem.getChildren().add(new TreeItem<String>(users.get(i).getUserName(), new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		// At the end:
+		finally {
+			session.close();
+			sf.close();
+		}
+	}
+	
 	@FXML
 	/**
 	 * This method is called when you select an item from the treeview
