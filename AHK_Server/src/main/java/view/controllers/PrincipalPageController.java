@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
@@ -33,7 +34,10 @@ public class PrincipalPageController {
 	private TreeView<String> subscriptionFilesTree;
 	@FXML
 	private TreeView<String> popularFilesTree;
+	@FXML
+	private Button openButton;
 
+	private String fileName;
 	private User user;
 
 	public PrincipalPageController() {
@@ -48,6 +52,7 @@ public class PrincipalPageController {
 		fillYourFiles();
 		fillPopularFiles();
 		fillSubscriptionFiles();
+		openButton.setDisable(true);
 	}
 
 	/**
@@ -66,16 +71,14 @@ public class PrincipalPageController {
 			// Save the result in a list
 			@SuppressWarnings("unchecked")
 			List<models.File> files = query.list();
-
+			
 			// Define the root item of treeview
 			TreeItem<String> rootItem = new TreeItem<>("Categories:",
 					new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 			ArrayList<Category> categories = new ArrayList<>();
 			ArrayList<Subcategory> subcategories = new ArrayList<>();
 			// If it is null make sure to be invalid
-			if (files.isEmpty()) {
-				System.out.println("It is empty");
-			} else {
+			if (!files.isEmpty()) {
 				boolean repeated = false;
 				// Get the subcategories
 				for (int i = 0; i < files.size(); i++) {
@@ -330,32 +333,33 @@ public class PrincipalPageController {
 	 */
 	private void selectItem() {
 		TreeItem<String> item = (TreeItem<String>) yourFilesTree.getSelectionModel().getSelectedItem();
-
-		/*
-		 * if (item != null) { System.out.println(item.getValue()); }
-		 */
+		if(item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
+			fileName = item.getValue();
+			openButton.setDisable(false);
+		}else {
+			openButton.setDisable(true);
+		}
 	}
-
+	
 	@FXML
-	/**
-	 * This method is used to logout
-	 * 
-	 * @param event
-	 */
-	private void logout(ActionEvent event) {
+	private void openFile(ActionEvent event) {		
 		// Get the screen information
 		Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		try {
 			// Define the window
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("../view/controllers/Login.fxml"));
+			loader.setLocation(MainApp.class.getResource("../view/controllers/FilePage.fxml"));
 			// This was to check if the path was good
-			// System.out.println(MainApp.class.getResource("../view/controllers/Login.fxml"));
+			// System.out.println(MainApp.class.getResource("../view/controllers/PrincipalPage.fxml"));
 			Parent root = loader.load();
 			Scene scene = new Scene(root);
 
+			stage.setUserData(user);
+			ToolBarController controller = loader.getController();
+			controller.recoverUserInfo(stage);
+			
 			// Load the app
-			stage.setTitle("Login");
+			stage.setTitle(fileName);
 			stage.setScene(scene);
 			stage.show();
 		} catch (Exception e) {

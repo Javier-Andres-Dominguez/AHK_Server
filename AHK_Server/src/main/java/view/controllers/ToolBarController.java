@@ -21,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import main.MainApp;
+import models.File;
 import models.User;
 
 public class ToolBarController {
@@ -74,7 +75,7 @@ public class ToolBarController {
 		usernameLabel.setText(user.getUserName());
 		setFirstScene();
 	}
-
+	
 	/**
 	 * This method gives the user information
 	 */
