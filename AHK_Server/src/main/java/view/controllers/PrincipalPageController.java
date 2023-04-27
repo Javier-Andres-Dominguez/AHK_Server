@@ -172,13 +172,13 @@ public class PrincipalPageController {
 		Session session = sf.openSession();
 		Query query = null;
 		// query.setMaxResults(10);
-
 		try {
 			// Execute the query and get the result
 			session.getTransaction().begin();
 
 			String hql = "FROM File f" + user.getUserId();
 			query = session.createQuery(hql);
+			query.setMaxResults(10);
 			// Save the result in a list
 			@SuppressWarnings("unchecked")
 			List<models.File> files = query.list();
