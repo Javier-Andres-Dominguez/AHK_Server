@@ -99,7 +99,7 @@ public class RegisterPageController {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("../view/controllers/Login.fxml"));
 			// This was to check if the path was good
-			System.out.println(MainApp.class.getResource("../view/controllers/Login.fxml"));
+			//System.out.println(MainApp.class.getResource("../view/controllers/Login.fxml"));
 			Parent root = loader.load();
 			Scene scene = new Scene(root);
 

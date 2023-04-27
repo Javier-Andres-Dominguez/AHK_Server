@@ -14,16 +14,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import main.MainApp;
 import models.Category;
+import models.File;
 import models.Subcategory;
 import models.User;
 
@@ -70,7 +68,8 @@ public class PrincipalPageController {
 			List<models.File> files = query.list();
 
 			// Define the root item of treeview
-			TreeItem<String> rootItem = new TreeItem<>("Categories:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+			TreeItem<String> rootItem = new TreeItem<>("Categories:",
+					new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 			ArrayList<Category> categories = new ArrayList<>();
 			ArrayList<Subcategory> subcategories = new ArrayList<>();
 			// If it is null make sure to be invalid
@@ -123,21 +122,24 @@ public class PrincipalPageController {
 			}
 
 			// For all categories:
-			for(int i = 0; i < categories.size(); i++) {
+			for (int i = 0; i < categories.size(); i++) {
 				// Create the tree category
-				TreeItem<String> treeCategory = new TreeItem<String>(categories.get(i).getCatName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+				TreeItem<String> treeCategory = new TreeItem<String>(categories.get(i).getCatName(),
+						new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 				// Check all the subcategories:
-				for(int n = 0; n < subcategories.size(); n++) {
+				for (int n = 0; n < subcategories.size(); n++) {
 					// If any belongs to the current category:
-					if(subcategories.get(n).getCategory().equals(categories.get(i))) {
+					if (subcategories.get(n).getCategory().equals(categories.get(i))) {
 						// Create the tree subcategory
-						TreeItem<String> treeSubcategory = new TreeItem<String>(subcategories.get(n).getSubName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+						TreeItem<String> treeSubcategory = new TreeItem<String>(subcategories.get(n).getSubName(),
+								new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 						// Check all the files:
-						for(int j = 0; j < files.size(); j++) {
+						for (int j = 0; j < files.size(); j++) {
 							// If any belongs to the current subcategory:
-							if(files.get(j).getSubcategory().equals(subcategories.get(n))) {
+							if (files.get(j).getSubcategory().equals(subcategories.get(n))) {
 								// Create the tree file
-								TreeItem<String> treeFile = new TreeItem<String>(files.get(j).getFileName(), new ImageView(new Image(getClass().getResourceAsStream("ahk.png"))));
+								TreeItem<String> treeFile = new TreeItem<String>(files.get(j).getFileName(),
+										new ImageView(new Image(getClass().getResourceAsStream("ahk.png"))));
 								// Add the file to the subcategory
 								treeSubcategory.getChildren().add(treeFile);
 							}
@@ -169,8 +171,8 @@ public class PrincipalPageController {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 		Query query = null;
-		//query.setMaxResults(10);
-		
+		// query.setMaxResults(10);
+
 		try {
 			// Execute the query and get the result
 			session.getTransaction().begin();
@@ -180,17 +182,19 @@ public class PrincipalPageController {
 			// Save the result in a list
 			@SuppressWarnings("unchecked")
 			List<models.File> files = query.list();
-			
+
 			// Define the root item of treeview
-			TreeItem<String> rootItem = new TreeItem<>("Popular files:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+			TreeItem<String> rootItem = new TreeItem<>("Popular files:",
+					new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 			// Assign the root item to the treeview
 			popularFilesTree.setRoot(rootItem);
 			// For all files from the result do:
-			for(int i = 0; i < files.size();i++) {
+			for (int i = 0; i < files.size(); i++) {
 				// Add them to the treeview
-				rootItem.getChildren().add(new TreeItem<String>(files.get(i).getFileName(), new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
+				rootItem.getChildren().add(new TreeItem<String>(files.get(i).getFileName(),
+						new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		// At the end:
@@ -207,29 +211,110 @@ public class PrincipalPageController {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 		Query query = null;
-		//query.setMaxResults(10);
-		
+		// query.setMaxResults(10);
+
 		try {
+			Boolean subcategoryRepeated = false;
+			Boolean categoryRepeated = false;
 			// Execute the query and get the result
 			session.getTransaction().begin();
-			String hql = "SELECT u.id.userSubscribed.userId FROM User_Subscribe_User u WHERE u.id.subscribedToUser.userId =" + user.getUserId();
+			String hql = "SELECT u.id FROM User_Subscribe_User u WHERE u.id.userSubscribed = " + user.getUserId();
 			query = session.createQuery(hql);
 			// Save the result in a list
 			@SuppressWarnings("unchecked")
-			//List<models.File> files = query.list();
-			List<models.User> users = query.list();
-			System.out.println(users);
+			// List of the combined users id
+			List<models.User_Subscribe_UserId> bothUsers = query.list();
+			// List of the user that the current user is subscribed to
+			User user;
+			File file;
+			Subcategory subcategory;
+			Category category;
+			ArrayList<Subcategory> subcategories = new ArrayList<>();
+			ArrayList<Category> categories = new ArrayList<>();
+			// List of the files that the users has
+			List<models.File> subscribedToUsersFiles;
 			// Define the root item of treeview
-			TreeItem<String> rootItem = new TreeItem<>("Popular files:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+			TreeItem<String> rootItem = new TreeItem<>("Users:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+			TreeItem<String> treeFileItem = null;
+			TreeItem<String> treeSubcategoryItem = null;
+			TreeItem<String> treeCategoryItem = null;
+			TreeItem<String> treeUserItem = null;
 			// Assign the root item to the treeview
-			popularFilesTree.setRoot(rootItem);
-			// For all files from the result do:
-			for(int i = 0; i < users.size();i++) {
-				// Add them to the treeview
-				//rootItem.getChildren().add(new TreeItem<String>(files.get(i).getFileName(), new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
-				rootItem.getChildren().add(new TreeItem<String>(users.get(i).getUserName(), new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
+			subscriptionFilesTree.setRoot(rootItem);
+			// Generate a list of the users that the user is subscribed to:
+			for (int i = 0; i < bothUsers.size(); i++) {
+				// Define the user
+				user = bothUsers.get(i).getSubscribedToUser();
+
+				// Save the user into a treeview item
+				treeUserItem = new TreeItem<>(user.getUserName(), new ImageView(new Image(getClass().getResourceAsStream("user.png"))));
+				
+				// Get a list of all the files that the user has
+				hql = "FROM File f WHERE f.user.userId = " + user.getUserId();
+				query = session.createQuery(hql);
+				// Save the query result into the list
+				subscribedToUsersFiles = query.list();
+
+				// For all the files:
+				for (int j = 0; j < subscribedToUsersFiles.size(); j++) {
+					// Define the file
+					file = subscribedToUsersFiles.get(i);
+					// Define the file treeview
+					treeFileItem = new TreeItem<>(file.getFileName(), new ImageView(new Image(getClass().getResourceAsStream("ahk.png"))));
+					// Get the file subcategory
+					subcategory = file.getSubcategory();
+					// Compare with all the subcategories
+					for(int n = 0; n < subcategories.size(); n++) {
+						// Don´t check the first subcategory
+						if(n == 0) {
+							// Do nothing
+						}else {
+							// Check if it is repeated
+							if(subcategory.equals(subcategories.get(n))) {
+								subcategoryRepeated = true;
+							}
+						}
+					}
+					// If after the check is not repeated:
+					if(!subcategoryRepeated) {
+						// Save it and add it to the treeview
+						subcategories.add(subcategory);
+						treeSubcategoryItem = new TreeItem<>(subcategory.getSubName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+						// Add the file to it´s subcategory
+						treeSubcategoryItem.getChildren().add(treeFileItem);
+					}
+					// Reset to the default value
+					subcategoryRepeated = false;
+					// Define the category
+					category = subcategory.getCategory();
+					// Compare with all the categories
+					for(int n = 0; n < categories.size(); n++) {
+						// Don´t check the first category
+						if(n == 0) {
+							// Do nothing
+						}else {
+							// Check if it is repeated
+							if(category.equals(categories.get(n))) {
+								categoryRepeated = true;
+							}
+						}
+					}
+					// If after the check is not repeated:
+					if(!categoryRepeated) {
+						// Save it and add it to the treeview
+						categories.add(category);
+						treeCategoryItem = new TreeItem<>(category.getCatName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+						// Add the subcategory to it´s category
+						treeCategoryItem.getChildren().add(treeSubcategoryItem);
+						treeUserItem.getChildren().add(treeCategoryItem);
+					}
+					// Reset to the default value
+					categoryRepeated = false;
+				}
+				// Add the item to the treeview root
+				rootItem.getChildren().add(treeUserItem);
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		// At the end:
@@ -238,7 +323,7 @@ public class PrincipalPageController {
 			sf.close();
 		}
 	}
-	
+
 	@FXML
 	/**
 	 * This method is called when you select an item from the treeview
@@ -246,9 +331,9 @@ public class PrincipalPageController {
 	private void selectItem() {
 		TreeItem<String> item = (TreeItem<String>) yourFilesTree.getSelectionModel().getSelectedItem();
 
-		if (item != null) {
-			System.out.println(item.getValue());
-		}
+		/*
+		 * if (item != null) { System.out.println(item.getValue()); }
+		 */
 	}
 
 	@FXML
