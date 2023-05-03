@@ -10,16 +10,11 @@ import org.hibernate.cfg.Configuration;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 import main.MainApp;
 import models.Category;
 import models.File;
@@ -210,6 +205,7 @@ public class PrincipalPageController {
 	/**
 	 * This method fills the popular files pane with files
 	 */
+	@SuppressWarnings("unchecked")
 	private void fillSubscriptionFiles() {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
@@ -224,7 +220,6 @@ public class PrincipalPageController {
 			String hql = "SELECT u.id FROM User_Subscribe_User u WHERE u.id.userSubscribed = " + user.getUserId();
 			query = session.createQuery(hql);
 			// Save the result in a list
-			@SuppressWarnings("unchecked")
 			// List of the combined users id
 			List<models.User_Subscribe_UserId> bothUsers = query.list();
 			// List of the user that the current user is subscribed to
@@ -333,7 +328,7 @@ public class PrincipalPageController {
 	 */
 	private void selectItem() {
 		TreeItem<String> item = (TreeItem<String>) yourFilesTree.getSelectionModel().getSelectedItem();
-		if(item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
+		if(!(item==null) && item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
 			fileName = item.getValue();
 			openButton.setDisable(false);
 		}else {
@@ -342,28 +337,36 @@ public class PrincipalPageController {
 	}
 	
 	@FXML
-	private void openFile(ActionEvent event) {		
+	private void openFile(ActionEvent event) {
+		SessionFactory sf = new Configuration().configure().buildSessionFactory();
+		Session session = sf.openSession();
+		Query query = null;
 		// Get the screen information
-		Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		try {
-			// Define the window
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("../view/controllers/FilePage.fxml"));
-			// This was to check if the path was good
-			// System.out.println(MainApp.class.getResource("../view/controllers/PrincipalPage.fxml"));
-			Parent root = loader.load();
-			Scene scene = new Scene(root);
+			// Execute the query and get the result
+			session.getTransaction().begin();
 
-			stage.setUserData(user);
-			ToolBarController controller = loader.getController();
-			controller.recoverUserInfo(stage);
+			String hql = "FROM File f WHERE f.user.userId = " + user.getUserId() + " AND f.fileName = '" + fileName + "'";
+			query = session.createQuery(hql);
+			// Save the result
+			@SuppressWarnings("unchecked")
+			List<models.File> file = query.list();
+			MainApp.file = file.get(0);
+			MainApp.toolBarController.openFile();
+			
+			
+			/*stage.setUserData(user);
 			
 			// Load the app
-			stage.setTitle(fileName);
-			stage.setScene(scene);
-			stage.show();
+			stage.setTitle("FilePage");
+			stage.show();*/
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		// At the end:
+		finally {
+			session.close();
+			sf.close();
 		}
 	}
 

@@ -15,6 +15,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import main.MainApp;
 import models.File;
 import models.Subcategory;
 import models.User;
@@ -40,21 +41,21 @@ public class FilePageController {
 	}
 
 	@FXML
-	private void initializate() {
-		// Get the information of the user that logs in
-		ToolBarController toolBarController = new ToolBarController();
-		//file = toolBarController.getFileInfo();
+	private void initialize() {
+		file = MainApp.file;
 		user = file.getUser();
 		fillFileInfo();
+		fillOtherFilesTreeItem();
 	}
 
 	/**
 	 * This method fills the file top information
 	 */
 	private void fillFileInfo() {
-		userNameLabel.setText(user.getUserName());
-		fileNameLabel.setText(file.getFileName());
+		userNameLabel.setText("User: " + user.getUserName());
+		fileNameLabel.setText("File: " + file.getFileName());
 		fileDescriptionTextField.setText(file.getFileDes());
+		fileDescriptionTextField.setEditable(false);
 	}
 
 	/**
@@ -74,16 +75,19 @@ public class FilePageController {
 			// Execute the query and get the result
 			session.getTransaction().begin();
 
-			String hql = "FROM File f WHERE f.subcategory =" + subcategory;
+			String hql = "FROM File f WHERE f.subcategory.subName = '" + subcategory.getSubName() + "'";
 			query = session.createQuery(hql);
 			// Save the result in a list
 			@SuppressWarnings("unchecked")
 			List<models.File> filesList = query.list();
 			// For all the files:
 			for (int i = 0; i < filesList.size(); i++) {
-				rootItem.getChildren().add(new TreeItem<String> (filesList.get(i).getFileName(),
-						new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
+				if(filesList.get(i).getFileId()!=file.getFileId()) {
+					rootItem.getChildren().add(new TreeItem<String> (filesList.get(i).getFileName(),
+							new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
+				}
 			}
+			otherFilesTreeView.setRoot(rootItem);
 		}
 		// If there is any error Inform in the screen
 		catch (Exception e) {

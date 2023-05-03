@@ -61,9 +61,11 @@ public class LoginController {
 			// And the credentials are good:
 			if (checkCredentials()) {
 				errorLabel.setText("Wellcome back");
+				// Save the user into the main
 				user = new User();
 				user.setUserId(userId);
 				user.setUserName(usernameField.getText());
+				MainApp.user = user;
 				changeView(event);
 			}
 			// If the credentials don´t match
@@ -126,8 +128,8 @@ public class LoginController {
 			Scene scene = new Scene(root);
 
 			stage.setUserData(user);
-			ToolBarController controller = loader.getController();
-			controller.recoverUserInfo(stage);
+			MainApp.toolBarController = loader.getController();
+			MainApp.toolBarController.recoverUserInfo(stage);
 			
 			// Load the app
 			stage.setTitle("PrincipalPage");

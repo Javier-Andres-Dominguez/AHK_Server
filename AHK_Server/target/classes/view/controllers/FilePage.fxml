@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.FilePageController">
    <children>
       <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -31,7 +30,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <TextField prefHeight="100.0" prefWidth="900.0" />
+                  <TextField fx:id="fileDescriptionTextField" prefHeight="100.0" prefWidth="900.0" />
                </children>
             </VBox>
             <HBox prefHeight="500.0" prefWidth="900.0">

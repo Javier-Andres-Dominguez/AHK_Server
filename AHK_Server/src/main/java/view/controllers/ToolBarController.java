@@ -92,14 +92,10 @@ public class ToolBarController {
 		FXMLLoader loader = null;
 		// Define the pane where the view will be
 		Pane newPane = null;
-		// Check if the user is admin
-		if (isAdmin()) {
-			loader = new FXMLLoader(MainApp.class.getResource("../view/controllers/PrincipalPage.fxml"));
-			notAdminButtons();
-		}else {
-			loader = new FXMLLoader(MainApp.class.getResource("../view/controllers/PrincipalPage.fxml"));
-			adminButtons();
-		}
+		// Establish the first view
+		loader = new FXMLLoader(MainApp.class.getResource("../view/controllers/PrincipalPage.fxml"));
+		// Assign the buttons
+		buttons();
 		// Set the buttons to navigate between the views
 		setButtons();
 
@@ -142,46 +138,18 @@ public class ToolBarController {
 	}
 
 	/**
-	 * This method checks if the user is admin
-	 * @return
+	 * This method assigns the buttons
 	 */
-	private boolean isAdmin() {
-
-		if(user.getUserId()==1) {
-			return true;
-		}else {
-			return false;
-		}
-	}
-
-	/**
-	 * This method assigns the admin buttons
-	 */
-	private void adminButtons() {
+	private void buttons() {
 		buttons = new Hyperlink[2];
 		for (int i = 0; i < buttons.length; i++) {
 			buttons[i] = new Hyperlink();
 		}
 		buttons[0].setText("Home");
-		buttons[0].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("view/controllers/PrincipalPage.fxml"));
+		buttons[0].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("../view/controllers/PrincipalPage.fxml"));
 		buttons[0].setDisable(true);
-		buttons[0].setText("Search");
-		buttons[0].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("view/controllers/PrincipalPage.fxml"));
-	}
-
-	/**
-	 * This method assigns the non-admin buttons
-	 */
-	private void notAdminButtons() {
-		buttons = new Hyperlink[2];
-		for (int i = 0; i < buttons.length; i++) {
-			buttons[i] = new Hyperlink();
-		}
-		buttons[0].setText("Home");
-		buttons[0].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("view/controllers/PrincipalPage.fxml"));
-		buttons[0].setDisable(true);
-		buttons[0].setText("Search");
-		buttons[0].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("view/controllers/PrincipalPage.fxml"));
+		buttons[1].setText("Search");
+		buttons[1].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("../view/controllers/PrincipalPage.fxml"));
 	}
 
 	/**
@@ -223,7 +191,6 @@ public class ToolBarController {
 			// System.out.println(MainApp.class.getResource("../view/controllers/Login.fxml"));
 			Parent root = loader.load();
 			Scene scene = new Scene(root);
-
 			// Load the app
 			stage.setTitle("Login");
 			stage.setScene(scene);
@@ -232,4 +199,22 @@ public class ToolBarController {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Make all buttons enabled
+	 */
+	private void setButtonsEnabled() {
+		for(int i = 0; i<buttonHBox.getChildren().size();i++){
+			buttonHBox.getChildren().get(i).setDisable(false);
+		}
+	}
+	
+	/**
+	 * This method is used when a file is opened
+	 */
+	public void openFile() {
+		changeScene("../view/controllers/FilePage.fxml");
+		setButtonsEnabled();
+	}
+	
 }

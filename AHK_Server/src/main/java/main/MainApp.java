@@ -6,16 +6,24 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import models.File;
+import models.User;
+import view.controllers.ToolBarController;
 
 public class MainApp extends Application{
 
 	private Stage primaryStage;
+	// This is used to take account of the File opened in the PrimaryPage
+	public static File file;
+	// This is used to take account of the User that logged in
+	public static User user;
+	// This is used to communicate between views and the toolbar
+	public static ToolBarController toolBarController;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Login");
-		
 		initRootLayout();
 	}
 
