@@ -2,6 +2,11 @@ package view.controllers;
 
 import java.io.IOException;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -213,7 +218,33 @@ public class ToolBarController {
 	 * This method is used when a file is opened
 	 */
 	public void openFile() {
+		// Update increment the view number
+		SessionFactory sf = new Configuration().configure().buildSessionFactory();
+		Session session = sf.openSession();
+		try {
+			File file = new File();
+			MainApp.selectedFile.setViews(MainApp.selectedFile.getViews()+1);
+			session.update(MainApp.selectedFile);
+		}
+		// If there is any error Inform in the screen
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		// At the end:
+		finally {
+			session.flush();
+			session.close();
+			sf.close();
+		}
 		changeScene("../view/controllers/FilePage.fxml");
+		setButtonsEnabled();
+	}
+	
+	/**
+	 * This method is used when a user is opened
+	 */
+	public void openUser() {
+		changeScene("../view/controllers/UserPage.fxml");
 		setButtonsEnabled();
 	}
 	

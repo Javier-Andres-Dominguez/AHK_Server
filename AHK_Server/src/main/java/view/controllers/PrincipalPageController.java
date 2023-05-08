@@ -26,14 +26,21 @@ public class PrincipalPageController {
 	@FXML
 	private TreeView<String> yourFilesTree;
 	@FXML
-	private TreeView<String> subscriptionFilesTree;
-	@FXML
 	private TreeView<String> popularFilesTree;
+	@FXML
+	private TreeView<String> subscriptionFilesTree;
 	@FXML
 	private Button openButton;
 
-	private String fileName;
-	private User user;
+	private User loggedUser;
+	private String fileSelected;
+	private String userSelected;
+	private String typeOfFile;
+	private String userOrFile;
+	private List<models.File> yourFiles;
+	private List<models.File> popularFiles;
+	private List<models.File> subscriptionFiles;
+	private List<models.User> subscriptionUsers;
 
 	public PrincipalPageController() {
 
@@ -43,7 +50,7 @@ public class PrincipalPageController {
 	private void initialize() {
 		// Get the information of the user that logs in
 		ToolBarController toolBarController = new ToolBarController();
-		user = toolBarController.getUserInfo();
+		loggedUser = toolBarController.getUserInfo();
 		fillYourFiles();
 		fillPopularFiles();
 		fillSubscriptionFiles();
@@ -58,14 +65,14 @@ public class PrincipalPageController {
 		Session session = sf.openSession();
 		Query query = null;
 		try {
-			// Execute the query and get the result
 			session.getTransaction().begin();
-
-			String hql = "FROM File f WHERE f.user.userId=" + user.getUserId();
+			
+			String hql = "FROM File f WHERE f.user.userId=" + loggedUser.getUserId();
 			query = session.createQuery(hql);
 			// Save the result in a list
 			@SuppressWarnings("unchecked")
-			List<models.File> files = query.list();
+			List<models.File> yourFiles = query.list();
+			this.yourFiles = yourFiles;
 			
 			// Define the root item of treeview
 			TreeItem<String> rootItem = new TreeItem<>("Categories:",
@@ -73,24 +80,24 @@ public class PrincipalPageController {
 			ArrayList<Category> categories = new ArrayList<>();
 			ArrayList<Subcategory> subcategories = new ArrayList<>();
 			// If it is null make sure to be invalid
-			if (!files.isEmpty()) {
+			if (!yourFiles.isEmpty()) {
 				boolean repeated = false;
 				// Get the subcategories
-				for (int i = 0; i < files.size(); i++) {
+				for (int i = 0; i < yourFiles.size(); i++) {
 					// Do not check the first subcategory
 					if (i == 0) {
 						// Add the subcategory
-						subcategories.add(files.get(i).getSubcategory());
+						subcategories.add(yourFiles.get(i).getSubcategory());
 					} else {
 						// Compare with all subcategories saved
 						for (int n = 0; n < subcategories.size(); n++) {
-							if (files.get(i).getSubcategory().equals(subcategories.get(n))) {
+							if (yourFiles.get(i).getSubcategory().equals(subcategories.get(n))) {
 								repeated = true;
 							}
 						}
 						// If after all the check it is not repeated, add it
 						if (!repeated) {
-							subcategories.add(files.get(i).getSubcategory());
+							subcategories.add(yourFiles.get(i).getSubcategory());
 						}
 						// Reset the value
 						repeated = false;
@@ -132,11 +139,11 @@ public class PrincipalPageController {
 						TreeItem<String> treeSubcategory = new TreeItem<String>(subcategories.get(n).getSubName(),
 								new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 						// Check all the files:
-						for (int j = 0; j < files.size(); j++) {
+						for (int j = 0; j < yourFiles.size(); j++) {
 							// If any belongs to the current subcategory:
-							if (files.get(j).getSubcategory().equals(subcategories.get(n))) {
+							if (yourFiles.get(j).getSubcategory().equals(subcategories.get(n))) {
 								// Create the tree file
-								TreeItem<String> treeFile = new TreeItem<String>(files.get(j).getFileName(),
+								TreeItem<String> treeFile = new TreeItem<String>(yourFiles.get(j).getFileName(),
 										new ImageView(new Image(getClass().getResourceAsStream("ahk.png"))));
 								// Add the file to the subcategory
 								treeSubcategory.getChildren().add(treeFile);
@@ -163,7 +170,7 @@ public class PrincipalPageController {
 	}
 
 	/**
-	 * This method fills the popular files pane with files
+	 * This method fills the popular files pane with popular files
 	 */
 	private void fillPopularFiles() {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
@@ -175,11 +182,14 @@ public class PrincipalPageController {
 			// Execute the query and get the result
 			session.getTransaction().begin();
 
-			String hql = "FROM File f" + user.getUserId();
+			String hql = "FROM File f";
+			//String hql = "FROM File f ORDER BY f.views";
 			query = session.createQuery(hql);
 			// Save the result in a list
 			@SuppressWarnings("unchecked")
-			List<models.File> files = query.list();
+			List<models.File> popularFiles = query.list();
+			// Save the result in a variable to access it from another method later
+			this.popularFiles = popularFiles;
 
 			// Define the root item of treeview
 			TreeItem<String> rootItem = new TreeItem<>("Popular files:",
@@ -187,9 +197,9 @@ public class PrincipalPageController {
 			// Assign the root item to the treeview
 			popularFilesTree.setRoot(rootItem);
 			// For all files from the result do:
-			for (int i = 0; i < files.size(); i++) {
+			for (int i = 0; i < popularFiles.size(); i++) {
 				// Add them to the treeview
-				rootItem.getChildren().add(new TreeItem<String>(files.get(i).getFileName(),
+				rootItem.getChildren().add(new TreeItem<String>(i+1+"-."+popularFiles.get(i).getFileName(),
 						new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
 			}
 		} catch (Exception e) {
@@ -217,7 +227,7 @@ public class PrincipalPageController {
 			Boolean categoryRepeated = false;
 			// Execute the query and get the result
 			session.getTransaction().begin();
-			String hql = "SELECT u.id FROM User_Subscribe_User u WHERE u.id.userSubscribed = " + user.getUserId();
+			String hql = "SELECT u.id FROM User_Subscribe_User u WHERE u.id.userSubscribed = " + loggedUser.getUserId();
 			query = session.createQuery(hql);
 			// Save the result in a list
 			// List of the combined users id
@@ -252,6 +262,7 @@ public class PrincipalPageController {
 				query = session.createQuery(hql);
 				// Save the query result into the list
 				subscribedToUsersFiles = query.list();
+				this.subscriptionFiles = subscribedToUsersFiles;
 
 				// For all the files:
 				for (int j = 0; j < subscribedToUsersFiles.size(); j++) {
@@ -324,49 +335,117 @@ public class PrincipalPageController {
 
 	@FXML
 	/**
-	 * This method is called when you select an item from the treeview
+	 * This method is called when you select an item from your files
 	 */
-	private void selectItem() {
+	private void selectItemFromYourFiles() {
+		typeOfFile = "YourFiles";
 		TreeItem<String> item = (TreeItem<String>) yourFilesTree.getSelectionModel().getSelectedItem();
-		if(!(item==null) && item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
-			fileName = item.getValue();
+		// If the selected item is a file:
+		if(item!=null && item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
+			fileSelected = item.getValue();
+			openButton.setText("Open file");
 			openButton.setDisable(false);
-		}else {
+		}
+		// Else is a folder
+		else {
+			openButton.setDisable(true);
+		}
+	}
+
+	@FXML
+	/**
+	 * This method is called when you select an item from your files
+	 */
+	private void selectItemFromPopularFiles() {
+		typeOfFile = "PopularFiles";
+		TreeItem<String> item = (TreeItem<String>) popularFilesTree.getSelectionModel().getSelectedItem();
+		// If the selected item is a file:
+		if(item!=null && item.getChildren().isEmpty() && !item.getValue().equals("Popular files:")) {
+			int end = item.getValue().indexOf('.');
+			fileSelected = item.getValue().substring(0, end-1);
+			openButton.setText("Open file");
+			openButton.setDisable(false);
+		}
+		// Else is a folder
+		else {
+			openButton.setDisable(true);
+		}
+	}
+
+	@FXML
+	/**
+	 * This method is called when you select an item from your files. And it is used to assign that file or user and enable the button
+	 */
+	private void selectItemFromSubscriptionFiles() {
+		typeOfFile = "SubscriptionFiles";
+		TreeItem<String> item = (TreeItem<String>) subscriptionFilesTree.getSelectionModel().getSelectedItem();
+		// If the selected item is a user:
+		if(item!=null && item.getParent()!=null && item.getParent().getValue().equals("Users:")){
+			userOrFile = "User";
+			userSelected = item.getValue();
+			openButton.setText("Open user");
+			openButton.setDisable(false);
+		}
+		// If the selected item is a file:
+		else if(item!=null && item.getChildren().isEmpty() && !item.getValue().equals("Users:")) {
+			userOrFile = "File";
+			fileSelected = item.getValue();
+			openButton.setText("Open file");
+			openButton.setDisable(false);
+		}
+		// If the selected item is a category or subcategory:
+		else {
 			openButton.setDisable(true);
 		}
 	}
 	
 	@FXML
-	private void openFile(ActionEvent event) {
-		SessionFactory sf = new Configuration().configure().buildSessionFactory();
-		Session session = sf.openSession();
-		Query query = null;
-		// Get the screen information
-		try {
-			// Execute the query and get the result
-			session.getTransaction().begin();
-
-			String hql = "FROM File f WHERE f.user.userId = " + user.getUserId() + " AND f.fileName = '" + fileName + "'";
-			query = session.createQuery(hql);
-			// Save the result
-			@SuppressWarnings("unchecked")
-			List<models.File> file = query.list();
-			MainApp.file = file.get(0);
-			MainApp.toolBarController.openFile();
-			
-			
-			/*stage.setUserData(user);
-			
-			// Load the app
-			stage.setTitle("FilePage");
-			stage.show();*/
-		} catch (Exception e) {
-			e.printStackTrace();
+	/**
+	 * This method is used to open an item
+	 * @param event
+	 */
+	private void openItem(ActionEvent event) {
+		// If the item is 1 of your files:
+		if(typeOfFile.equals("YourFiles")) {
+			// Check all the files
+			for(int i = 0; i <yourFiles.size(); i++) {
+				// If the file is the selected:
+				if(yourFiles.get(i).getFileName().equals(fileSelected)) {
+					MainApp.selectedFile = yourFiles.get(i);
+					MainApp.toolBarController.openFile();
+				}
+			}
 		}
-		// At the end:
-		finally {
-			session.close();
-			sf.close();
+		// If the item is a popular file:
+		else if(typeOfFile.equals("PopularFiles")) {
+			
+			MainApp.selectedFile = popularFiles.get(Integer.parseInt(fileSelected)-1);
+			MainApp.toolBarController.openFile();
+		}
+		// If the item is a From subscription tree:
+		else if(typeOfFile.equals("SubscriptionFiles")){
+			// If the item is a File:
+			if(userOrFile.equals("File")) {
+				// Check all the files
+				for(int i = 0; i <subscriptionFiles.size(); i++) {
+					// If the file is the selected:
+					if(subscriptionFiles.get(i).getFileName().equals(fileSelected)) {
+						MainApp.selectedFile = subscriptionFiles.get(i);
+						MainApp.toolBarController.openFile();
+					}
+				}
+			}
+			// If the item is a User:
+			else if(userOrFile.equals("User")) {
+				// Check all the files
+				for(int i = 0; i <subscriptionFiles.size(); i++) {
+					// If the user is the selected:
+					if(subscriptionUsers.get(i).getUserName().equals(userSelected)) {
+						MainApp.selectedUser = subscriptionUsers.get(i);
+						MainApp.toolBarController.openFile();
+					}
+				}
+			}
 		}
 	}
 

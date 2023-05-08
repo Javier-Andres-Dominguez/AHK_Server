@@ -13,10 +13,12 @@ import view.controllers.ToolBarController;
 public class MainApp extends Application{
 
 	private Stage primaryStage;
-	// This is used to take account of the File opened in the PrimaryPage
-	public static File file;
+	// This is used to take account of the User selected to open a file page
+	public static File selectedFile;
 	// This is used to take account of the User that logged in
-	public static User user;
+	public static User loggedUser;
+	// This is used to take account of the User selected to open a user page
+	public static User selectedUser;
 	// This is used to communicate between views and the toolbar
 	public static ToolBarController toolBarController;
 	

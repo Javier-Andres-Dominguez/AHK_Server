@@ -65,7 +65,7 @@ public class LoginController {
 				user = new User();
 				user.setUserId(userId);
 				user.setUserName(usernameField.getText());
-				MainApp.user = user;
+				MainApp.loggedUser = user;
 				changeView(event);
 			}
 			// If the credentials don´t match

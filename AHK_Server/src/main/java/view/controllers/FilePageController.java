@@ -29,6 +29,8 @@ public class FilePageController {
 	@FXML
 	private Label fileNameLabel;
 	@FXML
+	private Label viewsLabel;
+	@FXML
 	private TextField fileDescriptionTextField;
 	@FXML
 	private TreeView<String> otherFilesTreeView;
@@ -42,7 +44,7 @@ public class FilePageController {
 
 	@FXML
 	private void initialize() {
-		file = MainApp.file;
+		file = MainApp.selectedFile;
 		user = file.getUser();
 		fillFileInfo();
 		fillOtherFilesTreeItem();
@@ -54,6 +56,7 @@ public class FilePageController {
 	private void fillFileInfo() {
 		userNameLabel.setText("User: " + user.getUserName());
 		fileNameLabel.setText("File: " + file.getFileName());
+		viewsLabel.setText("Number of views: " + file.getViews());
 		fileDescriptionTextField.setText(file.getFileDes());
 		fileDescriptionTextField.setEditable(false);
 	}
