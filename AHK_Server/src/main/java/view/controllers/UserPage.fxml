@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.UserPageController">
+   <children>
+      <VBox alignment="CENTER" layoutX="388.0" layoutY="119.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox prefWidth="900.0" spacing="200.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <ImageView fx:id="userImageView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </ImageView>
+                  <VBox alignment="CENTER" spacing="15.0">
+                     <children>
+                        <Label fx:id="userNameLabel" text="UserName" />
+                        <Label fx:id="numberOfFilesLabel" text="NumberOfFiles" />
+                        <TextField fx:id="userBiographyTextField" prefHeight="125.0" prefWidth="500.0" text="UserBiography" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <ScrollPane prefHeight="300.0" prefWidth="900.0">
+               <content>
+                  <TreeView fx:id="userFilesTreeView" prefHeight="655.0" prefWidth="3000.0" />
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

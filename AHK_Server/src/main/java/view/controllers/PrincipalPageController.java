@@ -40,7 +40,7 @@ public class PrincipalPageController {
 	private List<models.File> yourFiles;
 	private List<models.File> popularFiles;
 	private List<models.File> subscriptionFiles;
-	private List<models.User> subscriptionUsers;
+	private List<models.User> subscriptionUsers = new ArrayList<models.User>();
 
 	public PrincipalPageController() {
 
@@ -253,7 +253,8 @@ public class PrincipalPageController {
 			for (int i = 0; i < bothUsers.size(); i++) {
 				// Define the user
 				user = bothUsers.get(i).getSubscribedToUser();
-
+				subscriptionUsers.add(user);
+				
 				// Save the user into a treeview item
 				treeUserItem = new TreeItem<>(user.getUserName(), new ImageView(new Image(getClass().getResourceAsStream("user.png"))));
 				
@@ -442,7 +443,7 @@ public class PrincipalPageController {
 					// If the user is the selected:
 					if(subscriptionUsers.get(i).getUserName().equals(userSelected)) {
 						MainApp.selectedUser = subscriptionUsers.get(i);
-						MainApp.toolBarController.openFile();
+						MainApp.toolBarController.openUser();
 					}
 				}
 			}
