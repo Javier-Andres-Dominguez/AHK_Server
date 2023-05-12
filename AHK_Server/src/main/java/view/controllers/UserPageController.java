@@ -16,6 +16,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import main.MainApp;
 import models.Category;
 import models.File;
@@ -25,7 +26,7 @@ import models.User;
 public class UserPageController {
 
 	@FXML
-	private ImageView userImageView;
+	private VBox userImageVBox;
 	@FXML
 	private Label userNameLabel;
 	@FXML
@@ -44,7 +45,7 @@ public class UserPageController {
 
 	@FXML
 	private void initialize() {
-		userImageView = new ImageView(new Image(getClass().getResourceAsStream("user.png")));
+		userImageVBox.getChildren().add(new ImageView(new Image(getClass().getResourceAsStream("user.png"))));
 		user = MainApp.selectedUser;
 		getUserFiles();
 		fillUserInfo();
