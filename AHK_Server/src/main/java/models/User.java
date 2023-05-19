@@ -22,6 +22,10 @@ public class User implements Serializable {
 	private String userPas;
 	@Column(name = "UserGma")
 	private String userGma;
+	@Column(name = "UserBio")
+	private String userBio;
+	@Column(name = "UserImg")
+	private String userImg;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Commentary> commentary = new HashSet<Commentary>(0);
@@ -48,13 +52,15 @@ public class User implements Serializable {
 		this.userGma = userGma;
 	}
 
-	public User(int userId, String userName, String userPas, String userGma, Set<Commentary> commentary, Set<File> file,
-			Set<Category> category, Set<Subcategory> subcategory/*, Set<User_Subscribe_User> subscribedUser, Set<User_Subscribe_User> subscribedToUser*/) {
+	public User(int userId, String userName, String userPas, String userGma, String userBio, String userImg, Set<Commentary> commentary, Set<File> file,
+			Set<Category> category, Set<Subcategory> subcategory, Set<User_Subscribe_User> subscribedUser, Set<User_Subscribe_User> subscribedToUser) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
 		this.userPas = userPas;
 		this.userGma = userGma;
+		this.userBio = userBio;
+		this.userImg = userImg;
 		this.commentary = commentary;
 		this.file = file;
 		this.category = category;
@@ -94,6 +100,22 @@ public class User implements Serializable {
 	public void setUserGma(String userGma) {
 		this.userGma = userGma;
 	}
+	
+	public String getUserBio() {
+		return userBio;
+	}
+
+	public void setUserBio(String userBio) {
+		this.userBio = userBio;
+	}
+
+	public String getUserImg() {
+		return userImg;
+	}
+
+	public void setUserImg(String userImg) {
+		this.userImg = userImg;
+	}
 
 	public Set<Commentary> getCommentary() {
 		return commentary;
@@ -127,7 +149,7 @@ public class User implements Serializable {
 		this.subcategory = subcategory;
 	}
 
-	/*public Set<User_Subscribe_User> getSubscribedUser() {
+	public Set<User_Subscribe_User> getSubscribedUser() {
 		return subscribedUser;
 	}
 
@@ -141,5 +163,5 @@ public class User implements Serializable {
 
 	public void setSubscribedToUser(Set<User_Subscribe_User> subscribedToUser) {
 		this.subscribedToUser = subscribedToUser;
-	}*/
+	}
 }
