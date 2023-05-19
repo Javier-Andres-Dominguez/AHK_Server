@@ -62,9 +62,6 @@ public class LoginController {
 			if (checkCredentials()) {
 				errorLabel.setText("Wellcome back");
 				// Save the user into the main
-				user = new User();
-				user.setUserId(userId);
-				user.setUserName(usernameField.getText());
 				MainApp.loggedUser = user;
 				changeView(event);
 			}
@@ -176,20 +173,22 @@ public class LoginController {
 		try {
 			// Execute the query and get the result
 			session.getTransaction().begin();
-			String hql = "SELECT u.userId FROM User u WHERE u.userName='" + usernameField.getText()
+
+			String hql = "FROM User u WHERE u.userName='" + usernameField.getText()
 					+ "' AND u.userPas='" + passwordField.getText() + "'";
 
 			query = session.createQuery(hql);
 
 			// Save the result in a list
-			List<Integer> queryResult = query.list();
+			List<User> queryResult = query.list();
 			// If it is null make sure to be invalid
 			if (queryResult.isEmpty()) {
 				// Assign the list information
 				userId = 0;
 			}else {
 				// Assign the list information
-				userId = queryResult.get(0);
+				user = queryResult.get(0);
+				userId = user.getUserId();
 			}
 
 		}

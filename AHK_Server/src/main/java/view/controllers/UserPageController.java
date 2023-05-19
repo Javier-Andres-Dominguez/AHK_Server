@@ -38,6 +38,7 @@ public class UserPageController {
 
 	private List<models.File> userFiles;
 	private User user;
+	private String imageUrl;
 
 	public UserPageController() {
 
@@ -45,7 +46,6 @@ public class UserPageController {
 
 	@FXML
 	private void initialize() {
-		userImageVBox.getChildren().add(new ImageView(new Image(getClass().getResourceAsStream("user.png"))));
 		user = MainApp.selectedUser;
 		getUserFiles();
 		fillUserInfo();
@@ -57,8 +57,21 @@ public class UserPageController {
 	private void fillUserInfo() {
 		userNameLabel.setText("User: " + user.getUserName());
 		numberOfFilesLabel.setText("Files: " + userFiles.size());
-		userBiographyTextField.setText("Biographyyyyyyyyyyyyyyyyy"/*user.getBiography()*/);
+		userBiographyTextField.setText(user.getUserBio());
 		userBiographyTextField.setEditable(false);
+		imageUrl = user.getUserImg();
+		ImageView imgView = null;
+		// Check if the user has an image for the profile or use the default one
+		if(imageUrl!=null) {
+			// Assign the it´s own image
+			imgView = new ImageView(new Image(imageUrl));
+		}else {
+			// Assign the default image
+			imgView = new ImageView(new Image(getClass().getResourceAsStream("user.png")));
+		}
+		imgView.setFitHeight(200);
+		imgView.setFitWidth(200);
+		userImageVBox.getChildren().add(imgView);
 		fillUserFileListTreeView();
 	}
 

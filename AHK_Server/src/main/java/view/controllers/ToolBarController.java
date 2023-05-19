@@ -24,6 +24,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import main.MainApp;
 import models.File;
@@ -31,6 +33,9 @@ import models.User;
 
 public class ToolBarController {
 
+	@FXML
+	private Circle userImageCircle;
+	
 	@FXML
 	private AnchorPane root;
 
@@ -41,7 +46,7 @@ public class ToolBarController {
 	private HBox buttonHBox;
 	
 	@FXML
-	private Label usernameLabel;
+	private Hyperlink usernameHyperlink;
 	
 	@FXML
 	private Button logoutButton;
@@ -53,6 +58,12 @@ public class ToolBarController {
 	public void initialize() {
 		// Define the button image
 		Image logoutImage = new Image(getClass().getResourceAsStream("../images/logoutbutton.png"));
+		// Check if the user has an image for the profile or use the default one
+		if(MainApp.loggedUser.getUserImg()!=null) {
+			userImageCircle.setFill(new ImagePattern(new Image(MainApp.loggedUser.getUserImg())));
+		}else {
+			userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("user.png"))));
+		}
 		// This was to check if the path was good
 		// System.out.println(PrincipalPageController.class.getResource("../images/logoutbutton.png"));
 		// Define the ImageView to resize it
@@ -77,8 +88,22 @@ public class ToolBarController {
 
 		user = (User) stage.getUserData();
 
-		usernameLabel.setText(user.getUserName());
+		usernameHyperlink.setText(user.getUserName());
+		usernameHyperlink.addEventHandler(MouseEvent.MOUSE_CLICKED, editProfile());
 		setFirstScene();
+	}
+	
+	private EventHandler<MouseEvent> editProfile() {
+		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				MainApp.selectedUser = user;
+				changeScene("../view/controllers/UserPage.fxml");
+				setButtonsEnabled();
+				usernameHyperlink.setDisable(true);
+			}
+		};
+		return eventHandler;
 	}
 	
 	/**
@@ -172,6 +197,7 @@ public class ToolBarController {
 						n.setDisable(true);
 					} else {
 						n.setDisable(false);
+						usernameHyperlink.setDisable(false);
 					}
 				}
 			}
