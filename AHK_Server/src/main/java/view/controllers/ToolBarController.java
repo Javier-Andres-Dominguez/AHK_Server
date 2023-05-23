@@ -56,8 +56,6 @@ public class ToolBarController {
 	private static User user;
 
 	public void initialize() {
-		// Define the button image
-		Image logoutImage = new Image(getClass().getResourceAsStream("../images/logoutbutton.png"));
 		// Check if the user has an image for the profile or use the default one
 		if(MainApp.loggedUser.getUserImg()!=null) {
 			userImageCircle.setFill(new ImagePattern(new Image(MainApp.loggedUser.getUserImg())));
@@ -66,6 +64,15 @@ public class ToolBarController {
 		}
 		// This was to check if the path was good
 		// System.out.println(PrincipalPageController.class.getResource("../images/logoutbutton.png"));
+		setupLogoutButton();
+	}
+
+	/**
+	 * This method is used to set the logout button
+	 */
+	private void setupLogoutButton() {
+		// Define the button image
+		Image logoutImage = new Image(getClass().getResourceAsStream("../images/logoutbutton.png"));
 		// Define the ImageView to resize it
 		ImageView imageView = new ImageView(logoutImage);
 		imageView.setFitHeight(50);
@@ -76,8 +83,10 @@ public class ToolBarController {
 		logoutButton.setMinSize(50, 50);
 		logoutButton.setMaxSize(50, 50);
 		logoutButton.setPrefSize(50, 50);
+		// Source help: https://www.naidoprograms.com/2020/10/botones-e-imagenes-circulares-con-javafx.html#:~:text=Agregamos%20una%20imagen%20al%20bot%C3%B3n,de%20MediaView%20un%20objeto%20Image.&text=Y%20ahora%20si%20le%20agregamos,Circle%20el%20valor%20de%20radio.
+		logoutButton.setShape(userImageCircle);
 	}
-
+	
 	/**
 	 * This method gets the user information
 	 * @param event
@@ -93,6 +102,10 @@ public class ToolBarController {
 		setFirstScene();
 	}
 	
+	/**
+	 * This method is called when you click on your profile to edit it
+	 * @return
+	 */
 	private EventHandler<MouseEvent> editProfile() {
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 			@Override
@@ -179,7 +192,7 @@ public class ToolBarController {
 		buttons[0].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("../view/controllers/PrincipalPage.fxml"));
 		buttons[0].setDisable(true);
 		buttons[1].setText("Search");
-		buttons[1].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("../view/controllers/PrincipalPage.fxml"));
+		buttons[1].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("../view/controllers/SearchPage.fxml"));
 	}
 
 	/**
@@ -217,9 +230,9 @@ public class ToolBarController {
 		try {
 			// Define the window
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("../view/controllers/Login.fxml"));
+			loader.setLocation(MainApp.class.getResource("../view/controllers/LoginPage.fxml"));
 			// This was to check if the path was good
-			// System.out.println(MainApp.class.getResource("../view/controllers/Login.fxml"));
+			// System.out.println(MainApp.class.getResource("../view/controllers/LoginPage.fxml"));
 			Parent root = loader.load();
 			Scene scene = new Scene(root);
 			// Load the app
@@ -248,7 +261,6 @@ public class ToolBarController {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 		try {
-			File file = new File();
 			MainApp.selectedFile.setViews(MainApp.selectedFile.getViews()+1);
 			session.update(MainApp.selectedFile);
 		}

@@ -36,9 +36,9 @@ public class MainApp extends Application{
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			// Define the screen
-			loader.setLocation(MainApp.class.getResource("../view/controllers/Login.fxml"));
+			loader.setLocation(MainApp.class.getResource("../view/controllers/LoginPage.fxml"));
 			// This was to check if the path was good
-			//System.out.println(MainApp.class.getResource("../view/controllers/Login.fxml"));
+			//System.out.println(MainApp.class.getResource("../view/controllers/LoginPage.fxml"));
 			Scene scene = new Scene(loader.load());
 			// Load and show the scene
 			primaryStage.setScene(scene);

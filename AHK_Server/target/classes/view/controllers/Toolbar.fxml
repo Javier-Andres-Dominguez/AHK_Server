@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 
 <AnchorPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="752.0" prefWidth="1164.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.ToolBarController">
    <children>
@@ -13,12 +14,13 @@
          <children>
             <ToolBar layoutX="10.0" layoutY="10.0" prefHeight="69.0" prefWidth="1162.0">
                <items>
-                  <HBox alignment="CENTER" prefWidth="1150.0" spacing="100.0">
+                  <HBox alignment="CENTER" prefWidth="1150.0" spacing="500.0">
                      <children>
                         <HBox fx:id="buttonHBox" alignment="CENTER_RIGHT" spacing="15.0" />
                         <HBox alignment="CENTER" spacing="15.0">
                            <children>
-                              <Label fx:id="usernameLabel" />
+                              <Hyperlink fx:id="usernameHyperlink" text="Username" />
+                              <Circle fx:id="userImageCircle" fill="DODGERBLUE" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
                               <Button fx:id="logoutButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#logout" styleClass="logoutButton" stylesheets="@../css/AHK_Server.css" />
                            </children>
                         </HBox>

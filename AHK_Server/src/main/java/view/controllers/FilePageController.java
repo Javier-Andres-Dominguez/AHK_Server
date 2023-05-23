@@ -7,8 +7,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
@@ -25,7 +27,7 @@ public class FilePageController {
 	@FXML
 	private Button downloadButton;
 	@FXML
-	private Label userNameLabel;
+	private Hyperlink userNameHyperlink;
 	@FXML
 	private Label fileNameLabel;
 	@FXML
@@ -34,7 +36,12 @@ public class FilePageController {
 	private TextField fileDescriptionTextField;
 	@FXML
 	private TreeView<String> otherFilesTreeView;
+	@FXML
+	private Button openButton;
 
+	List<File> filesList;
+	
+	private String fileSelected;
 	private User user;
 	private File file;
 
@@ -46,6 +53,8 @@ public class FilePageController {
 	private void initialize() {
 		file = MainApp.selectedFile;
 		user = file.getUser();
+		openButton.setDisable(true);
+		openButton.setVisible(false);
 		fillFileInfo();
 		fillOtherFilesTreeItem();
 	}
@@ -54,7 +63,7 @@ public class FilePageController {
 	 * This method fills the file top information
 	 */
 	private void fillFileInfo() {
-		userNameLabel.setText("User: " + user.getUserName());
+		userNameHyperlink.setText(user.getUserName());
 		fileNameLabel.setText("File: " + file.getFileName());
 		viewsLabel.setText("Number of views: " + file.getViews());
 		fileDescriptionTextField.setText(file.getFileDes());
@@ -64,6 +73,7 @@ public class FilePageController {
 	/**
 	 * This method fills the treeview
 	 */
+	@SuppressWarnings("unchecked")
 	private void fillOtherFilesTreeItem() {
 		// Define the root item of treeview
 		TreeItem<String> rootItem = new TreeItem<>("Related files:",
@@ -81,8 +91,7 @@ public class FilePageController {
 			String hql = "FROM File f WHERE f.subcategory.subName = '" + subcategory.getSubName() + "'";
 			query = session.createQuery(hql);
 			// Save the result in a list
-			@SuppressWarnings("unchecked")
-			List<models.File> filesList = query.list();
+			filesList = query.list();
 			// For all the files:
 			for (int i = 0; i < filesList.size(); i++) {
 				if(filesList.get(i).getFileId()!=file.getFileId()) {
@@ -101,6 +110,53 @@ public class FilePageController {
 			session.close();
 			sf.close();
 		}
+	}
+
+	@FXML
+	/**
+	 * This method is called when you select an item from your files
+	 */
+	private void selectItemFromYourFiles() {
+		checkButtonState();
+		TreeItem<String> item = (TreeItem<String>) otherFilesTreeView.getSelectionModel().getSelectedItem();
+		// If the selected item is a file:
+		if(item!=null && item.getChildren().isEmpty() && !item.getValue().equals("Related files:")) {
+			fileSelected = item.getValue();
+			openButton.setText("Open file");
+			openButton.setDisable(false);
+		}
+		// Else is a folder
+		else {
+			openButton.setDisable(true);
+		}
+	}
+	
+	@FXML
+	/**
+	 * This method is used to open an item
+	 * @param event
+	 */
+	private void openItem(ActionEvent event) {
+		boolean matched = false;
+		for(int i = 0; i<filesList.size() || !matched; i++) {
+			if(filesList.get(i).getFileName().equals(fileSelected)) {
+				MainApp.selectedFile = filesList.get(i);
+				matched = true;
+			}
+		}
+		MainApp.toolBarController.openFile();
+	}
+	
+	private void checkButtonState() {
+		if(!openButton.isVisible()) {
+			openButton.setVisible(true);
+		}
+	}
+	
+	@FXML
+	private void openUser() {
+		MainApp.selectedUser = user;
+		MainApp.toolBarController.openUser();
 	}
 
 }

@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,15 +29,20 @@ public class UserPageController {
 	@FXML
 	private VBox userImageVBox;
 	@FXML
-	private Label userNameLabel;
+	private TextField userNameTextField;
 	@FXML
 	private Label numberOfFilesLabel;
 	@FXML
 	private TextField userBiographyTextField;
 	@FXML
 	private TreeView<String> userFilesTreeView;
+	@FXML
+	private Button openButton;
+	@FXML
+	private Button saveChangesButton;
 
 	private List<models.File> userFiles;
+	private String selectedFile;
 	private User user;
 	private String imageUrl;
 
@@ -47,32 +53,11 @@ public class UserPageController {
 	@FXML
 	private void initialize() {
 		user = MainApp.selectedUser;
+		openButton.setDisable(true);
+		openButton.setVisible(false);
 		getUserFiles();
 		fillUserInfo();
-	}
-
-	/**
-	 * This method fills the file top information
-	 */
-	private void fillUserInfo() {
-		userNameLabel.setText("User: " + user.getUserName());
-		numberOfFilesLabel.setText("Files: " + userFiles.size());
-		userBiographyTextField.setText(user.getUserBio());
-		userBiographyTextField.setEditable(false);
-		imageUrl = user.getUserImg();
-		ImageView imgView = null;
-		// Check if the user has an image for the profile or use the default one
-		if(imageUrl!=null) {
-			// Assign the it´s own image
-			imgView = new ImageView(new Image(imageUrl));
-		}else {
-			// Assign the default image
-			imgView = new ImageView(new Image(getClass().getResourceAsStream("user.png")));
-		}
-		imgView.setFitHeight(200);
-		imgView.setFitWidth(200);
-		userImageVBox.getChildren().add(imgView);
-		fillUserFileListTreeView();
+		checkYourProfile();
 	}
 
 	/**
@@ -100,6 +85,29 @@ public class UserPageController {
 			session.close();
 			sf.close();
 		}
+	}
+	
+	/**
+	 * This method fills the file top information
+	 */
+	private void fillUserInfo() {
+		userNameTextField.setText(user.getUserName());
+		numberOfFilesLabel.setText("Files: " + userFiles.size());
+		userBiographyTextField.setText(user.getUserBio());
+		imageUrl = user.getUserImg();
+		ImageView imgView = null;
+		// Check if the user has an image for the profile or use the default one
+		if(imageUrl!=null) {
+			// Assign the it´s own image
+			imgView = new ImageView(new Image(imageUrl));
+		}else {
+			// Assign the default image
+			imgView = new ImageView(new Image(getClass().getResourceAsStream("user.png")));
+		}
+		imgView.setFitHeight(200);
+		imgView.setFitWidth(200);
+		userImageVBox.getChildren().add(imgView);
+		fillUserFileListTreeView();
 	}
 	
 	/**
@@ -188,4 +196,83 @@ public class UserPageController {
 		userFilesTreeView.setRoot(rootItem);
 	}
 
+	/**
+	 * This method checks if the user logged and selected is the same and enables/disables buttons
+	 */
+	private void checkYourProfile() {
+		if(user == MainApp.loggedUser) {
+			userNameTextField.setEditable(true);
+			saveChangesButton.setDisable(false);
+			userBiographyTextField.setEditable(true);
+		}else {
+			userNameTextField.setEditable(false);
+			saveChangesButton.setDisable(true);
+			saveChangesButton.setVisible(false);
+			userBiographyTextField.setEditable(false);
+		}
+	}
+
+	@FXML
+	private void saveChanges() {
+		// Update increment the view number
+		SessionFactory sf = new Configuration().configure().buildSessionFactory();
+		Session session = sf.openSession();
+		try {
+			user.setUserName(userNameTextField.getText());
+			user.setUserBio(userBiographyTextField.getText());
+			session.update(user);
+		}
+		// If there is any error Inform in the screen
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		// At the end:
+		finally {
+			session.flush();
+			session.close();
+			sf.close();
+		}
+	}
+
+	@FXML
+	/**
+	 * This method is called when you select an item from your files
+	 */
+	private void selectItemFromYourFiles() {
+		checkButtonState();
+		TreeItem<String> item = (TreeItem<String>) userFilesTreeView.getSelectionModel().getSelectedItem();
+		// If the selected item is a file:
+		if(item!=null && item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
+			selectedFile = item.getValue();
+			openButton.setText("Open file");
+			openButton.setDisable(false);
+		}
+		// Else is a folder
+		else {
+			openButton.setDisable(true);
+		}
+	}
+	
+	@FXML
+	/**
+	 * This method is used to open an item
+	 * @param event
+	 */
+	private void openItem(ActionEvent event) {
+		boolean matched = false;
+		for(int i = 0; i<userFiles.size() || !matched; i++) {
+			if(userFiles.get(i).getFileName().equals(selectedFile)) {
+				MainApp.selectedFile = userFiles.get(i);
+				matched = true;
+			}
+		}
+		MainApp.toolBarController.openFile();
+	}
+	
+	private void checkButtonState() {
+		if(!openButton.isVisible()) {
+			openButton.setVisible(true);
+		}
+	}
+	
 }

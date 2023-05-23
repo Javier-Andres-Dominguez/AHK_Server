@@ -53,7 +53,7 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1200.0" prefWidth="900.0" styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css">
                            <children>
-                              <TreeView fx:id="yourFilesTree" onContextMenuRequested="#selectItem" onMouseClicked="#selectItem" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <TreeView fx:id="yourFilesTree" onContextMenuRequested="#selectItemFromYourFiles" onMouseClicked="#selectItemFromYourFiles" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children></AnchorPane>
                     </content>
                   </ScrollPane>
@@ -66,7 +66,7 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="900.0" styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css">
                            <children>
-                              <TreeView fx:id="popularFilesTree" onContextMenuRequested="#selectItem" onMouseClicked="#selectItem" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <TreeView fx:id="popularFilesTree" layoutX="-14.0" onContextMenuRequested="#selectItemFromPopularFiles" onMouseClicked="#selectItemFromPopularFiles" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0" />
                            </children></AnchorPane>
                     </content>
                   </ScrollPane>
@@ -79,7 +79,7 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="900.0" styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css">
                            <children>
-                              <TreeView fx:id="subscriptionFilesTree" onContextMenuRequested="#selectItem" onMouseClicked="#selectItem" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <TreeView fx:id="subscriptionFilesTree" onContextMenuRequested="#selectItemFromSubscriptionFiles" onMouseClicked="#selectItemFromSubscriptionFiles" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children></AnchorPane>
                     </content>
                   </ScrollPane>
@@ -92,7 +92,7 @@
         <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
       </padding>
          <children>
-            <Button fx:id="openButton" mnemonicParsing="false" onAction="#openFile" text="Open" />
+            <Button fx:id="openButton" mnemonicParsing="false" onAction="#openItem" text="Open" />
          </children>
     </HBox>
   </children>

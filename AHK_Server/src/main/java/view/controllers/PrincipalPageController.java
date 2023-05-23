@@ -54,6 +54,7 @@ public class PrincipalPageController {
 		fillYourFiles();
 		fillPopularFiles();
 		fillSubscriptionFiles();
+		openButton.setVisible(false);
 		openButton.setDisable(true);
 	}
 
@@ -339,6 +340,7 @@ public class PrincipalPageController {
 	 * This method is called when you select an item from your files
 	 */
 	private void selectItemFromYourFiles() {
+		checkButtonState();
 		typeOfFile = "YourFiles";
 		TreeItem<String> item = (TreeItem<String>) yourFilesTree.getSelectionModel().getSelectedItem();
 		// If the selected item is a file:
@@ -358,6 +360,7 @@ public class PrincipalPageController {
 	 * This method is called when you select an item from your files
 	 */
 	private void selectItemFromPopularFiles() {
+		checkButtonState();
 		typeOfFile = "PopularFiles";
 		TreeItem<String> item = (TreeItem<String>) popularFilesTree.getSelectionModel().getSelectedItem();
 		// If the selected item is a file:
@@ -378,6 +381,7 @@ public class PrincipalPageController {
 	 * This method is called when you select an item from your files. And it is used to assign that file or user and enable the button
 	 */
 	private void selectItemFromSubscriptionFiles() {
+		checkButtonState();
 		typeOfFile = "SubscriptionFiles";
 		TreeItem<String> item = (TreeItem<String>) subscriptionFilesTree.getSelectionModel().getSelectedItem();
 		// If the selected item is a user:
@@ -447,6 +451,12 @@ public class PrincipalPageController {
 					}
 				}
 			}
+		}
+	}
+	
+	private void checkButtonState() {
+		if(!openButton.isVisible()) {
+			openButton.setVisible(true);
 		}
 	}
 
