@@ -8,15 +8,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Embeddable
-public class User_Subscribe_UserId implements Serializable{
+public class User_Subscribe_UserId implements Serializable {
 
 	@ManyToOne
-	@JoinColumn(name="SubscribedUserId")
+	@JoinColumn(name = "SubscribedUserId")
 	private User userSubscribed;
 	@ManyToOne
-	@JoinColumn(name="SubscribedToUserId")
+	@JoinColumn(name = "SubscribedToUserId")
 	private User subscribedToUser;
-	
+
 	public User_Subscribe_UserId() {
 
 	}
@@ -51,7 +51,8 @@ public class User_Subscribe_UserId implements Serializable{
 			return false;
 		User_Subscribe_UserId castOther = (User_Subscribe_UserId) other;
 
-		return Objects.equals(userSubscribed, castOther.userSubscribed) && Objects.equals(subscribedToUser, castOther.subscribedToUser);
+		return Objects.equals(userSubscribed, castOther.userSubscribed)
+				&& Objects.equals(subscribedToUser, castOther.subscribedToUser);
 
 	}
 

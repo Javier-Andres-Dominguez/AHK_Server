@@ -14,14 +14,17 @@ public class Commentary implements Serializable {
 	@Id
 	@Column(name = "ComId")
 	private int comId;
+
 	@Column(name = "ComDes")
 	private String comDes;
+
 	@Column(name = "Rate")
 	private int rate;
 
 	@ManyToOne
 	@JoinColumn(name = "UserId")
 	private User user;
+
 	@ManyToOne
 	@JoinColumn(name = "FileId")
 	private File file;
@@ -31,7 +34,6 @@ public class Commentary implements Serializable {
 	}
 
 	public Commentary(int comId, String comDes, int rate, User user, File file) {
-		super();
 		this.comId = comId;
 		this.comDes = comDes;
 		this.rate = rate;
@@ -40,7 +42,6 @@ public class Commentary implements Serializable {
 	}
 
 	public Commentary(int comId, String comDes, int rate) {
-		super();
 		this.comId = comId;
 		this.comDes = comDes;
 		this.rate = rate;

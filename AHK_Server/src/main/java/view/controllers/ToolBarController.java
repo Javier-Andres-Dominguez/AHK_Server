@@ -35,36 +35,37 @@ public class ToolBarController {
 
 	@FXML
 	private Circle userImageCircle;
-	
 	@FXML
 	private AnchorPane root;
-
 	@FXML
 	private VBox rootLayout;
-
 	@FXML
 	private HBox buttonHBox;
-	
 	@FXML
 	private Hyperlink usernameHyperlink;
-	
 	@FXML
 	private Button logoutButton;
 
 	private Hyperlink buttons[];
+	private String cssFile = MainApp.class.getResource("../view/css/AHK_Server.css").toExternalForm();
 
 	private static User user;
 
 	public void initialize() {
-		// Check if the user has an image for the profile or use the default one
-		if(MainApp.loggedUser.getUserImg()!=null) {
+
+		loadUserImage();
+		setupLogoutButton();
+	}
+
+	/**
+	 * This method checks if the user has an image, else it will have the default
+	 */
+	private void loadUserImage() {
+		if (MainApp.loggedUser.getUserImg() != null) {
 			userImageCircle.setFill(new ImagePattern(new Image(MainApp.loggedUser.getUserImg())));
-		}else {
+		} else {
 			userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("user.png"))));
 		}
-		// This was to check if the path was good
-		// System.out.println(PrincipalPageController.class.getResource("../images/logoutbutton.png"));
-		setupLogoutButton();
 	}
 
 	/**
@@ -83,12 +84,14 @@ public class ToolBarController {
 		logoutButton.setMinSize(50, 50);
 		logoutButton.setMaxSize(50, 50);
 		logoutButton.setPrefSize(50, 50);
-		// Source help: https://www.naidoprograms.com/2020/10/botones-e-imagenes-circulares-con-javafx.html#:~:text=Agregamos%20una%20imagen%20al%20bot%C3%B3n,de%20MediaView%20un%20objeto%20Image.&text=Y%20ahora%20si%20le%20agregamos,Circle%20el%20valor%20de%20radio.
+		// Source help:
+		// https://www.naidoprograms.com/2020/10/botones-e-imagenes-circulares-con-javafx.html#:~:text=Agregamos%20una%20imagen%20al%20bot%C3%B3n,de%20MediaView%20un%20objeto%20Image.&text=Y%20ahora%20si%20le%20agregamos,Circle%20el%20valor%20de%20radio.
 		logoutButton.setShape(userImageCircle);
 	}
-	
+
 	/**
 	 * This method gets the user information
+	 * 
 	 * @param event
 	 */
 	public void recoverUserInfo(Stage event) {
@@ -98,27 +101,22 @@ public class ToolBarController {
 		user = (User) stage.getUserData();
 
 		usernameHyperlink.setText(user.getUserName());
-		usernameHyperlink.addEventHandler(MouseEvent.MOUSE_CLICKED, editProfile());
+		usernameHyperlink.setOnAction(e -> editProfile());
 		setFirstScene();
 	}
-	
+
 	/**
 	 * This method is called when you click on your profile to edit it
+	 * 
 	 * @return
 	 */
-	private EventHandler<MouseEvent> editProfile() {
-		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				MainApp.selectedUser = user;
-				changeScene("../view/controllers/UserPage.fxml");
-				setButtonsEnabled();
-				usernameHyperlink.setDisable(true);
-			}
-		};
-		return eventHandler;
+	private void editProfile() {
+		MainApp.selectedUser = user;
+		changeScene("../view/controllers/UserPage.fxml");
+		setButtonsEnabled();
+		usernameHyperlink.setDisable(true);
 	}
-	
+
 	/**
 	 * This method gives the user information
 	 */
@@ -150,6 +148,7 @@ public class ToolBarController {
 		} catch (IOException exception) {
 			throw new RuntimeException(exception);
 		}
+		newPane.getStylesheets().add(cssFile);
 		// Upload the view
 		rootLayout.getChildren().add(newPane);
 	}
@@ -165,6 +164,7 @@ public class ToolBarController {
 
 	/**
 	 * This method changes the view
+	 * 
 	 * @param file
 	 */
 	private void changeScene(String file) {
@@ -174,6 +174,7 @@ public class ToolBarController {
 			loader.setLocation(MainApp.class.getResource(file));
 			Pane newPane = loader.load();
 			rootLayout.getChildren().remove(rootLayout.getChildren().size() - 1);
+			newPane.getStylesheets().add(cssFile);
 			rootLayout.getChildren().add(newPane);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -197,6 +198,7 @@ public class ToolBarController {
 
 	/**
 	 * This method disables and enable buttons
+	 * 
 	 * @param scene
 	 * @return
 	 */
@@ -231,10 +233,11 @@ public class ToolBarController {
 			// Define the window
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("../view/controllers/LoginPage.fxml"));
-			// This was to check if the path was good
-			// System.out.println(MainApp.class.getResource("../view/controllers/LoginPage.fxml"));
 			Parent root = loader.load();
 			Scene scene = new Scene(root);
+			scene.getStylesheets()
+					.add(getClass().getClassLoader().getResource("view/css/AHK_Server.css").toExternalForm());
+
 			// Load the app
 			stage.setTitle("Login");
 			stage.setScene(scene);
@@ -243,16 +246,16 @@ public class ToolBarController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Make all buttons enabled
 	 */
 	private void setButtonsEnabled() {
-		for(int i = 0; i<buttonHBox.getChildren().size();i++){
+		for (int i = 0; i < buttonHBox.getChildren().size(); i++) {
 			buttonHBox.getChildren().get(i).setDisable(false);
 		}
 	}
-	
+
 	/**
 	 * This method is used when a file is opened
 	 */
@@ -261,7 +264,7 @@ public class ToolBarController {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 		try {
-			MainApp.selectedFile.setViews(MainApp.selectedFile.getViews()+1);
+			MainApp.selectedFile.setViews(MainApp.selectedFile.getViews() + 1);
 			session.update(MainApp.selectedFile);
 		}
 		// If there is any error Inform in the screen
@@ -277,7 +280,7 @@ public class ToolBarController {
 		changeScene("../view/controllers/FilePage.fxml");
 		setButtonsEnabled();
 	}
-	
+
 	/**
 	 * This method is used when a user is opened
 	 */
@@ -285,5 +288,5 @@ public class ToolBarController {
 		changeScene("../view/controllers/UserPage.fxml");
 		setButtonsEnabled();
 	}
-	
+
 }

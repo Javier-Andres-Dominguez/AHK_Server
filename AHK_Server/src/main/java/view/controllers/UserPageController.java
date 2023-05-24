@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import dao.User_Subscribe_UserDao;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -23,6 +24,8 @@ import models.Category;
 import models.File;
 import models.Subcategory;
 import models.User;
+import models.User_Subscribe_User;
+import models.User_Subscribe_UserId;
 
 public class UserPageController {
 
@@ -40,8 +43,11 @@ public class UserPageController {
 	private Button openButton;
 	@FXML
 	private Button saveChangesButton;
+	@FXML
+	private Button subscriptionButton;
 
-	private List<models.File> userFiles;
+	private Boolean subscribed;
+	private List<File> userFiles;
 	private String selectedFile;
 	private User user;
 	private String imageUrl;
@@ -55,6 +61,7 @@ public class UserPageController {
 		user = MainApp.selectedUser;
 		openButton.setDisable(true);
 		openButton.setVisible(false);
+		isSubscribed();
 		getUserFiles();
 		fillUserInfo();
 		checkYourProfile();
@@ -70,7 +77,7 @@ public class UserPageController {
 		Query query = null;
 		try {
 			session.getTransaction().begin();
-			
+
 			String hql = "FROM File f WHERE f.user.userId=" + user.getUserId();
 			query = session.createQuery(hql);
 			// Save the result in a list
@@ -86,7 +93,7 @@ public class UserPageController {
 			sf.close();
 		}
 	}
-	
+
 	/**
 	 * This method fills the file top information
 	 */
@@ -97,10 +104,10 @@ public class UserPageController {
 		imageUrl = user.getUserImg();
 		ImageView imgView = null;
 		// Check if the user has an image for the profile or use the default one
-		if(imageUrl!=null) {
+		if (imageUrl != null) {
 			// Assign the it´s own image
 			imgView = new ImageView(new Image(imageUrl));
-		}else {
+		} else {
 			// Assign the default image
 			imgView = new ImageView(new Image(getClass().getResourceAsStream("user.png")));
 		}
@@ -109,7 +116,7 @@ public class UserPageController {
 		userImageVBox.getChildren().add(imgView);
 		fillUserFileListTreeView();
 	}
-	
+
 	/**
 	 * This method fills the treeview
 	 */
@@ -197,14 +204,15 @@ public class UserPageController {
 	}
 
 	/**
-	 * This method checks if the user logged and selected is the same and enables/disables buttons
+	 * This method checks if the user logged and selected is the same and
+	 * enables/disables buttons
 	 */
 	private void checkYourProfile() {
-		if(user == MainApp.loggedUser) {
+		if (user == MainApp.loggedUser || user.getUserId() == 1) {
 			userNameTextField.setEditable(true);
 			saveChangesButton.setDisable(false);
 			userBiographyTextField.setEditable(true);
-		}else {
+		} else {
 			userNameTextField.setEditable(false);
 			saveChangesButton.setDisable(true);
 			saveChangesButton.setVisible(false);
@@ -212,9 +220,73 @@ public class UserPageController {
 		}
 	}
 
+	/**
+	 * This method checks if the logged user is subscribed to the opened user
+	 * @return
+	 */
+	private boolean isSubscribed() {
+		for(int i = 0; i<MainApp.subscriptionUsers.size(); i++) {
+			if(user.getUserId()==MainApp.subscriptionUsers.get(i).getUserId()) {
+				subscriptionButton.setText("Unsubscribe");
+				return true;
+			}
+		}
+		subscriptionButton.setText("Subscribe");
+		return false;
+	}
+	
+	@FXML
+	private void subscribeAndUnsubscribe(){
+		SessionFactory sf = new Configuration().configure().buildSessionFactory();
+		Session session = sf.openSession();
+
+		try {
+			session.getTransaction().begin();
+			User_Subscribe_UserId user_Subscribe_UserId = new User_Subscribe_UserId();
+			user_Subscribe_UserId.setSubscribedToUser(user);
+			user_Subscribe_UserId.setUserSubscribed(MainApp.loggedUser);
+
+			User_Subscribe_User user_Subscribe_User = new User_Subscribe_User();
+			user_Subscribe_User.setUser_Subscibre_UserId(user_Subscribe_UserId);
+			// Define the loader
+			User_Subscribe_UserDao user_Subscribe_UserDao = new User_Subscribe_UserDao(session);
+			
+			if(isSubscribed()) {
+				user_Subscribe_UserDao.deleteUser_Subscribe_User(user_Subscribe_User);
+				session.flush();
+				for(int i = 0; i<MainApp.subscriptionUsers.size();i++) {
+					if(MainApp.subscriptionUsers.get(i)==user) {
+						MainApp.subscriptionUsers.remove(i);
+						break;
+					}
+				}
+				subscriptionButton.setText("Subscribe");
+			}else {
+				user_Subscribe_UserDao.insertUser_Subscribe_User(user_Subscribe_User);
+				session.flush();
+				for(int i = 0; i<MainApp.subscriptionUsers.size();i++) {
+					if(MainApp.subscriptionUsers.get(i)==user) {
+						MainApp.subscriptionUsers.add(user);
+						break;
+					}
+				}
+				subscriptionButton.setText("Unsubscribe");
+			}
+		}
+		// If there is any error Inform in the screen
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		// At the end:
+		finally {
+			session.flush();
+			session.close();
+			sf.close();
+		}
+	}
+	
 	@FXML
 	private void saveChanges() {
-		// Update increment the view number
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 		try {
@@ -242,7 +314,7 @@ public class UserPageController {
 		checkButtonState();
 		TreeItem<String> item = (TreeItem<String>) userFilesTreeView.getSelectionModel().getSelectedItem();
 		// If the selected item is a file:
-		if(item!=null && item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
+		if (item != null && item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
 			selectedFile = item.getValue();
 			openButton.setText("Open file");
 			openButton.setDisable(false);
@@ -252,27 +324,28 @@ public class UserPageController {
 			openButton.setDisable(true);
 		}
 	}
-	
+
 	@FXML
 	/**
 	 * This method is used to open an item
+	 * 
 	 * @param event
 	 */
 	private void openItem(ActionEvent event) {
 		boolean matched = false;
-		for(int i = 0; i<userFiles.size() || !matched; i++) {
-			if(userFiles.get(i).getFileName().equals(selectedFile)) {
+		for (int i = 0; i < userFiles.size() || !matched; i++) {
+			if (userFiles.get(i).getFileName().equals(selectedFile)) {
 				MainApp.selectedFile = userFiles.get(i);
 				matched = true;
 			}
 		}
 		MainApp.toolBarController.openFile();
 	}
-	
+
 	private void checkButtonState() {
-		if(!openButton.isVisible()) {
+		if (!openButton.isVisible()) {
 			openButton.setVisible(true);
 		}
 	}
-	
+
 }

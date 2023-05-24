@@ -16,27 +16,37 @@ public class User implements Serializable {
 	@Id
 	@Column(name = "UserId")
 	private int userId;
+
 	@Column(name = "UserName")
 	private String userName;
+
 	@Column(name = "UserPas")
 	private String userPas;
+
 	@Column(name = "UserGma")
 	private String userGma;
+
 	@Column(name = "UserBio")
 	private String userBio;
+
 	@Column(name = "UserImg")
 	private String userImg;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<Commentary> commentary = new HashSet<Commentary>(0);
+	private Set<Commentary> commentaries = new HashSet<Commentary>(0);
+
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<File> file = new HashSet<File>(0);
+	private Set<File> files = new HashSet<File>(0);
+
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<Category> category = new HashSet<Category>(0);
+	private Set<Category> categories = new HashSet<Category>(0);
+
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<Subcategory> subcategory = new HashSet<Subcategory>(0);
+	private Set<Subcategory> subcategories = new HashSet<Subcategory>(0);
+
 	@OneToMany(mappedBy = "id.userSubscribed", cascade = CascadeType.ALL)
 	private Set<User_Subscribe_User> subscribedUser = new HashSet<User_Subscribe_User>(0);
+
 	@OneToMany(mappedBy = "id.subscribedToUser", cascade = CascadeType.ALL)
 	private Set<User_Subscribe_User> subscribedToUser = new HashSet<User_Subscribe_User>(0);
 
@@ -52,8 +62,9 @@ public class User implements Serializable {
 		this.userGma = userGma;
 	}
 
-	public User(int userId, String userName, String userPas, String userGma, String userBio, String userImg, Set<Commentary> commentary, Set<File> file,
-			Set<Category> category, Set<Subcategory> subcategory, Set<User_Subscribe_User> subscribedUser, Set<User_Subscribe_User> subscribedToUser) {
+	public User(int userId, String userName, String userPas, String userGma, String userBio, String userImg,
+			Set<Commentary> commentaries, Set<File> files, Set<Category> categories, Set<Subcategory> subcategories,
+			Set<User_Subscribe_User> subscribedUser, Set<User_Subscribe_User> subscribedToUser) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -61,12 +72,12 @@ public class User implements Serializable {
 		this.userGma = userGma;
 		this.userBio = userBio;
 		this.userImg = userImg;
-		this.commentary = commentary;
-		this.file = file;
-		this.category = category;
-		this.subcategory = subcategory;/*
+		this.commentaries = commentaries;
+		this.files = files;
+		this.categories = categories;
+		this.subcategories = subcategories;
 		this.subscribedUser = subscribedUser;
-		this.subscribedToUser = subscribedToUser;*/
+		this.subscribedToUser = subscribedToUser;
 	}
 
 	public int getUserId() {
@@ -100,7 +111,7 @@ public class User implements Serializable {
 	public void setUserGma(String userGma) {
 		this.userGma = userGma;
 	}
-	
+
 	public String getUserBio() {
 		return userBio;
 	}
@@ -117,36 +128,36 @@ public class User implements Serializable {
 		this.userImg = userImg;
 	}
 
-	public Set<Commentary> getCommentary() {
-		return commentary;
+	public Set<Commentary> getCommentaries() {
+		return commentaries;
 	}
 
-	public void setCommentary(Set<Commentary> commentary) {
-		this.commentary = commentary;
+	public void setCommentaries(Set<Commentary> commentaries) {
+		this.commentaries = commentaries;
 	}
 
-	public Set<File> getFile() {
-		return file;
+	public Set<File> getFiles() {
+		return files;
 	}
 
-	public void setFile(Set<File> file) {
-		this.file = file;
+	public void setFiles(Set<File> files) {
+		this.files = files;
 	}
 
-	public Set<Category> getCategory() {
-		return category;
+	public Set<Category> getCategories() {
+		return categories;
 	}
 
-	public void setCategory(Set<Category> category) {
-		this.category = category;
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
 	}
 
-	public Set<Subcategory> getSubcategory() {
-		return subcategory;
+	public Set<Subcategory> getSubcategories() {
+		return subcategories;
 	}
 
-	public void setSubcategory(Set<Subcategory> subcategory) {
-		this.subcategory = subcategory;
+	public void setSubcategories(Set<Subcategory> subcategories) {
+		this.subcategories = subcategories;
 	}
 
 	public Set<User_Subscribe_User> getSubscribedUser() {

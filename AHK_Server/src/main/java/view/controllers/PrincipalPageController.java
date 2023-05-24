@@ -1,7 +1,9 @@
 package view.controllers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -20,6 +22,7 @@ import models.Category;
 import models.File;
 import models.Subcategory;
 import models.User;
+import models.User_Subscribe_UserId;
 
 public class PrincipalPageController {
 
@@ -37,10 +40,9 @@ public class PrincipalPageController {
 	private String userSelected;
 	private String typeOfFile;
 	private String userOrFile;
-	private List<models.File> yourFiles;
-	private List<models.File> popularFiles;
-	private List<models.File> subscriptionFiles;
-	private List<models.User> subscriptionUsers = new ArrayList<models.User>();
+	private List<File> yourFiles;
+	private List<File> popularFiles;
+	private List<List<File>> subscriptionFiles = new ArrayList<>();;
 
 	public PrincipalPageController() {
 
@@ -48,6 +50,8 @@ public class PrincipalPageController {
 
 	@FXML
 	private void initialize() {
+		// This is in case you rejoin the view, so the values do not get repeated
+		MainApp.subscriptionUsers.clear();
 		// Get the information of the user that logs in
 		ToolBarController toolBarController = new ToolBarController();
 		loggedUser = toolBarController.getUserInfo();
@@ -64,99 +68,49 @@ public class PrincipalPageController {
 	private void fillYourFiles() {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
-		Query query = null;
 		try {
 			session.getTransaction().begin();
-			
-			String hql = "FROM File f WHERE f.user.userId=" + loggedUser.getUserId();
-			query = session.createQuery(hql);
+
+			String hql = "FROM File f WHERE f.user.userId = :userId";
+			Query query = session.createQuery(hql);
+			query.setParameter("userId", loggedUser.getUserId());
 			// Save the result in a list
-			@SuppressWarnings("unchecked")
-			List<models.File> yourFiles = query.list();
-			this.yourFiles = yourFiles;
-			
+			yourFiles = (List<File>) query.list();
+
 			// Define the root item of treeview
 			TreeItem<String> rootItem = new TreeItem<>("Categories:",
 					new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
-			ArrayList<Category> categories = new ArrayList<>();
-			ArrayList<Subcategory> subcategories = new ArrayList<>();
+			Set<Category> categories = new HashSet<>();
+			Set<Subcategory> subcategories = new HashSet<>();
 			// If it is null make sure to be invalid
-			if (!yourFiles.isEmpty()) {
-				boolean repeated = false;
-				// Get the subcategories
-				for (int i = 0; i < yourFiles.size(); i++) {
-					// Do not check the first subcategory
-					if (i == 0) {
-						// Add the subcategory
-						subcategories.add(yourFiles.get(i).getSubcategory());
-					} else {
-						// Compare with all subcategories saved
-						for (int n = 0; n < subcategories.size(); n++) {
-							if (yourFiles.get(i).getSubcategory().equals(subcategories.get(n))) {
-								repeated = true;
-							}
-						}
-						// If after all the check it is not repeated, add it
-						if (!repeated) {
-							subcategories.add(yourFiles.get(i).getSubcategory());
-						}
-						// Reset the value
-						repeated = false;
-					}
-				}
-				// Get the categories
-				for (int i = 0; i < subcategories.size(); i++) {
-					// Do not check the first category
-					if (i == 0) {
-						// Add the category
-						categories.add(subcategories.get(i).getCategory());
-					} else {
-						// Compare with all categories saved
-						for (int n = 0; n < categories.size(); n++) {
-							if (subcategories.get(i).getCategory().equals(categories.get(n))) {
-								repeated = true;
-							}
-						}
-						// If after all the check it is not repeated, add it
-						if (!repeated) {
-							categories.add(subcategories.get(i).getCategory());
-						}
-						// Reset the value
-						repeated = false;
-					}
-				}
+			for (File file : yourFiles) {
+				subcategories.add(file.getSubcategory());
 			}
 
-			// For all categories:
-			for (int i = 0; i < categories.size(); i++) {
-				// Create the tree category
-				TreeItem<String> treeCategory = new TreeItem<String>(categories.get(i).getCatName(),
+			for (Subcategory subcategory : subcategories) {
+				categories.add(subcategory.getCategory());
+			}
+
+			for (Category category : categories) {
+				TreeItem<String> treeCategory = new TreeItem<>(category.getCatName(),
 						new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
-				// Check all the subcategories:
-				for (int n = 0; n < subcategories.size(); n++) {
-					// If any belongs to the current category:
-					if (subcategories.get(n).getCategory().equals(categories.get(i))) {
-						// Create the tree subcategory
-						TreeItem<String> treeSubcategory = new TreeItem<String>(subcategories.get(n).getSubName(),
+				for (Subcategory subcategory : subcategories) {
+					if (subcategory.getCategory().equals(category)) {
+						TreeItem<String> treeSubcategory = new TreeItem<>(subcategory.getSubName(),
 								new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
-						// Check all the files:
-						for (int j = 0; j < yourFiles.size(); j++) {
-							// If any belongs to the current subcategory:
-							if (yourFiles.get(j).getSubcategory().equals(subcategories.get(n))) {
-								// Create the tree file
-								TreeItem<String> treeFile = new TreeItem<String>(yourFiles.get(j).getFileName(),
+						for (File file : yourFiles) {
+							if (file.getSubcategory().equals(subcategory)) {
+								TreeItem<String> treeFile = new TreeItem<>(file.getFileName(),
 										new ImageView(new Image(getClass().getResourceAsStream("ahk.png"))));
-								// Add the file to the subcategory
 								treeSubcategory.getChildren().add(treeFile);
 							}
 						}
-						// Add the subcategory to the category
 						treeCategory.getChildren().add(treeSubcategory);
 					}
 				}
-				// Add the categories to the tree view
 				rootItem.getChildren().add(treeCategory);
 			}
+
 			yourFilesTree.setRoot(rootItem);
 		}
 		// If there is any error Inform in the screen
@@ -176,21 +130,17 @@ public class PrincipalPageController {
 	private void fillPopularFiles() {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
-		Query query = null;
 		// query.setMaxResults(10);
 
 		try {
 			// Execute the query and get the result
 			session.getTransaction().begin();
 
-			String hql = "FROM File f";
-			//String hql = "FROM File f ORDER BY f.views";
-			query = session.createQuery(hql);
-			// Save the result in a list
-			@SuppressWarnings("unchecked")
-			List<models.File> popularFiles = query.list();
+			String hql = "FROM File f ORDER BY f.views DESC";
+			Query query = session.createQuery(hql);
+			query.setMaxResults(10);
 			// Save the result in a variable to access it from another method later
-			this.popularFiles = popularFiles;
+			popularFiles = (List<File>) query.list();
 
 			// Define the root item of treeview
 			TreeItem<String> rootItem = new TreeItem<>("Popular files:",
@@ -200,7 +150,7 @@ public class PrincipalPageController {
 			// For all files from the result do:
 			for (int i = 0; i < popularFiles.size(); i++) {
 				// Add them to the treeview
-				rootItem.getChildren().add(new TreeItem<String>(i+1+"-."+popularFiles.get(i).getFileName(),
+				rootItem.getChildren().add(new TreeItem<String>(i + 1 + "-." + popularFiles.get(i).getFileName(),
 						new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
 			}
 		} catch (Exception e) {
@@ -220,108 +170,131 @@ public class PrincipalPageController {
 	private void fillSubscriptionFiles() {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
-		Query query = null;
-		// query.setMaxResults(10);
 
 		try {
-			Boolean subcategoryRepeated = false;
-			Boolean categoryRepeated = false;
 			// Execute the query and get the result
 			session.getTransaction().begin();
 			String hql = "SELECT u.id FROM User_Subscribe_User u WHERE u.id.userSubscribed = " + loggedUser.getUserId();
-			query = session.createQuery(hql);
+			Query query = session.createQuery(hql);
 			// Save the result in a list
-			// List of the combined users id
-			List<models.User_Subscribe_UserId> bothUsers = query.list();
-			// List of the user that the current user is subscribed to
-			User user;
+			List<User_Subscribe_UserId> subscriptionUsers = (List<User_Subscribe_UserId>) query.list();
+			// Defining variables that will be used later with all entities
+			User notYourUser;
 			File file;
 			Subcategory subcategory;
 			Category category;
-			ArrayList<Subcategory> subcategories = new ArrayList<>();
-			ArrayList<Category> categories = new ArrayList<>();
-			// List of the files that the users has
-			List<models.File> subscribedToUsersFiles;
-			// Define the root item of treeview
-			TreeItem<String> rootItem = new TreeItem<>("Users:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 			TreeItem<String> treeFileItem = null;
 			TreeItem<String> treeSubcategoryItem = null;
 			TreeItem<String> treeCategoryItem = null;
 			TreeItem<String> treeUserItem = null;
+			// Defining all lists that will be used later with all entities
+			List<List<Subcategory>> listOfListOfSubcategories = new ArrayList<List<Subcategory>>();
+			List<List<Category>> listOfListOfCategories = new ArrayList<List<Category>>();
+			List<Subcategory> listOfSubcategories = new ArrayList<Subcategory>();
+			List<Category> listOfCategories = new ArrayList<Category>();
+			// Define the root item of treeview
+			TreeItem<String> rootItem = new TreeItem<>("Users:",
+					new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 			// Assign the root item to the treeview
 			subscriptionFilesTree.setRoot(rootItem);
-			// Generate a list of the users that the user is subscribed to:
-			for (int i = 0; i < bothUsers.size(); i++) {
+			
+			// Generate a list of the users subscribed to:
+			for (int i = 0; i < subscriptionUsers.size(); i++) {
 				// Define the user
-				user = bothUsers.get(i).getSubscribedToUser();
-				subscriptionUsers.add(user);
+				notYourUser = subscriptionUsers.get(i).getSubscribedToUser();
 				
-				// Save the user into a treeview item
-				treeUserItem = new TreeItem<>(user.getUserName(), new ImageView(new Image(getClass().getResourceAsStream("user.png"))));
+				/*--------------------------------------------------Saving-Users-------------------------------------------------------------------------*/
 				
-				// Get a list of all the files that the user has
-				hql = "FROM File f WHERE f.user.userId = " + user.getUserId();
+				// Save it into a list
+				MainApp.subscriptionUsers.add(notYourUser);
+				
+				// Get all the files created by that user
+				hql = "FROM File f WHERE f.user.userId = :userId";
 				query = session.createQuery(hql);
-				// Save the query result into the list
-				subscribedToUsersFiles = query.list();
-				this.subscriptionFiles = subscribedToUsersFiles;
+				query.setParameter("userId", notYourUser.getUserId());
+				
+				/*-----------------------------------------------------Saving-Files-------------------------------------------------------------------*/
+				
+				// Save the query result into the list of files of the main list
+				subscriptionFiles.add((List<File>) query.list());
 
-				// For all the files:
-				for (int j = 0; j < subscribedToUsersFiles.size(); j++) {
+				// For every file in a list:
+				for (int n = 0; n < subscriptionFiles.get(i).size(); n++) {
 					// Define the file
-					file = subscribedToUsersFiles.get(i);
-					// Define the file treeview
-					treeFileItem = new TreeItem<>(file.getFileName(), new ImageView(new Image(getClass().getResourceAsStream("ahk.png"))));
+					file = subscriptionFiles.get(i).get(n);
+
+					/*----------------------------------------------Saving-Subcategories---------------------------------------------------------------*/
+
 					// Get the file subcategory
 					subcategory = file.getSubcategory();
-					// Compare with all the subcategories
-					for(int n = 0; n < subcategories.size(); n++) {
-						// Don´t check the first subcategory
-						if(n == 0) {
-							// Do nothing
-						}else {
-							// Check if it is repeated
-							if(subcategory.equals(subcategories.get(n))) {
-								subcategoryRepeated = true;
-							}
+					// Save the first subcategory
+					if(n==0) {
+						listOfSubcategories.add(subcategory);
+					}else {
+						// Compare with all the subcategories
+						if (!listOfSubcategories.contains(subcategory)) {
+							listOfSubcategories.add(subcategory);
 						}
+						// Reset to the default value
 					}
-					// If after the check is not repeated:
-					if(!subcategoryRepeated) {
-						// Save it and add it to the treeview
-						subcategories.add(subcategory);
-						treeSubcategoryItem = new TreeItem<>(subcategory.getSubName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
-						// Add the file to it´s subcategory
-						treeSubcategoryItem.getChildren().add(treeFileItem);
-					}
-					// Reset to the default value
-					subcategoryRepeated = false;
+
+					/*--------------------------------------------------------Categories---------------------------------------------------------------*/
+
 					// Define the category
 					category = subcategory.getCategory();
-					// Compare with all the categories
-					for(int n = 0; n < categories.size(); n++) {
-						// Don´t check the first category
-						if(n == 0) {
-							// Do nothing
-						}else {
-							// Check if it is repeated
-							if(category.equals(categories.get(n))) {
-								categoryRepeated = true;
+					// Save the first category
+					if(n==0) {
+						listOfCategories.add(category);
+					}else {
+						// Compare with all the categories
+						if (!listOfCategories.contains(category)) {
+							listOfCategories.add(category);
+						}
+						// Reset to the default value
+					}
+				}
+				// Clean the lists
+				List<Subcategory> listOfSubcategoriesAux = new ArrayList<Subcategory>(listOfSubcategories);
+				List<Category> listOfCategoriesAux = new ArrayList<Category>(listOfCategories);
+				listOfListOfSubcategories.add(listOfSubcategoriesAux);
+				listOfListOfCategories.add(listOfCategoriesAux);
+				listOfSubcategories.clear();
+				listOfCategories.clear();
+			}
+			// Define the user treeview
+			for (int i = 0; i < MainApp.subscriptionUsers.size(); i++) {
+				treeUserItem = new TreeItem<>(MainApp.subscriptionUsers.get(i).getUserName(),
+						new ImageView(new Image(getClass().getResourceAsStream("user.png"))));
+				// Define the categories treeview
+				for (int n = 0; n < listOfListOfCategories.get(i).size(); n++) {
+					treeCategoryItem = new TreeItem<>(listOfListOfCategories.get(i).get(n).getCatName(),
+							new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+					// Define the subcategories treeview
+					for (int j = 0; j < listOfListOfSubcategories.get(i).size(); j++) {
+						treeSubcategoryItem = new TreeItem<>(listOfListOfSubcategories.get(i).get(j).getSubName(),
+								new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+						/*----------------------------------------------------------File-----------------------------------------------------------*/
+						for (int x = 0; x < subscriptionFiles.get(i).size(); x++) {
+							file = subscriptionFiles.get(i).get(x);
+							if(file.getSubcategory().getSubName().equals(treeSubcategoryItem.getValue())) {
+								treeFileItem = new TreeItem<>(subscriptionFiles.get(i).get(x).getFileName(),
+										new ImageView(new Image(getClass().getResourceAsStream("ahk.png"))));
+								//Add the item to the treeview subcategory
+								treeSubcategoryItem.getChildren().add(treeFileItem);
 							}
 						}
+						/*----------------------------------------------------------Subcategory-----------------------------------------------------------*/
+						subcategory = listOfListOfSubcategories.get(i).get(j);
+						if(subcategory.getCategory().getCatName().equals(treeCategoryItem.getValue())) {
+							//Add the item to the treeview category
+							treeCategoryItem.getChildren().add(treeSubcategoryItem);
+						}
 					}
-					// If after the check is not repeated:
-					if(!categoryRepeated) {
-						// Save it and add it to the treeview
-						categories.add(category);
-						treeCategoryItem = new TreeItem<>(category.getCatName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
-						// Add the subcategory to it´s category
-						treeCategoryItem.getChildren().add(treeSubcategoryItem);
-						treeUserItem.getChildren().add(treeCategoryItem);
-					}
-					// Reset to the default value
-					categoryRepeated = false;
+					/*----------------------------------------------------------Category-----------------------------------------------------------*/
+					//Add the item to the treeview user
+					treeUserItem.getChildren().add(treeCategoryItem);
 				}
+				/*----------------------------------------------------------User-----------------------------------------------------------*/
 				// Add the item to the treeview root
 				rootItem.getChildren().add(treeUserItem);
 			}
@@ -342,9 +315,9 @@ public class PrincipalPageController {
 	private void selectItemFromYourFiles() {
 		checkButtonState();
 		typeOfFile = "YourFiles";
-		TreeItem<String> item = (TreeItem<String>) yourFilesTree.getSelectionModel().getSelectedItem();
+		TreeItem<String> item = yourFilesTree.getSelectionModel().getSelectedItem();
 		// If the selected item is a file:
-		if(item!=null && item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
+		if (item != null && item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
 			fileSelected = item.getValue();
 			openButton.setText("Open file");
 			openButton.setDisable(false);
@@ -362,11 +335,11 @@ public class PrincipalPageController {
 	private void selectItemFromPopularFiles() {
 		checkButtonState();
 		typeOfFile = "PopularFiles";
-		TreeItem<String> item = (TreeItem<String>) popularFilesTree.getSelectionModel().getSelectedItem();
+		TreeItem<String> item = popularFilesTree.getSelectionModel().getSelectedItem();
 		// If the selected item is a file:
-		if(item!=null && item.getChildren().isEmpty() && !item.getValue().equals("Popular files:")) {
+		if (item != null && item.getChildren().isEmpty() && !item.getValue().equals("Popular files:")) {
 			int end = item.getValue().indexOf('.');
-			fileSelected = item.getValue().substring(0, end-1);
+			fileSelected = item.getValue().substring(0, end - 1);
 			openButton.setText("Open file");
 			openButton.setDisable(false);
 		}
@@ -378,21 +351,22 @@ public class PrincipalPageController {
 
 	@FXML
 	/**
-	 * This method is called when you select an item from your files. And it is used to assign that file or user and enable the button
+	 * This method is called when you select an item from your files. And it is used
+	 * to assign that file or user and enable the button
 	 */
 	private void selectItemFromSubscriptionFiles() {
 		checkButtonState();
 		typeOfFile = "SubscriptionFiles";
-		TreeItem<String> item = (TreeItem<String>) subscriptionFilesTree.getSelectionModel().getSelectedItem();
+		TreeItem<String> item = subscriptionFilesTree.getSelectionModel().getSelectedItem();
 		// If the selected item is a user:
-		if(item!=null && item.getParent()!=null && item.getParent().getValue().equals("Users:")){
+		if (item != null && item.getParent() != null && item.getParent().getValue().equals("Users:")) {
 			userOrFile = "User";
 			userSelected = item.getValue();
 			openButton.setText("Open user");
 			openButton.setDisable(false);
 		}
 		// If the selected item is a file:
-		else if(item!=null && item.getChildren().isEmpty() && !item.getValue().equals("Users:")) {
+		else if (item != null && item.getChildren().isEmpty() && !item.getValue().equals("Users:")) {
 			userOrFile = "File";
 			fileSelected = item.getValue();
 			openButton.setText("Open file");
@@ -403,59 +377,62 @@ public class PrincipalPageController {
 			openButton.setDisable(true);
 		}
 	}
-	
+
 	@FXML
 	/**
 	 * This method is used to open an item
+	 * 
 	 * @param event
 	 */
-	private void openItem(ActionEvent event) {
+	private void openItem() {
 		// If the item is 1 of your files:
-		if(typeOfFile.equals("YourFiles")) {
+		if (typeOfFile.equals("YourFiles")) {
 			// Check all the files
-			for(int i = 0; i <yourFiles.size(); i++) {
+			for (int i = 0; i < yourFiles.size(); i++) {
 				// If the file is the selected:
-				if(yourFiles.get(i).getFileName().equals(fileSelected)) {
+				if (yourFiles.get(i).getFileName().equals(fileSelected)) {
 					MainApp.selectedFile = yourFiles.get(i);
 					MainApp.toolBarController.openFile();
 				}
 			}
 		}
 		// If the item is a popular file:
-		else if(typeOfFile.equals("PopularFiles")) {
-			
-			MainApp.selectedFile = popularFiles.get(Integer.parseInt(fileSelected)-1);
+		else if (typeOfFile.equals("PopularFiles")) {
+
+			MainApp.selectedFile = popularFiles.get(Integer.parseInt(fileSelected) - 1);
 			MainApp.toolBarController.openFile();
 		}
 		// If the item is a From subscription tree:
-		else if(typeOfFile.equals("SubscriptionFiles")){
+		else if (typeOfFile.equals("SubscriptionFiles")) {
 			// If the item is a File:
-			if(userOrFile.equals("File")) {
-				// Check all the files
-				for(int i = 0; i <subscriptionFiles.size(); i++) {
-					// If the file is the selected:
-					if(subscriptionFiles.get(i).getFileName().equals(fileSelected)) {
-						MainApp.selectedFile = subscriptionFiles.get(i);
-						MainApp.toolBarController.openFile();
+			if (userOrFile.equals("File")) {
+				// Check all the filelists:
+				for (int i = 0; i < subscriptionFiles.size(); i++) {
+					// Check all the files:
+					for (int n = 0; n < subscriptionFiles.get(i).size(); n++) {
+						if (subscriptionFiles.get(i).get(n).getFileName().equals(fileSelected)) {
+							MainApp.selectedFile = subscriptionFiles.get(i).get(n);
+							MainApp.toolBarController.openFile();
+						}
 					}
 				}
 			}
 			// If the item is a User:
-			else if(userOrFile.equals("User")) {
+			else if (userOrFile.equals("User")) {
 				// Check all the files
-				for(int i = 0; i <subscriptionFiles.size(); i++) {
+				for (int i = 0; i < subscriptionFiles.size(); i++) {
 					// If the user is the selected:
-					if(subscriptionUsers.get(i).getUserName().equals(userSelected)) {
-						MainApp.selectedUser = subscriptionUsers.get(i);
+					if (MainApp.subscriptionUsers.get(i).getUserName().equals(userSelected)) {
+						MainApp.selectedUser = MainApp.subscriptionUsers.get(i);
 						MainApp.toolBarController.openUser();
 					}
 				}
 			}
 		}
 	}
-	
+
 	private void checkButtonState() {
-		if(!openButton.isVisible()) {
+		if (!openButton.isVisible()) {
 			openButton.setVisible(true);
 		}
 	}

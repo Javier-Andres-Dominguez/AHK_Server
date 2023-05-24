@@ -6,17 +6,13 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
 @Entity
-public class User_Subscribe_User implements Serializable{
+public class User_Subscribe_User implements Serializable {
 
 	@EmbeddedId
 	private User_Subscribe_UserId id;
 
 	public User_Subscribe_User() {
-		
-	}
 
-	public User_Subscribe_User(User_Subscribe_UserId user_Subscribe_UserId) {
-		this.id = user_Subscribe_UserId;
 	}
 
 	public User_Subscribe_UserId getUser_Subscibre_UserId() {
@@ -26,5 +22,5 @@ public class User_Subscribe_User implements Serializable{
 	public void setUser_Subscibre_UserId(User_Subscribe_UserId user_Subscribe_UserId) {
 		this.id = user_Subscribe_UserId;
 	}
-	
+
 }

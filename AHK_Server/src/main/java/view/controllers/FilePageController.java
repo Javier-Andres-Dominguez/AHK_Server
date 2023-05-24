@@ -40,7 +40,7 @@ public class FilePageController {
 	private Button openButton;
 
 	List<File> filesList;
-	
+
 	private String fileSelected;
 	private User user;
 	private File file;
@@ -83,19 +83,19 @@ public class FilePageController {
 
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
-		Query query = null;
 		try {
 			// Execute the query and get the result
 			session.getTransaction().begin();
 
-			String hql = "FROM File f WHERE f.subcategory.subName = '" + subcategory.getSubName() + "'";
-			query = session.createQuery(hql);
+			String hql = "FROM File f WHERE f.subcategory.subName = :subName";
+			Query query = session.createQuery(hql);
+			query.setParameter("subName", subcategory.getSubName());
 			// Save the result in a list
-			filesList = query.list();
+			filesList = (List<File>) query.list();
 			// For all the files:
-			for (int i = 0; i < filesList.size(); i++) {
-				if(filesList.get(i).getFileId()!=file.getFileId()) {
-					rootItem.getChildren().add(new TreeItem<String> (filesList.get(i).getFileName(),
+			for (File otherFile : filesList) {
+				if (otherFile.getFileId() != file.getFileId()) {
+					rootItem.getChildren().add(new TreeItem<>(otherFile.getFileName(),
 							new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
 				}
 			}
@@ -118,10 +118,11 @@ public class FilePageController {
 	 */
 	private void selectItemFromYourFiles() {
 		checkButtonState();
-		TreeItem<String> item = (TreeItem<String>) otherFilesTreeView.getSelectionModel().getSelectedItem();
+		TreeItem<String> selectedItem = (TreeItem<String>) otherFilesTreeView.getSelectionModel().getSelectedItem();
 		// If the selected item is a file:
-		if(item!=null && item.getChildren().isEmpty() && !item.getValue().equals("Related files:")) {
-			fileSelected = item.getValue();
+		if (selectedItem != null && selectedItem.getChildren().isEmpty()
+				&& !selectedItem.getValue().equals("Related files:")) {
+			fileSelected = selectedItem.getValue();
 			openButton.setText("Open file");
 			openButton.setDisable(false);
 		}
@@ -130,29 +131,35 @@ public class FilePageController {
 			openButton.setDisable(true);
 		}
 	}
-	
+
 	@FXML
 	/**
 	 * This method is used to open an item
+	 * 
 	 * @param event
 	 */
 	private void openItem(ActionEvent event) {
 		boolean matched = false;
-		for(int i = 0; i<filesList.size() || !matched; i++) {
-			if(filesList.get(i).getFileName().equals(fileSelected)) {
-				MainApp.selectedFile = filesList.get(i);
+
+		for (File otherFile : filesList) {
+			if (otherFile.getFileName().equals(fileSelected)) {
+				MainApp.selectedFile = otherFile;
 				matched = true;
+				break;
 			}
 		}
-		MainApp.toolBarController.openFile();
+
+		if (matched) {
+			MainApp.toolBarController.openFile();
+		}
 	}
-	
+
 	private void checkButtonState() {
-		if(!openButton.isVisible()) {
+		if (!openButton.isVisible()) {
 			openButton.setVisible(true);
 		}
 	}
-	
+
 	@FXML
 	private void openUser() {
 		MainApp.selectedUser = user;

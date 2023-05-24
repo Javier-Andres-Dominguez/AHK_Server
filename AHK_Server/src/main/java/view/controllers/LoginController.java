@@ -39,7 +39,7 @@ public class LoginController {
 	// Define this cod user to prove if the credentials are correct
 	private int userId = -1;
 	private User user;
-	
+
 	public LoginController() {
 
 	}
@@ -92,11 +92,9 @@ public class LoginController {
 			// Define the window
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("../view/controllers/RegisterPage.fxml"));
-			// This was to check if the path was good
-			// System.out.println(MainApp.class.getResource("../view/controllers/RegisterPage.fxml"));
 			Parent root = loader.load();
 			Scene scene = new Scene(root);
-
+			scene.getStylesheets().add(getClass().getResource("../css/AHK_Server.css").toExternalForm());
 			// Load the app
 			stage.setTitle("RegisterPage");
 			stage.setScene(scene);
@@ -119,15 +117,14 @@ public class LoginController {
 			// Define the window
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("../view/controllers/Toolbar.fxml"));
-			// This was to check if the path was good
-			// System.out.println(MainApp.class.getResource("../view/controllers/PrincipalPage.fxml"));
 			Parent root = loader.load();
 			Scene scene = new Scene(root);
+			scene.getStylesheets().add(getClass().getResource("../css/AHK_Server.css").toExternalForm());
 
 			stage.setUserData(user);
 			MainApp.toolBarController = loader.getController();
 			MainApp.toolBarController.recoverUserInfo(stage);
-			
+
 			// Load the app
 			stage.setTitle("PrincipalPage");
 			stage.setScene(scene);
@@ -174,23 +171,23 @@ public class LoginController {
 			// Execute the query and get the result
 			session.getTransaction().begin();
 
-			String hql = "FROM User u WHERE u.userName='" + usernameField.getText()
-					+ "' AND u.userPas='" + passwordField.getText() + "'";
+			String hql = "FROM User u WHERE u.userName = :username AND u.userPas = :password";
 
 			query = session.createQuery(hql);
+			query.setParameter("username", usernameField.getText());
+			query.setParameter("password", passwordField.getText());
 
 			// Save the result in a list
-			List<User> queryResult = query.list();
+			List<User> queryResult = (List<User>) query.list();
+
 			// If it is null make sure to be invalid
 			if (queryResult.isEmpty()) {
-				// Assign the list information
 				userId = 0;
-			}else {
+			} else {
 				// Assign the list information
 				user = queryResult.get(0);
 				userId = user.getUserId();
 			}
-
 		}
 		// If there is any error Inform in the screen
 		catch (Exception e) {
@@ -205,11 +202,7 @@ public class LoginController {
 		}
 		// If the userId is not changed means that there is no credentials in the
 		// database with those values
-		if (userId <= 0) {
-			return false;
-		} else {
-			return true;
-		}
+		return userId > 0;
 	}
 
 }

@@ -18,17 +18,20 @@ public class Subcategory implements Serializable {
 	@Id
 	@Column(name = "SubId")
 	private int subId;
+
 	@Column(name = "SubName")
 	private String subName;
 
 	@ManyToOne
 	@JoinColumn(name = "UserId")
 	private User user;
+
 	@ManyToOne
 	@JoinColumn(name = "CatId")
 	private Category category;
+
 	@OneToMany(mappedBy = "subcategory", cascade = CascadeType.ALL)
-	private Set<File> file = new HashSet<File>(0);
+	private Set<File> files = new HashSet<File>(0);
 
 	public Subcategory() {
 
@@ -40,13 +43,13 @@ public class Subcategory implements Serializable {
 		this.subName = subName;
 	}
 
-	public Subcategory(int subId, String subName, User user, Category category, Set<File> file) {
+	public Subcategory(int subId, String subName, User user, Category category, Set<File> files) {
 		super();
 		this.subId = subId;
 		this.subName = subName;
 		this.user = user;
 		this.category = category;
-		this.file = file;
+		this.files = files;
 	}
 
 	public int getSubId() {
@@ -81,12 +84,12 @@ public class Subcategory implements Serializable {
 		this.category = category;
 	}
 
-	public Set<File> getFile() {
-		return file;
+	public Set<File> getFiles() {
+		return files;
 	}
 
-	public void setFile(Set<File> file) {
-		this.file = file;
+	public void setFiles(Set<File> files) {
+		this.files = files;
 	}
 
 }

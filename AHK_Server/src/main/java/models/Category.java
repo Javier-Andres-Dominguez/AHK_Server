@@ -18,14 +18,16 @@ public class Category implements Serializable {
 	@Id
 	@Column(name = "CatId")
 	private int catId;
+
 	@Column(name = "CatName")
 	private String catName;
 
 	@ManyToOne
 	@JoinColumn(name = "UserId")
 	private User user;
+
 	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-	private Set<Subcategory> subcategory = new HashSet<Subcategory>(0);
+	private Set<Subcategory> subcategories = new HashSet<Subcategory>(0);
 
 	public Category() {
 
@@ -37,12 +39,12 @@ public class Category implements Serializable {
 		this.catName = catName;
 	}
 
-	public Category(int catId, String catName, User user, Set<Subcategory> subcategory) {
+	public Category(int catId, String catName, User user, Set<Subcategory> subcategories) {
 		super();
 		this.catId = catId;
 		this.catName = catName;
 		this.user = user;
-		this.subcategory = subcategory;
+		this.subcategories = subcategories;
 	}
 
 	public int getCatId() {
@@ -69,12 +71,22 @@ public class Category implements Serializable {
 		this.user = user;
 	}
 
-	public Set<Subcategory> getSubcategory() {
-		return subcategory;
+	public Set<Subcategory> getSubcategories() {
+		return subcategories;
 	}
 
-	public void setSubcategory(Set<Subcategory> subcategory) {
-		this.subcategory = subcategory;
+	public void setSubcategories(Set<Subcategory> subcategories) {
+		this.subcategories = subcategories;
+	}
+
+	public void addSubcategory(Subcategory subcategory) {
+		subcategories.add(subcategory);
+		subcategory.setCategory(this);
+	}
+
+	public void removeSubcategory(Subcategory subcategory) {
+		subcategories.remove(subcategory);
+		subcategory.setCategory(null);
 	}
 
 }

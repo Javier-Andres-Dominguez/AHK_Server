@@ -10,31 +10,44 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.LoginController">
-   <children>
-      <HBox alignment="CENTER_LEFT" layoutX="200.0" layoutY="150.0" prefHeight="400.0" prefWidth="600.0" spacing="35.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <ImageView fx:id="loginImage" fitHeight="150.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/logo.jpg" />
-               </image>
-            </ImageView>
-            <VBox alignment="CENTER" prefHeight="400.0" prefWidth="130.0" spacing="10.0">
-               <children>
-                  <Label text="Username" />
-                  <TextField fx:id="usernameField" />
-                  <Label text="Password" />
-                  <PasswordField fx:id="passwordField" />
-                  <Label fx:id="errorLabel" textFill="RED" />
-                  <VBox alignment="CENTER" spacing="20.0">
-                     <children>
-                        <Button fx:id="createUserButton" mnemonicParsing="false" onAction="#createUser" prefHeight="31.0" prefWidth="80.0" text="Register" />
-                        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" prefHeight="31.0" prefWidth="80.0" text="Login" />
-                     </children>
-                  </VBox>
-               </children>
-            </VBox>
-         </children>
-      </HBox>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+	prefWidth="600.0" xmlns="http://javafx.com/javafx/19"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="view.controllers.LoginController">
+	<children>
+		<HBox alignment="CENTER_LEFT" layoutX="200.0" layoutY="150.0"
+			prefHeight="400.0" prefWidth="600.0" spacing="35.0"
+			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+			AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+			<children>
+				<ImageView fx:id="loginImage" fitHeight="150.0"
+					fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
+					<image>
+						<Image url="@../images/logo.jpg" />
+					</image>
+				</ImageView>
+				<VBox alignment="CENTER" prefHeight="400.0" prefWidth="130.0"
+					spacing="10.0">
+					<children>
+						<Label text="Username" />
+						<TextField fx:id="usernameField" />
+						<Label text="Password" />
+						<PasswordField fx:id="passwordField" />
+						<Label fx:id="errorLabel" textFill="RED" />
+						<VBox alignment="CENTER" spacing="20.0">
+							<children>
+								<Button fx:id="createUserButton" mnemonicParsing="false"
+									onAction="#createUser" prefHeight="31.0" prefWidth="80.0"
+									text="Register" />
+								<Button fx:id="loginButton" mnemonicParsing="false"
+									onAction="#login" prefHeight="31.0" prefWidth="80.0"
+									text="Login" />
+							</children>
+						</VBox>
+					</children>
+				</VBox>
+			</children>
+		</HBox>
+	</children>
 </AnchorPane>

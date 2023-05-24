@@ -9,36 +9,51 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.SearchPage">
-   <children>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <HBox alignment="CENTER" spacing="20.0">
-               <children>
-                  <TextField fx:id="searchTextField" prefWidth="150.0" />
-                  <Button fx:id="searchButton" mnemonicParsing="false" onAction="#search" text="Search" />
-               </children>
-            </HBox>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
-               <children>
-                  <Label fx:id="errorLabel" textFill="RED" />
-                  <HBox alignment="CENTER" spacing="20.0">
-                     <children>
-                        <CheckBox fx:id="categoriesCheckBox" mnemonicParsing="false" text="Categories" />
-                        <CheckBox fx:id="subcategoriesCheckBox" mnemonicParsing="false" text="Subcategories" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER" spacing="20.0">
-                     <children>
-                        <CheckBox fx:id="filesCheckBox" mnemonicParsing="false" text="Files" />
-                        <CheckBox fx:id="usersCheckBox" mnemonicParsing="false" text="Users" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-            <TreeView fx:id="contentTreeView" prefHeight="200.0" prefWidth="200.0" />
-            <Button fx:id="openButton" mnemonicParsing="false" text="Open" />
-         </children>
-      </VBox>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+	prefWidth="900.0" xmlns="http://javafx.com/javafx/19"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="view.controllers.SearchPage">
+	<children>
+		<VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0"
+			spacing="20.0" AnchorPane.bottomAnchor="0.0"
+			AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+			AnchorPane.topAnchor="0.0">
+			<children>
+				<HBox alignment="CENTER" spacing="20.0">
+					<children>
+						<TextField fx:id="searchTextField" prefWidth="150.0" />
+						<Button fx:id="searchButton" mnemonicParsing="false"
+							onAction="#search" text="Search" />
+					</children>
+				</HBox>
+				<VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0"
+					spacing="30.0">
+					<children>
+						<Label fx:id="errorLabel" textFill="RED" />
+						<HBox alignment="CENTER" spacing="20.0">
+							<children>
+								<CheckBox fx:id="categoriesCheckBox"
+									mnemonicParsing="false" text="Categories" />
+								<CheckBox fx:id="subcategoriesCheckBox"
+									mnemonicParsing="false" text="Subcategories" />
+							</children>
+						</HBox>
+						<HBox alignment="CENTER" spacing="20.0">
+							<children>
+								<CheckBox fx:id="filesCheckBox" mnemonicParsing="false"
+									text="Files" />
+								<CheckBox fx:id="usersCheckBox" mnemonicParsing="false"
+									text="Users" />
+							</children>
+						</HBox>
+					</children>
+				</VBox>
+				<TreeView fx:id="contentTreeView" prefHeight="200.0"
+					prefWidth="200.0" />
+				<Button fx:id="openButton" mnemonicParsing="false"
+					text="Open" />
+			</children>
+		</VBox>
+	</children>
 </AnchorPane>

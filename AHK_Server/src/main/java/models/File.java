@@ -18,24 +18,30 @@ public class File implements Serializable {
 	@Id
 	@Column(name = "FileId")
 	private int fileId;
+
 	@Column(name = "FileName")
 	private String fileName;
+
 	@Column(name = "FileDes")
 	private String fileDes;
+
 	@Column(name = "FilePath")
 	private String filePath;
+
 	@Column(name = "Views")
 	private int views;
 
 	@ManyToOne
 	@JoinColumn(name = "UserId")
 	private User user;
+
 	@ManyToOne
 	@JoinColumn(name = "SubId")
 	private Subcategory subcategory;
+
 	@OneToMany(mappedBy = "file", cascade = CascadeType.ALL)
-	private Set<Commentary> commentary = new HashSet<Commentary>(0);
-	
+	private Set<Commentary> commentaries = new HashSet<Commentary>(0);
+
 	public File() {
 	}
 
@@ -47,14 +53,14 @@ public class File implements Serializable {
 	}
 
 	public File(int fileId, String fileName, String fileDes, String filePath, User user, Subcategory subcategory,
-			Set<Commentary> commentary) {
+			Set<Commentary> commentaries) {
 		this.fileId = fileId;
 		this.fileName = fileName;
 		this.fileDes = fileDes;
 		this.filePath = filePath;
 		this.user = user;
 		this.subcategory = subcategory;
-		this.commentary = commentary;
+		this.commentaries = commentaries;
 	}
 
 	public int getFileId() {
@@ -113,12 +119,12 @@ public class File implements Serializable {
 		this.subcategory = subcategory;
 	}
 
-	public Set<Commentary> getCommentary() {
-		return commentary;
+	public Set<Commentary> getCommentaries() {
+		return commentaries;
 	}
 
-	public void setCommentary(Set<Commentary> commentary) {
-		this.commentary = commentary;
+	public void setCommentaries(Set<Commentary> commentaries) {
+		this.commentaries = commentaries;
 	}
-	
+
 }

@@ -1,6 +1,68 @@
-.logoutButton {
+/*.principalPagePane {
 	-fx-background-color: white;
+}*/
+/* Estilo CSS para la aplicación */
+
+/* Estilo de fondo */
+.root {
+  -fx-background-color: #f5f5f5;
 }
-.principalPagePane {
-	-fx-background-color: white;
+
+/* Estilo de los títulos */
+.label {
+  -fx-font-size: 18.0px;
+  -fx-font-weight: bold;
+}
+
+/* Estilo de los campos de texto */
+.text-field {
+  -fx-background-color: #ffffff;
+  -fx-border-color: #cccccc;
+  -fx-border-width: 1.0px;
+  -fx-border-radius: 3.0px;
+  -fx-padding: 5.0px;
+}
+
+/* Estilo de los botones */
+.button {
+  -fx-background-color: #4CAF50;
+  -fx-text-fill: #ffffff;
+  -fx-font-weight: bold;
+  -fx-padding: 8.0px 16.0px;
+  -fx-border-radius: 3.0px;
+}
+
+.button:hover {
+  -fx-background-color: #45a049;
+}
+
+/* Estilo de los enlaces */
+.hyperlink {
+  -fx-text-fill: #4CAF50;
+  -fx-font-weight: bold;
+}
+
+/* Estilo de la barra de herramientas */
+.tool-bar {
+  -fx-background-color: #ffffff;
+  -fx-border-color: #cccccc;
+  -fx-border-width: 0.0 0.0 1.0px 0.0;
+}
+
+/* Estilo del círculo de imagen de usuario */
+.circle {
+  -fx-fill: #4CAF50;
+  -fx-stroke: #ffffff;
+}
+
+/* Estilo del botón de cierre de sesión */
+.logout-button {
+  -fx-background-color: #ff0000;
+  -fx-text-fill: #ffffff;
+  -fx-padding: 8.0px 16.0px;
+  -fx-border-radius: 3.0px;
+}
+
+.logout-button:hover {
+  -fx-background-color: #d50000;
 }

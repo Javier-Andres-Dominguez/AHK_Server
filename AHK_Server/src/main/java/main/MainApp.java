@@ -1,6 +1,8 @@
 package main;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,18 +12,21 @@ import models.File;
 import models.User;
 import view.controllers.ToolBarController;
 
-public class MainApp extends Application{
+public class MainApp extends Application {
 
 	private Stage primaryStage;
+
 	// This is used to take account of the User selected to open a file page
 	public static File selectedFile;
 	// This is used to take account of the User that logged in
 	public static User loggedUser;
+	// This is a list of the users that the logged user is subscribed to:
+	public static List<User> subscriptionUsers = new ArrayList<>();
 	// This is used to take account of the User selected to open a user page
 	public static User selectedUser;
 	// This is used to communicate between views and the toolbar
 	public static ToolBarController toolBarController;
-	
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
@@ -29,17 +34,16 @@ public class MainApp extends Application{
 		initRootLayout();
 	}
 
-    /**
-     * This method launches the first stage
-     */
+	/**
+	 * This method launches the first stage
+	 */
 	public void initRootLayout() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			// Define the screen
 			loader.setLocation(MainApp.class.getResource("../view/controllers/LoginPage.fxml"));
-			// This was to check if the path was good
-			//System.out.println(MainApp.class.getResource("../view/controllers/LoginPage.fxml"));
 			Scene scene = new Scene(loader.load());
+			scene.getStylesheets().add(getClass().getResource("../view/css/AHK_Server.css").toExternalForm());
 			// Load and show the scene
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -48,8 +52,9 @@ public class MainApp extends Application{
 			e.printStackTrace();
 		}
 	}
+
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+
 }

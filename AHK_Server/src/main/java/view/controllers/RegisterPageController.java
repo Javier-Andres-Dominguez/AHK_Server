@@ -33,29 +33,35 @@ public class RegisterPageController {
 	private Button cancelButton;
 	@FXML
 	private Button registerButton;
-	
+
 	public RegisterPageController() {
-		
+
 	}
 
 	@FXML
 	private void initialize() {
+		clearFields();
+	}
+
+	/**
+	 * This method is used to clear the fields
+	 */
+	private void clearFields() {
 		usernameField.setText("");
 		userPasswordField.setText("");
 		userGmailField.setText("");
 	}
-	
+
 	@FXML
 	/**
 	 * This method is used to insert a new user into the database
 	 */
 	private void register() {
 		// If all fields are filled :
-		if(filledFields()) {
+		if (filledFields()) {
 			SessionFactory sf = new Configuration().configure().buildSessionFactory();
 			Session session = sf.openSession();
 			try {
-				// Execute the query and get the result
 				session.getTransaction().begin();
 				// Create a user and assign all the information
 				User user = new User();
@@ -78,15 +84,13 @@ public class RegisterPageController {
 				session.getTransaction().commit();
 				session.close();
 				sf.close();
-				usernameField.setText("");
-				userPasswordField.setText("");
-				userGmailField.setText("");
+				clearFields();
 				errorLabel.setText("User registered successfully");
 			}
-			
+
 		}
 	}
-	
+
 	@FXML
 	/**
 	 * This method is used to get back to the login screen
@@ -97,11 +101,10 @@ public class RegisterPageController {
 		try {
 			// Define the window
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("../view/controllers/Login.fxml"));
-			// This was to check if the path was good
-			//System.out.println(MainApp.class.getResource("../view/controllers/Login.fxml"));
+			loader.setLocation(MainApp.class.getResource("../view/controllers/LoginPage.fxml"));
 			Parent root = loader.load();
 			Scene scene = new Scene(root);
+			scene.getStylesheets().add(getClass().getResource("../css/AHK_Server.css").toExternalForm());
 
 			// Load the app
 			stage.setTitle("LoginPage");
@@ -111,29 +114,27 @@ public class RegisterPageController {
 			errorLabel.setText("Can´t go back");
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	/**
 	 * This method is used to check if the fields are empty
+	 * 
 	 * @return
 	 */
 	private boolean filledFields() {
-		if(usernameField.getText().equals("")) {
+		if (usernameField.getText().equals("")) {
 			errorLabel.setText("Username is empty");
 			return false;
-		}
-		else if(userPasswordField.getText().equals("")) {
+		} else if (userPasswordField.getText().equals("")) {
 			errorLabel.setText("Password is empty");
 			return false;
-		}
-		else if(userGmailField.getText().equals("")) {
+		} else if (userGmailField.getText().equals("")) {
 			errorLabel.setText("Gmail is empty");
 			return false;
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
-	
+
 }
