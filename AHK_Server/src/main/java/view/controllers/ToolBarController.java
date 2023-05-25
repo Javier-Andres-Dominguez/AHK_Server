@@ -62,7 +62,13 @@ public class ToolBarController {
 	 */
 	private void loadUserImage() {
 		if (MainApp.loggedUser.getUserImg() != null) {
-			userImageCircle.setFill(new ImagePattern(new Image(MainApp.loggedUser.getUserImg())));
+			try {
+				userImageCircle.setFill(new ImagePattern(new Image(MainApp.loggedUser.getUserImg())));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("user.png"))));
+			}
 		} else {
 			userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("user.png"))));
 		}

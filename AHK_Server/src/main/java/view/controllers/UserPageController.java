@@ -46,7 +46,6 @@ public class UserPageController {
 	@FXML
 	private Button subscriptionButton;
 
-	private Boolean subscribed;
 	private List<File> userFiles;
 	private String selectedFile;
 	private User user;
@@ -208,15 +207,26 @@ public class UserPageController {
 	 * enables/disables buttons
 	 */
 	private void checkYourProfile() {
-		if (user == MainApp.loggedUser || user.getUserId() == 1) {
+		if (user == MainApp.loggedUser) {
 			userNameTextField.setEditable(true);
 			saveChangesButton.setDisable(false);
 			userBiographyTextField.setEditable(true);
-		} else {
+			subscriptionButton.setDisable(true);
+			subscriptionButton.setVisible(false);
+		}else if(MainApp.loggedUser.getUserId() == 1) {
+			userNameTextField.setEditable(true);
+			saveChangesButton.setDisable(false);
+			userBiographyTextField.setEditable(true);
+			subscriptionButton.setDisable(false);
+			subscriptionButton.setVisible(true);
+		}
+		else {
 			userNameTextField.setEditable(false);
 			saveChangesButton.setDisable(true);
 			saveChangesButton.setVisible(false);
 			userBiographyTextField.setEditable(false);
+			subscriptionButton.setDisable(false);
+			subscriptionButton.setVisible(true);
 		}
 	}
 
