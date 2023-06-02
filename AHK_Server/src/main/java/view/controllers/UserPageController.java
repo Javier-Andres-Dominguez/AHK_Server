@@ -104,8 +104,16 @@ public class UserPageController {
 		ImageView imgView = null;
 		// Check if the user has an image for the profile or use the default one
 		if (imageUrl != null) {
-			// Assign the it´s own image
-			imgView = new ImageView(new Image(imageUrl));
+			// Define the image
+			Image img = new Image(imageUrl);
+			// If the image can load:
+			if(!img.isError()) {
+				imgView = new ImageView(img);
+			}
+			// Else use the default:
+			else {
+				imgView = new ImageView(new Image(getClass().getResourceAsStream("user.png")));
+			}
 		} else {
 			// Assign the default image
 			imgView = new ImageView(new Image(getClass().getResourceAsStream("user.png")));
@@ -207,7 +215,7 @@ public class UserPageController {
 	 * enables/disables buttons
 	 */
 	private void checkYourProfile() {
-		if (user == MainApp.loggedUser) {
+		if (user.getUserId() == MainApp.loggedUser.getUserId()) {
 			userNameTextField.setEditable(true);
 			saveChangesButton.setDisable(false);
 			userBiographyTextField.setEditable(true);
@@ -262,7 +270,7 @@ public class UserPageController {
 			User_Subscribe_UserDao user_Subscribe_UserDao = new User_Subscribe_UserDao(session);
 			
 			if(isSubscribed()) {
-				user_Subscribe_UserDao.deleteUser_Subscribe_User(user_Subscribe_User);
+				session.delete(user_Subscribe_User);
 				session.flush();
 				for(int i = 0; i<MainApp.subscriptionUsers.size();i++) {
 					if(MainApp.subscriptionUsers.get(i)==user) {

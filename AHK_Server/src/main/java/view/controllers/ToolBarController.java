@@ -2,7 +2,6 @@ package view.controllers;
 
 import java.io.IOException;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -16,7 +15,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -28,7 +26,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import main.MainApp;
-import models.File;
 import models.User;
 
 public class ToolBarController {
@@ -52,7 +49,6 @@ public class ToolBarController {
 	private static User user;
 
 	public void initialize() {
-
 		loadUserImage();
 		setupLogoutButton();
 	}
@@ -61,15 +57,22 @@ public class ToolBarController {
 	 * This method checks if the user has an image, else it will have the default
 	 */
 	private void loadUserImage() {
+		// If the user has an image:
 		if (MainApp.loggedUser.getUserImg() != null) {
-			try {
-				userImageCircle.setFill(new ImagePattern(new Image(MainApp.loggedUser.getUserImg())));
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			// Define the image
+			Image img = new Image(MainApp.loggedUser.getUserImg());
+			// If the image can load:
+			if(!img.isError()) {
+				userImageCircle.setFill(new ImagePattern(img));
+			}
+			// Else use the default:
+			else {
 				userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("user.png"))));
 			}
-		} else {
+			
+		}
+		// Else use the default
+		else {
 			userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("user.png"))));
 		}
 	}
@@ -191,7 +194,7 @@ public class ToolBarController {
 	 * This method assigns the buttons
 	 */
 	private void buttons() {
-		buttons = new Hyperlink[2];
+		buttons = new Hyperlink[3];
 		for (int i = 0; i < buttons.length; i++) {
 			buttons[i] = new Hyperlink();
 		}
@@ -200,6 +203,8 @@ public class ToolBarController {
 		buttons[0].setDisable(true);
 		buttons[1].setText("Search");
 		buttons[1].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("../view/controllers/SearchPage.fxml"));
+		buttons[2].setText("Upload File");
+		buttons[2].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("../view/controllers/UploadFilePage.fxml"));
 	}
 
 	/**

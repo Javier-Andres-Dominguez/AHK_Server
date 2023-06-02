@@ -1,5 +1,8 @@
 package view.controllers;
 
+import java.util.List;
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -63,15 +66,19 @@ public class RegisterPageController {
 			Session session = sf.openSession();
 			try {
 				session.getTransaction().begin();
-				// Create a user and assign all the information
-				User user = new User();
-				user.setUserName(usernameField.getText());
-				user.setUserPas(userPasswordField.getText());
-				user.setUserGma(userGmailField.getText());
-				// Define the loader
-				UserDao userDao = new UserDao(session);
-				// Save the user into the database
-				userDao.insertUser(user);
+				Query query = session.createQuery("FROM User u WHERE u.userName LIKE :userName");
+				query.setParameter("userName", usernameField.getText());
+				if(validUsername()) {
+					// Create a user and assign all the information
+					User user = new User();
+					user.setUserName(usernameField.getText());
+					user.setUserPas(userPasswordField.getText());
+					user.setUserGma(userGmailField.getText());
+					// Define the loader
+					UserDao userDao = new UserDao(session);
+					// Save the user into the database
+					userDao.insertUser(user);
+				}
 
 			}
 			// If there is any error Inform in the screen
@@ -91,6 +98,36 @@ public class RegisterPageController {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	private boolean validUsername() {
+		SessionFactory sf = new Configuration().configure().buildSessionFactory();
+		Session session = sf.openSession();
+		boolean existingUsername = false;
+		try {
+			session.getTransaction().begin();
+			Query query = session.createQuery("FROM User u WHERE u.userName LIKE :userName");
+			query.setParameter("userName", usernameField.getText());
+			List<User> usernamesList = query.list();
+			if(usernamesList.size()>0) {
+				errorLabel.setText("User name alredy exists");
+				existingUsername = false;
+			}else {
+				existingUsername = true;
+			}
+		}
+		// If there is any error Inform in the screen
+		catch (Exception e) {
+			e.printStackTrace();
+			errorLabel.setText("Connection error");
+		}
+		// At the end:
+		finally {
+			session.close();
+			sf.close();
+		}
+		return existingUsername;
+	}
+	
 	@FXML
 	/**
 	 * This method is used to get back to the login screen

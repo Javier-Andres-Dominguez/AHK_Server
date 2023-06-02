@@ -17,6 +17,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.DirectoryChooser;
 import main.MainApp;
 import models.File;
 import models.Subcategory;
@@ -44,10 +45,6 @@ public class FilePageController {
 	private String fileSelected;
 	private User user;
 	private File file;
-
-	public FilePageController() {
-
-	}
 
 	@FXML
 	private void initialize() {
@@ -154,12 +151,32 @@ public class FilePageController {
 		}
 	}
 
+	/**
+	 * Make sure that the button is visible
+	 */
 	private void checkButtonState() {
 		if (!openButton.isVisible()) {
 			openButton.setVisible(true);
 		}
 	}
 
+	@FXML
+	private void openFileChooser() {
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		configurateFileChooser(directoryChooser);
+		directoryChooser.showDialog(null);
+	}
+	
+	/**
+	 * Config the directorychooser
+	 * @param directoryChooser
+	 */
+	private void configurateFileChooser(DirectoryChooser directoryChooser) {
+		directoryChooser.setTitle("Choose a place to download");
+		directoryChooser.setInitialDirectory(
+				new java.io.File(System.getProperty("user.home")));
+	}
+	
 	@FXML
 	private void openUser() {
 		MainApp.selectedUser = user;

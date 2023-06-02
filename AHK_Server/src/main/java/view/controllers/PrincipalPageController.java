@@ -10,7 +10,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
@@ -65,6 +64,7 @@ public class PrincipalPageController {
 	/**
 	 * This method fills your files pane with files, subcategories and categories
 	 */
+	@SuppressWarnings("unchecked")
 	private void fillYourFiles() {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
@@ -127,6 +127,7 @@ public class PrincipalPageController {
 	/**
 	 * This method fills the popular files pane with popular files
 	 */
+	@SuppressWarnings("unchecked")
 	private void fillPopularFiles() {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
@@ -140,7 +141,7 @@ public class PrincipalPageController {
 			Query query = session.createQuery(hql);
 			query.setMaxResults(10);
 			// Save the result in a variable to access it from another method later
-			popularFiles = (List<File>) query.list();
+			popularFiles = query.list();
 
 			// Define the root item of treeview
 			TreeItem<String> rootItem = new TreeItem<>("Popular files:",
@@ -177,7 +178,7 @@ public class PrincipalPageController {
 			String hql = "SELECT u.id FROM User_Subscribe_User u WHERE u.id.userSubscribed = " + loggedUser.getUserId();
 			Query query = session.createQuery(hql);
 			// Save the result in a list
-			List<User_Subscribe_UserId> subscriptionUsers = (List<User_Subscribe_UserId>) query.list();
+			List<User_Subscribe_UserId> subscriptionUsers = query.list();
 			// Defining variables that will be used later with all entities
 			User notYourUser;
 			File file;
@@ -431,6 +432,9 @@ public class PrincipalPageController {
 		}
 	}
 
+	/**
+	 * Make sure that the button is visible
+	 */
 	private void checkButtonState() {
 		if (!openButton.isVisible()) {
 			openButton.setVisible(true);

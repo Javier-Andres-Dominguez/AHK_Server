@@ -16,6 +16,11 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import main.MainApp;
+import models.Category;
+import models.File;
+import models.Subcategory;
+import models.User;
 
 public class SearchPage {
 
@@ -24,6 +29,9 @@ public class SearchPage {
 
 	@FXML
 	private Button searchButton;
+	
+	@FXML
+	private Button openButton;
 
 	@FXML
 	private Label errorLabel;
@@ -42,17 +50,31 @@ public class SearchPage {
 
 	@FXML
 	private TreeView<String> contentTreeView;
-
-	@FXML
-	private Button openButton;
-
-	List<?> resultList;
+	TreeItem<String> rootItem;
+	
+	private boolean userChecked = false;
+	private boolean categoryChecked = false;
+	private boolean subcategoryChecked = false;
+	private boolean fileChecked = false;
+	
+	private List<User> usersList;
+	private List<Category> categoriesList;
+	private List<Subcategory> subcategoriesList;
+	private List<File> filesList;
+	
+	private User userSelected;
+	/*private Category categorySelected;
+	private Subcategory subcategorySelected;*/
+	private File fileSelected;
+	
+	private String itemType;
 
 	public void initialize() {
 		// Define the root item of treeview
-		TreeItem<String> rootItem = new TreeItem<>("Results:",
-				new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+		rootItem = new TreeItem<String>("Results:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 		contentTreeView.setRoot(rootItem);
+		openButton.setDisable(true);
+		openButton.setVisible(false);
 	}
 
 	/**
@@ -61,28 +83,12 @@ public class SearchPage {
 	@FXML
 	private void search() {
 		if (!textFieldEmpty()) {
-			if (checkBoxes()) {
-				SessionFactory sf = new Configuration().configure().buildSessionFactory();
-				Session session = sf.openSession();
-				Query query = null;
-				try {
-					session.getTransaction().begin();
-
-					String hql = "FROM";
-					hql = checkCheckedBoxes(hql);
-					query = session.createQuery(hql);
-					// Save the result in a list
-					resultList = query.list();
-				}
-				// If there is any error Inform in the screen
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-				// At the end:
-				finally {
-					session.close();
-					sf.close();
-				}
+			if (anyBoxesChecked()) {
+				openButton.setVisible(true);
+				// Disable the button, as nothing is selected
+				openButton.setDisable(true);
+				getInfoFromCheckedBoxes();
+				generateResults();
 			} else {
 				errorLabel.setText("No checkbox was checked, can´t search");
 			}
@@ -97,11 +103,7 @@ public class SearchPage {
 	 * @return
 	 */
 	private boolean textFieldEmpty() {
-		if (searchTextField.getText().equals(null)) {
-			return true;
-		} else {
-			return false;
-		}
+	    return searchTextField.getText().isEmpty();
 	}
 
 	/**
@@ -109,57 +111,167 @@ public class SearchPage {
 	 * 
 	 * @return
 	 */
-	private boolean checkBoxes() {
-		if (categoriesCheckBox.isSelected() || subcategoriesCheckBox.isSelected() || filesCheckBox.isSelected()
-				|| usersCheckBox.isSelected()) {
-			return true;
-		} else {
-			return false;
-		}
+	private boolean anyBoxesChecked() {
+	    userChecked = usersCheckBox.isSelected();
+	    categoryChecked = categoriesCheckBox.isSelected();
+	    subcategoryChecked = subcategoriesCheckBox.isSelected();
+	    fileChecked = filesCheckBox.isSelected();
+
+	    return userChecked || categoryChecked || subcategoryChecked || fileChecked;
 	}
+
 
 	/**
 	 * This method is used to check what checkboxes are checked
 	 */
-	private String checkCheckedBoxes(String hqlString) {
-		boolean added = false;
-		String secondPart = "";
-		if (categoriesCheckBox.isSelected()) {
-			hqlString += " Category c";
-			secondPart += " WHERE c.catName = '" + searchTextField.getText() + "'";
-			added = true;
-		}
-		if (subcategoriesCheckBox.isSelected()) {
-			if (added) {
-				hqlString += "OR Subcategory s";
-				secondPart += " OR s.subName = '" + searchTextField.getText() + "'";
-			} else {
-				hqlString += " Subcategory s";
-				secondPart += " WHERE s.subName = '" + searchTextField.getText() + "'";
-				added = true;
+	@SuppressWarnings("unchecked")
+	private void getInfoFromCheckedBoxes() {
+		SessionFactory sf = new Configuration().configure().buildSessionFactory();
+		Session session = sf.openSession();
+		try {
+			session.getTransaction().begin();
+
+			if (categoriesCheckBox.isSelected()) {
+				Query query = session.createQuery("FROM Category c WHERE c.catName LIKE :searchTextField");
+				query.setParameter("searchTextField", searchTextField.getText());
+				// Save the result in a list
+				categoriesList = query.list();
+			}
+			if (subcategoriesCheckBox.isSelected()) {
+				Query query = session.createQuery("FROM Subcategory s WHERE s.subName LIKE :searchTextField");
+				query.setParameter("searchTextField", searchTextField.getText());
+				// Save the result in a list
+				subcategoriesList = query.list();
+			}
+			if (filesCheckBox.isSelected()) {
+				Query query = session.createQuery("FROM File f WHERE f.fileName LIKE :searchTextField");
+				query.setParameter("searchTextField", searchTextField.getText());
+				// Save the result in a list
+				filesList = query.list();
+			}
+			if (usersCheckBox.isSelected()) {
+				Query query = session.createQuery("FROM User u WHERE u.userName LIKE :searchTextField");
+				query.setParameter("searchTextField", searchTextField.getText());
+				// Save the result in a list
+				usersList = query.list();
 			}
 		}
-		if (filesCheckBox.isSelected()) {
-			if (added) {
-				hqlString += "OR File f";
-				secondPart += " OR f.fileName = '" + searchTextField.getText() + "'";
-			} else {
-				hqlString += " File f";
-				secondPart += " WHERE f.fileName = '" + searchTextField.getText() + "'";
-				added = true;
-			}
+		// If there is any error Inform in the screen
+		catch (Exception e) {
+			e.printStackTrace();
 		}
-		if (usersCheckBox.isSelected()) {
-			if (added) {
-				hqlString += "OR User u";
-				secondPart += " OR u.userName = '" + searchTextField.getText() + "'";
-			} else {
-				hqlString += " User u";
-				secondPart += " WHERE u.userName = '" + searchTextField.getText() + "'";
-				added = true;
-			}
+		// At the end:
+		finally {
+			session.close();
+			sf.close();
 		}
-		return hqlString += secondPart;
 	}
 
+	/**
+	 * This method is used to create the treeviews of the results from the query
+	 */
+	private void generateResults() {
+		// Reset in case it was used before
+		rootItem = new TreeItem<String>("Results:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+		if(userChecked) {
+			TreeItem<String> user = new TreeItem<String>("Users:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+			for(int i = 0; i<usersList.size(); i++) {
+				user.getChildren().add(new TreeItem<String>(usersList.get(i).getUserName(), new ImageView(new Image(getClass().getResourceAsStream("user.png")))));
+			}
+			rootItem.getChildren().add(user);
+		}
+		if(categoryChecked) {
+			TreeItem<String> category = new TreeItem<String>("Categories:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+			for(int i = 0; i<categoriesList.size(); i++) {
+				category.getChildren().add(new TreeItem<String>(categoriesList.get(i).getCatName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png")))));
+			}
+			rootItem.getChildren().add(category);
+		}
+		if(subcategoryChecked) {
+			TreeItem<String> subcategory = new TreeItem<String>("Subcategories:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+			for(int i = 0; i<subcategoriesList.size(); i++) {
+				subcategory.getChildren().add(new TreeItem<String>(subcategoriesList.get(i).getSubName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png")))));
+			}
+			rootItem.getChildren().add(subcategory);
+		}
+		if(fileChecked) {
+			TreeItem<String> file = new TreeItem<String>("Files:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+			for(int i = 0; i<filesList.size(); i++) {
+				file.getChildren().add(new TreeItem<String>(filesList.get(i).getFileName(), new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
+			}
+			rootItem.getChildren().add(file);
+		}
+		contentTreeView.setRoot(rootItem);
+	}
+
+	@FXML
+	/**
+	 * This method is called when you select an item from your files
+	 */
+	private void selectItemFromYourFiles() {
+		TreeItem<String> item = contentTreeView.getSelectionModel().getSelectedItem();
+		if(item != null && !item.getValue().equals("Results:") && item.getParent().getValue().equals("Users:") && !item.getValue().equals("Results:")) {
+			itemType = "User";
+			openButton.setText("Open User");
+			openButton.setDisable(false);
+			for(int i = 0; i<usersList.size();i++) {
+				if(usersList.get(i).getUserName().equals(item.getValue())) {
+					userSelected = usersList.get(i);
+					break;
+				}
+			}
+		}
+		if(item != null && !item.getValue().equals("Results:") && item.getParent().getValue().equals("Categories:")) {
+			//itemType = "Category";
+			openButton.setText("Open Category");
+			openButton.setDisable(false);
+			/*for(int i = 0; i<categoriesList.size();i++) {
+				if(categoriesList.get(i).getCatName().equals(item.getValue())) {
+					categorySelected = categoriesList.get(i);
+					break;
+				}
+			}*/
+		}
+		if(item != null && !item.getValue().equals("Results:") && item.getParent().getValue().equals("Subcategories:") && !item.getValue().equals("Results:")) {
+			//itemType = "Subcategory";
+			openButton.setText("Open Subcategory");
+			openButton.setDisable(false);
+			/*for(int i = 0; i<subcategoriesList.size();i++) {
+			if(subcategoriesList.get(i).getSubName().equals(item.getValue())) {
+				subcategorySelected = subcategoriesList.get(i);
+				break;
+			}
+		}*/
+		}
+		if(item != null && !item.getValue().equals("Results:") && item.getParent().getValue().equals("Files:") && !item.getValue().equals("Results:")) {
+			itemType = "File";
+			openButton.setText("Open File");
+			openButton.setDisable(false);
+			for(int i = 0; i<filesList.size();i++) {
+				if(filesList.get(i).getFileName().equals(item.getValue())) {
+					fileSelected = filesList.get(i);
+					break;
+				}
+			}
+		}
+	}
+	
+	@FXML
+	private void openItem() {
+		if(itemType.equals("User")) {
+			MainApp.selectedUser = userSelected;
+			MainApp.toolBarController.openUser();
+		}
+		if(itemType.equals("File")) {
+			MainApp.selectedFile = fileSelected;
+			MainApp.toolBarController.openFile();
+		}
+		/*if(itemType.equals("Category")) {
+			MainApp.toolBarController.openCategory();
+		}
+		if(itemType.equals("Subcategory")) {
+			MainApp.toolBarController.openSubcategory();
+		}*/
+	}
+	
 }

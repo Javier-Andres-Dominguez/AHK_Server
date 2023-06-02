@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -10,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.FilePageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.UploadFilePageController">
 	<children>
 		<VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<children>
@@ -23,13 +22,14 @@
 										<HBox alignment="CENTER" spacing="15.0">
 											<children>
 												<Label text="User:" />
-												<Hyperlink fx:id="userNameHyperlink" onAction="#openUser" text="Hyperlink" />
-												<Label fx:id="fileNameLabel" text="FileNameExample" />
+												<Label fx:id="userNameLabel" text="UsernameExample" />
+												<Label text="Filename:" />
+												<Label fx:id="fileNameLabel" />
 											</children>
 										</HBox>
 										<HBox alignment="CENTER" spacing="15.0">
 											<children>
-												<Button fx:id="downloadButton" mnemonicParsing="false" onAction="#openFileChooser" text="Download" />
+												<Button fx:id="uploadFileButton" mnemonicParsing="false" onAction="#openFileChooser" text="Upload File" />
 												<Label fx:id="viewsLabel" text="Views" />
 											</children>
 										</HBox>
@@ -40,25 +40,16 @@
 						<TextField fx:id="fileDescriptionTextField" prefHeight="100.0" prefWidth="900.0" />
 					</children>
 				</VBox>
-				<HBox prefHeight="500.0" prefWidth="900.0">
-					<children>
-						<ScrollPane prefHeight="500.0" prefWidth="600.0">
-							<content>
-								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1500.0" prefWidth="1500.0" />
-							</content>
-						</ScrollPane>
 						<ScrollPane prefHeight="500.0" prefWidth="400.0">
 							<content>
-								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="750.0">
+								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="1500.0">
 									<children>
-										<TreeView fx:id="otherFilesTreeView" layoutX="20.0" layoutY="14.0" onContextMenuRequested="#selectItemFromYourFiles" onMouseClicked="#selectItemFromYourFiles" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+										<TreeView fx:id="subcategoriesTreeView" layoutX="20.0" layoutY="14.0" onContextMenuRequested="#selectSubcategoryForFile" onMouseClicked="#selectSubcategoryForFile" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 									</children>
 								</AnchorPane>
 							</content>
 						</ScrollPane>
-					</children>
-				</HBox>
-				<Button fx:id="openButton" mnemonicParsing="false" onAction="#openItem" text="Open" />
+				<Button fx:id="publishButton" mnemonicParsing="false" onAction="#publishFile" text="Publish" />
 			</children>
 		</VBox>
 	</children>
