@@ -12,3 +12,4 @@ There are also many users and they can comment, rate and download every file. <b
 * Implement the new window for Categories and Subcategories <br>
 * Implement the comentaries in the file <br>
 * Add the documentation
+* Add function to the download button from FilePage <br>
