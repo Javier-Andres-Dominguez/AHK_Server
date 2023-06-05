@@ -62,14 +62,14 @@ public class ToolBarController {
 			// Define the image
 			Image img = new Image(MainApp.loggedUser.getUserImg());
 			// If the image can load:
-			if(!img.isError()) {
+			if (!img.isError()) {
 				userImageCircle.setFill(new ImagePattern(img));
 			}
 			// Else use the default:
 			else {
 				userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("user.png"))));
 			}
-			
+
 		}
 		// Else use the default
 		else {
@@ -204,7 +204,8 @@ public class ToolBarController {
 		buttons[1].setText("Search");
 		buttons[1].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("../view/controllers/SearchPage.fxml"));
 		buttons[2].setText("Upload File");
-		buttons[2].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("../view/controllers/UploadFilePage.fxml"));
+		buttons[2].addEventHandler(MouseEvent.MOUSE_CLICKED,
+				btnEventHandler("../view/controllers/UploadFilePage.fxml"));
 	}
 
 	/**

@@ -1,36 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
-  All rights reserved. Use is subject to license terms.
-
-  This file is available and licensed under the following license:
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:
-
-  - Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-  - Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in
-    the documentation and/or other materials provided with the distribution.
-  - Neither the name of Oracle Corporation nor the names of its
-    contributors may be used to endorse or promote products derived
-    from this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--->
+<!-- Copyright (c) 2015, 2019, Gluon and/or its affiliates. All rights reserved. 
+	Use is subject to license terms. This file is available and licensed under 
+	the following license: Redistribution and use in source and binary forms, 
+	with or without modification, are permitted provided that the following conditions 
+	are met: - Redistributions of source code must retain the above copyright 
+	notice, this list of conditions and the following disclaimer. - Redistributions 
+	in binary form must reproduce the above copyright notice, this list of conditions 
+	and the following disclaimer in the documentation and/or other materials 
+	provided with the distribution. - Neither the name of Oracle Corporation 
+	nor the names of its contributors may be used to endorse or promote products 
+	derived from this software without specific prior written permission. THIS 
+	SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+	IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+	INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+	BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF 
+	USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+	THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+	NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+	EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. -->
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -42,58 +32,91 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.PrincipalPageController">
-  <children>
-    <SplitPane dividerPositions="0.33, 0.67" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
-         <items>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <Label minHeight="50.0" text="Your files" />
-                  <ScrollPane prefHeight="1000.0" prefWidth="200.0">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1200.0" prefWidth="900.0" styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css">
-                           <children>
-                              <TreeView fx:id="yourFilesTree" onContextMenuRequested="#selectItemFromYourFiles" onMouseClicked="#selectItemFromYourFiles" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                           </children></AnchorPane>
-                    </content>
-                  </ScrollPane>
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <Label minHeight="50.0" text="Most Popular" />
-                  <ScrollPane prefHeight="1000.0" prefWidth="200.0">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="900.0" styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css">
-                           <children>
-                              <TreeView fx:id="popularFilesTree" layoutX="-14.0" onContextMenuRequested="#selectItemFromPopularFiles" onMouseClicked="#selectItemFromPopularFiles" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0" />
-                           </children></AnchorPane>
-                    </content>
-                  </ScrollPane>
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <Label minHeight="50.0" text="Subscription" />
-                  <ScrollPane prefHeight="1000.0" prefWidth="200.0">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="900.0" styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css">
-                           <children>
-                              <TreeView fx:id="subscriptionFilesTree" onContextMenuRequested="#selectItemFromSubscriptionFiles" onMouseClicked="#selectItemFromSubscriptionFiles" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                           </children></AnchorPane>
-                    </content>
-                  </ScrollPane>
-               </children>
-            </VBox>
-         </items>
-    </SplitPane>
-    <HBox id="HBox" alignment="CENTER" spacing="5.0" VBox.vgrow="NEVER">
-      <padding>
-        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-      </padding>
-         <children>
-            <Button fx:id="openButton" mnemonicParsing="false" onAction="#openItem" text="Open" />
-         </children>
-    </HBox>
-  </children>
+<VBox prefHeight="600.0" prefWidth="900.0"
+	xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="view.controllers.PrincipalPageController">
+	<children>
+		<SplitPane dividerPositions="0.33, 0.67"
+			focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0"
+			VBox.vgrow="ALWAYS">
+			<items>
+				<VBox prefHeight="200.0" prefWidth="100.0">
+					<children>
+						<Label minHeight="50.0" text="Your files" />
+						<ScrollPane prefHeight="1000.0" prefWidth="200.0">
+							<content>
+								<AnchorPane minHeight="0.0" minWidth="0.0"
+									prefHeight="1200.0" prefWidth="900.0"
+									styleClass="principalPagePane"
+									stylesheets="@../css/AHK_Server.css">
+									<children>
+										<TreeView fx:id="yourFilesTree"
+											onContextMenuRequested="#selectItemFromYourFiles"
+											onMouseClicked="#selectItemFromYourFiles" prefHeight="200.0"
+											prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
+											AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+											AnchorPane.topAnchor="0.0" />
+									</children>
+								</AnchorPane>
+							</content>
+						</ScrollPane>
+					</children>
+				</VBox>
+				<VBox prefHeight="200.0" prefWidth="100.0">
+					<children>
+						<Label minHeight="50.0" text="Most Popular" />
+						<ScrollPane prefHeight="1000.0" prefWidth="200.0">
+							<content>
+								<AnchorPane minHeight="0.0" minWidth="0.0"
+									prefHeight="1000.0" prefWidth="900.0"
+									styleClass="principalPagePane"
+									stylesheets="@../css/AHK_Server.css">
+									<children>
+										<TreeView fx:id="popularFilesTree" layoutX="-14.0"
+											onContextMenuRequested="#selectItemFromPopularFiles"
+											onMouseClicked="#selectItemFromPopularFiles"
+											prefHeight="200.0" prefWidth="200.0"
+											AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-14.0"
+											AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0" />
+									</children>
+								</AnchorPane>
+							</content>
+						</ScrollPane>
+					</children>
+				</VBox>
+				<VBox prefHeight="200.0" prefWidth="100.0">
+					<children>
+						<Label minHeight="50.0" text="Subscription" />
+						<ScrollPane prefHeight="1000.0" prefWidth="200.0">
+							<content>
+								<AnchorPane minHeight="0.0" minWidth="0.0"
+									prefHeight="1000.0" prefWidth="900.0"
+									styleClass="principalPagePane"
+									stylesheets="@../css/AHK_Server.css">
+									<children>
+										<TreeView fx:id="subscriptionFilesTree"
+											onContextMenuRequested="#selectItemFromSubscriptionFiles"
+											onMouseClicked="#selectItemFromSubscriptionFiles"
+											prefHeight="200.0" prefWidth="200.0"
+											AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+											AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+									</children>
+								</AnchorPane>
+							</content>
+						</ScrollPane>
+					</children>
+				</VBox>
+			</items>
+		</SplitPane>
+		<HBox id="HBox" alignment="CENTER" spacing="5.0"
+			VBox.vgrow="NEVER">
+			<padding>
+				<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+			</padding>
+			<children>
+				<Button fx:id="openButton" mnemonicParsing="false"
+					onAction="#openItem" text="Open" />
+			</children>
+		</HBox>
+	</children>
 </VBox>

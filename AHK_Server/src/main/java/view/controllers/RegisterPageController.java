@@ -68,7 +68,7 @@ public class RegisterPageController {
 				session.getTransaction().begin();
 				Query query = session.createQuery("FROM User u WHERE u.userName LIKE :userName");
 				query.setParameter("userName", usernameField.getText());
-				if(validUsername()) {
+				if (validUsername()) {
 					// Create a user and assign all the information
 					User user = new User();
 					user.setUserName(usernameField.getText());
@@ -108,10 +108,10 @@ public class RegisterPageController {
 			Query query = session.createQuery("FROM User u WHERE u.userName LIKE :userName");
 			query.setParameter("userName", usernameField.getText());
 			List<User> usernamesList = query.list();
-			if(usernamesList.size()>0) {
+			if (usernamesList.size() > 0) {
 				errorLabel.setText("User name alredy exists");
 				existingUsername = false;
-			}else {
+			} else {
 				existingUsername = true;
 			}
 		}
@@ -127,7 +127,7 @@ public class RegisterPageController {
 		}
 		return existingUsername;
 	}
-	
+
 	@FXML
 	/**
 	 * This method is used to get back to the login screen

@@ -10,38 +10,43 @@
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.UserPageController">
-   <children>
-      <VBox alignment="CENTER" layoutX="388.0" layoutY="119.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <HBox prefWidth="900.0" spacing="200.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <VBox fx:id="userImageVBox" prefHeight="200.0" prefWidth="100.0" />
-                  <VBox alignment="CENTER" spacing="15.0">
-                     <children>
-                        <HBox alignment="CENTER" spacing="30.0">
+	<children>
+		<VBox alignment="CENTER" layoutX="388.0" layoutY="119.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+			<children>
+				<HBox prefWidth="900.0" spacing="200.0" VBox.vgrow="ALWAYS">
+					<children>
+						<VBox fx:id="userImageVBox" prefHeight="200.0" prefWidth="100.0" />
+						<VBox alignment="CENTER" spacing="15.0">
+							<children>
+								<HBox alignment="CENTER" spacing="30.0">
+									<children>
+										<Label text="User:" />
+										<TextField fx:id="userNameTextField" prefWidth="150.0" />
+									</children>
+								</HBox>
+                        <HBox alignment="CENTER" spacing="20.0">
                            <children>
-                              <Label text="User:" />
-                              <TextField fx:id="userNameTextField" prefWidth="150.0" />
+      								<Label fx:id="numberOfFilesLabel" text="NumberOfFiles" />
+                              <Button fx:id="subscriptionButton" mnemonicParsing="false" onAction="#subscribeAndUnsubscribe" text="Subscription" />
                            </children>
                         </HBox>
-                        <Label fx:id="numberOfFilesLabel" text="NumberOfFiles" />
-                        <TextField fx:id="userBiographyTextField" prefHeight="125.0" prefWidth="500.0" text="UserBiography" />
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <ScrollPane prefHeight="300.0" prefWidth="900.0">
-               <content>
-                  <TreeView fx:id="userFilesTreeView" onContextMenuRequested="#selectItemFromYourFiles" onMouseClicked="#selectItemFromYourFiles" prefHeight="655.0" prefWidth="3000.0" />
-               </content>
-            </ScrollPane>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
-               <children>
-                  <Button fx:id="openButton" mnemonicParsing="false" onAction="#openItem" text="Open" />
-                  <Button fx:id="saveChangesButton" mnemonicParsing="false" onAction="#saveChanges" text="Save" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-   </children>
+								<TextField fx:id="userBiographyTextField" prefHeight="125.0" prefWidth="500.0" text="UserBiography" />
+							</children>
+						</VBox>
+					</children>
+				</HBox>
+				<ScrollPane prefHeight="300.0" prefWidth="900.0">
+					<content>
+						<TreeView fx:id="userFilesTreeView" onContextMenuRequested="#selectItemFromYourFiles" onMouseClicked="#selectItemFromYourFiles" prefHeight="655.0" prefWidth="3000.0" />
+					</content>
+				</ScrollPane>
+				<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+					<children>
+						<Button fx:id="openButton" mnemonicParsing="false" onAction="#openItem" text="Open" />
+						<Button fx:id="saveChangesButton" mnemonicParsing="false" onAction="#saveChanges" text="Save" />
+					</children>
+				</HBox>
+			</children>
+		</VBox>
+	</children>
 </AnchorPane>

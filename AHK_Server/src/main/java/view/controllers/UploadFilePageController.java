@@ -77,12 +77,12 @@ public class UploadFilePageController {
 			Query query = session.createQuery("FROM Subcategory");
 			// Save the result in a list
 			subcategoriesList = query.list();
-			
+
 			query = session.createQuery("FROM Category");
 			// Save the result in a list
 			categoriesList = query.list();
 			// Define the root item of treeview
-			TreeItem<String> rootItem = new TreeItem<>("Categories:",
+			TreeItem<String> rootItem = new TreeItem<>("Select your subcategory:",
 					new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 			// For all the categories:
 			for (Category category : categoriesList) {
@@ -90,9 +90,9 @@ public class UploadFilePageController {
 				TreeItem<String> categoryItem = new TreeItem<>(category.getCatName(),
 						new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 				// Add the correspondent subcategories to it
-				for(Subcategory subcategory : subcategoriesList) {
+				for (Subcategory subcategory : subcategoriesList) {
 					// Make sure that the subcategory corresponds to the category
-					if(subcategory.getCategory().getCatId()==category.getCatId()) {
+					if (subcategory.getCategory().getCatId() == category.getCatId()) {
 						// Create the subcategory treeitem
 						TreeItem<String> subcategoryItem = new TreeItem<>(subcategory.getSubName(),
 								new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
@@ -113,30 +113,30 @@ public class UploadFilePageController {
 			sf.close();
 		}
 	}
-	
+
 	@FXML
 	private void openFileChooser() {
 		FileChooser fileChooser = new FileChooser();
 		configurateFileChooser(fileChooser);
 		fileUploaded = fileChooser.showOpenDialog(null);
 		// If a file was selected:
-		if(fileUploaded!=null) {
+		if (fileUploaded != null) {
 			uploadFileButton.setText("Change File");
+			fillFileInfo();
+			fillCategoriesAndSubcategoriesItems();
 		}
-		fillFileInfo();
-		fillCategoriesAndSubcategoriesItems();
 	}
-	
+
 	/**
-	 * Config the directorychooser
+	 * Config the filechooser
+	 * 
 	 * @param fileChooser
 	 */
 	private void configurateFileChooser(FileChooser fileChooser) {
 		fileChooser.setTitle("Choose your script");
 		FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("AHK files (*.ahk)", "*.ahk");
 		fileChooser.getExtensionFilters().add(extensionFilter);
-		fileChooser.setInitialDirectory(
-				new java.io.File(System.getProperty("user.home")));
+		fileChooser.setInitialDirectory(new java.io.File(System.getProperty("user.home")));
 	}
 
 	/**
@@ -153,15 +153,15 @@ public class UploadFilePageController {
 	 * This method is called when you select an item from your files
 	 */
 	private void selectSubcategoryForFile() {
-		checkButtonState();
 		TreeItem<String> selectedItem = (TreeItem<String>) subcategoriesTreeView.getSelectionModel().getSelectedItem();
 		// If the selected item is a subcategory:
 		if (selectedItem != null && selectedItem.getChildren().isEmpty()
 				&& !selectedItem.getValue().equals("Categories:")) {
+			checkButtonState();
 			// Check with all subcategories:
-			for(Subcategory subcategory : subcategoriesList) {
+			for (Subcategory subcategory : subcategoriesList) {
 				// Get the subcategory with that name selected
-				if(selectedItem.getValue().equals(subcategory.getSubName())) {
+				if (selectedItem.getValue().equals(subcategory.getSubName())) {
 					subcategorySelected = subcategory;
 					break;
 				}
@@ -170,7 +170,8 @@ public class UploadFilePageController {
 			publishButton.setDisable(false);
 		}
 		// Else is a folder
-		else {
+		else if (selectedItem != null) {
+			checkButtonState();
 			publishButton.setText("Select Subcategory");
 			publishButton.setDisable(true);
 		}
@@ -205,7 +206,6 @@ public class UploadFilePageController {
 				file.setSubcategory(subcategorySelected);
 				file.setUser(loggedUser);
 				file.setViews(0);
-				file.setFilePath("../../Files/" + subcategorySelected.getCategory().getCatName() + "/" + subcategorySelected.getSubName());
 				// Define the loader
 				FileDao fileDao = new FileDao(session);
 				// Save the loggedUser into the database
@@ -228,16 +228,18 @@ public class UploadFilePageController {
 
 	/**
 	 * This method checks if all the fields are filled
+	 * 
 	 * @return
 	 */
 	private boolean filledFields() {
-		if(fileNameLabel.getText().equals(null) || fileNameLabel.getText().equals("")/* || fileNameLabel.getText().matches("\\s*")*/) {
+		if (fileNameLabel.getText().equals(null)
+				|| fileNameLabel.getText().equals("")/* || fileNameLabel.getText().matches("\\s*") */) {
 			return false;
-		}else {
+		} else {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * This method is used to bring things back to default after uploading a file
 	 */

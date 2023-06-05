@@ -1,5 +1,10 @@
 package view.controllers;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -38,6 +43,8 @@ public class FilePageController {
 	@FXML
 	private TreeView<String> otherFilesTreeView;
 	@FXML
+	private Label errorLabel;
+	@FXML
 	private Button openButton;
 
 	List<File> filesList;
@@ -65,6 +72,45 @@ public class FilePageController {
 		viewsLabel.setText("Number of views: " + file.getViews());
 		fileDescriptionTextField.setText(file.getFileDes());
 		fileDescriptionTextField.setEditable(false);
+	}
+
+	@FXML
+	private void openDirectoryChooser() {
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		configurateDirectoryChooser(directoryChooser);
+		java.io.File folder = directoryChooser.showDialog(null);
+		// If a file was selected:
+		if (folder != null) {
+			errorLabel.setText("Downloading File");
+			download(file.getFilePath(), folder.getAbsolutePath() + "/" + file.getFileName());
+		}
+	}
+
+	/**
+	 * This method downloads the file to the directory selected
+	 */
+	// https://stackoverflow.com/questions/1146153/copying-files-from-one-directory-to-another-in-java
+	private void download(String originalFilePath, String destinationFilePath) {
+		Path sourceFile = Paths.get(originalFilePath);
+		Path destinationFile = Paths.get(destinationFilePath);
+
+		try {
+			Files.copy(sourceFile, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+			errorLabel.setText("File Downloaded");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Config the directorychooser
+	 * 
+	 * @param directoryChooser
+	 */
+	private void configurateDirectoryChooser(DirectoryChooser directoryChooser) {
+		directoryChooser.setTitle("Choose your download destiny");
+		directoryChooser.setInitialDirectory(new java.io.File(System.getProperty("user.home")));
 	}
 
 	/**
@@ -160,23 +206,6 @@ public class FilePageController {
 		}
 	}
 
-	@FXML
-	private void openFileChooser() {
-		DirectoryChooser directoryChooser = new DirectoryChooser();
-		configurateFileChooser(directoryChooser);
-		directoryChooser.showDialog(null);
-	}
-	
-	/**
-	 * Config the directorychooser
-	 * @param directoryChooser
-	 */
-	private void configurateFileChooser(DirectoryChooser directoryChooser) {
-		directoryChooser.setTitle("Choose a place to download");
-		directoryChooser.setInitialDirectory(
-				new java.io.File(System.getProperty("user.home")));
-	}
-	
 	@FXML
 	private void openUser() {
 		MainApp.selectedUser = user;

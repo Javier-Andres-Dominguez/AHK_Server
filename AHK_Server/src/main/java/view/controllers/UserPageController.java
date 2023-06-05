@@ -107,7 +107,7 @@ public class UserPageController {
 			// Define the image
 			Image img = new Image(imageUrl);
 			// If the image can load:
-			if(!img.isError()) {
+			if (!img.isError()) {
 				imgView = new ImageView(img);
 			}
 			// Else use the default:
@@ -221,14 +221,13 @@ public class UserPageController {
 			userBiographyTextField.setEditable(true);
 			subscriptionButton.setDisable(true);
 			subscriptionButton.setVisible(false);
-		}else if(MainApp.loggedUser.getUserId() == 1) {
+		} else if (MainApp.loggedUser.getUserId() == 1) {
 			userNameTextField.setEditable(true);
 			saveChangesButton.setDisable(false);
 			userBiographyTextField.setEditable(true);
 			subscriptionButton.setDisable(false);
 			subscriptionButton.setVisible(true);
-		}
-		else {
+		} else {
 			userNameTextField.setEditable(false);
 			saveChangesButton.setDisable(true);
 			saveChangesButton.setVisible(false);
@@ -240,11 +239,12 @@ public class UserPageController {
 
 	/**
 	 * This method checks if the logged user is subscribed to the opened user
+	 * 
 	 * @return
 	 */
 	private boolean isSubscribed() {
-		for(int i = 0; i<MainApp.subscriptionUsers.size(); i++) {
-			if(user.getUserId()==MainApp.subscriptionUsers.get(i).getUserId()) {
+		for (int i = 0; i < MainApp.subscriptionUsers.size(); i++) {
+			if (user.getUserId() == MainApp.subscriptionUsers.get(i).getUserId()) {
 				subscriptionButton.setText("Unsubscribe");
 				return true;
 			}
@@ -252,9 +252,9 @@ public class UserPageController {
 		subscriptionButton.setText("Subscribe");
 		return false;
 	}
-	
+
 	@FXML
-	private void subscribeAndUnsubscribe(){
+	private void subscribeAndUnsubscribe() {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 
@@ -268,22 +268,22 @@ public class UserPageController {
 			user_Subscribe_User.setUser_Subscibre_UserId(user_Subscribe_UserId);
 			// Define the loader
 			User_Subscribe_UserDao user_Subscribe_UserDao = new User_Subscribe_UserDao(session);
-			
-			if(isSubscribed()) {
+
+			if (isSubscribed()) {
 				session.delete(user_Subscribe_User);
 				session.flush();
-				for(int i = 0; i<MainApp.subscriptionUsers.size();i++) {
-					if(MainApp.subscriptionUsers.get(i)==user) {
+				for (int i = 0; i < MainApp.subscriptionUsers.size(); i++) {
+					if (MainApp.subscriptionUsers.get(i) == user) {
 						MainApp.subscriptionUsers.remove(i);
 						break;
 					}
 				}
 				subscriptionButton.setText("Subscribe");
-			}else {
+			} else {
 				user_Subscribe_UserDao.insertUser_Subscribe_User(user_Subscribe_User);
 				session.flush();
-				for(int i = 0; i<MainApp.subscriptionUsers.size();i++) {
-					if(MainApp.subscriptionUsers.get(i)==user) {
+				for (int i = 0; i < MainApp.subscriptionUsers.size(); i++) {
+					if (MainApp.subscriptionUsers.get(i) == user) {
 						MainApp.subscriptionUsers.add(user);
 						break;
 					}
@@ -302,7 +302,7 @@ public class UserPageController {
 			sf.close();
 		}
 	}
-	
+
 	@FXML
 	private void saveChanges() {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();

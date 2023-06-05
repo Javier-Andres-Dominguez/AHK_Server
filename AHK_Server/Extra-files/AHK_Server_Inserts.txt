@@ -81,7 +81,6 @@ CREATE TABLE IF NOT EXISTS `AHK_Server`.`file` (
   `FileId` INT NOT NULL AUTO_INCREMENT,
   `FileName` VARCHAR(100) NOT NULL,
   `FileDes` VARCHAR(1000) NOT NULL,
-  `FilePath` VARCHAR(150) NOT NULL,
   `Keyword1` VARCHAR(60) NULL,
   `Keyword2` VARCHAR(60) NULL,
   `Keyword3` VARCHAR(60) NULL,
@@ -179,12 +178,11 @@ VALUES ('Soldier 76', 2, 1),
 ('Ashe-OrbWalker', 3, 3),
 ('Tumangaonline', 4, 4);
 
-INSERT INTO file (FileName,FileDes, FilePath, UserId, SubId, Views)
-VALUES ('Soldier Recoil.ahk', 'This script helps you to have no recoil when playing Soldier76 in the game Overwatch 2','C:\Users\DEEPGAMING\Downloads\AHK\Scripts\Ov\S76\S76Recoil.ahk', 2, 1, 0),
-('MP5 Recoil.ahk', 'This script helps you to have no recoil when playing the MP5 in the game Modern Warfare', 'C:\Users\DEEPGAMING\Downloads\AHK\Scripts\Cod\MP5Recoil.ahk', 2, 2, 0),
-('Ashe Orbwalker.ahk', 'This script helps you when playing Ashe in the game League of Legends', 'C:\Users\DEEPGAMING\Downloads\AHK\Scripts\Lol\AsheOrbWalker.ahk', 3, 3, 0),
-('Manga Better Controller.ahk', '', 'C:\Users\DEEPGAMING\Downloads\AHK\Scripts\Manga.ahk', 4, 4, 0),
-('Test.ahk', 'This description is for a test','C:\Users\DEEPGAMING\Downloads\AHK\Scripts\Ov\S76\S76Recoil.ahk', 2, 1, 0);
+INSERT INTO file (FileName, FileDes, UserId, SubId, Views)
+VALUES ('Soldier Recoil.ahk', 'This script helps you to have no recoil when playing Soldier76 in the game Overwatch 2', 2, 1, 0),
+('MP5 Recoil.ahk', 'This script helps you to have no recoil when playing the MP5 in the game Modern Warfare', 2, 2, 0),
+('Ashe Orbwalker.ahk', 'This script helps you when playing Ashe in the game League of Legends', 3, 3, 0),
+('Test.ahk', 'This description is for a test', 4, 1, 0);
 
 INSERT INTO commentary (ComDes, Rate, UserId, FileId)
 VALUES ('Nice script bro, thanks and keep it up', 5, 1, 1),

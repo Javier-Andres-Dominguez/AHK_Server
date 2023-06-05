@@ -131,7 +131,6 @@ public class PrincipalPageController {
 	private void fillPopularFiles() {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
-		// query.setMaxResults(10);
 
 		try {
 			// Execute the query and get the result
@@ -198,24 +197,24 @@ public class PrincipalPageController {
 					new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 			// Assign the root item to the treeview
 			subscriptionFilesTree.setRoot(rootItem);
-			
+
 			// Generate a list of the users subscribed to:
 			for (int i = 0; i < subscriptionUsers.size(); i++) {
 				// Define the user
 				notYourUser = subscriptionUsers.get(i).getSubscribedToUser();
-				
+
 				/*--------------------------------------------------Saving-Users-------------------------------------------------------------------------*/
-				
+
 				// Save it into a list
 				MainApp.subscriptionUsers.add(notYourUser);
-				
+
 				// Get all the files created by that user
 				hql = "FROM File f WHERE f.user.userId = :userId";
 				query = session.createQuery(hql);
 				query.setParameter("userId", notYourUser.getUserId());
-				
+
 				/*-----------------------------------------------------Saving-Files-------------------------------------------------------------------*/
-				
+
 				// Save the query result into the list of files of the main list
 				subscriptionFiles.add((List<File>) query.list());
 
@@ -229,9 +228,9 @@ public class PrincipalPageController {
 					// Get the file subcategory
 					subcategory = file.getSubcategory();
 					// Save the first subcategory
-					if(n==0) {
+					if (n == 0) {
 						listOfSubcategories.add(subcategory);
-					}else {
+					} else {
 						// Compare with all the subcategories
 						if (!listOfSubcategories.contains(subcategory)) {
 							listOfSubcategories.add(subcategory);
@@ -244,9 +243,9 @@ public class PrincipalPageController {
 					// Define the category
 					category = subcategory.getCategory();
 					// Save the first category
-					if(n==0) {
+					if (n == 0) {
 						listOfCategories.add(category);
-					}else {
+					} else {
 						// Compare with all the categories
 						if (!listOfCategories.contains(category)) {
 							listOfCategories.add(category);
@@ -277,22 +276,22 @@ public class PrincipalPageController {
 						/*----------------------------------------------------------File-----------------------------------------------------------*/
 						for (int x = 0; x < subscriptionFiles.get(i).size(); x++) {
 							file = subscriptionFiles.get(i).get(x);
-							if(file.getSubcategory().getSubName().equals(treeSubcategoryItem.getValue())) {
+							if (file.getSubcategory().getSubName().equals(treeSubcategoryItem.getValue())) {
 								treeFileItem = new TreeItem<>(subscriptionFiles.get(i).get(x).getFileName(),
 										new ImageView(new Image(getClass().getResourceAsStream("ahk.png"))));
-								//Add the item to the treeview subcategory
+								// Add the item to the treeview subcategory
 								treeSubcategoryItem.getChildren().add(treeFileItem);
 							}
 						}
 						/*----------------------------------------------------------Subcategory-----------------------------------------------------------*/
 						subcategory = listOfListOfSubcategories.get(i).get(j);
-						if(subcategory.getCategory().getCatName().equals(treeCategoryItem.getValue())) {
-							//Add the item to the treeview category
+						if (subcategory.getCategory().getCatName().equals(treeCategoryItem.getValue())) {
+							// Add the item to the treeview category
 							treeCategoryItem.getChildren().add(treeSubcategoryItem);
 						}
 					}
 					/*----------------------------------------------------------Category-----------------------------------------------------------*/
-					//Add the item to the treeview user
+					// Add the item to the treeview user
 					treeUserItem.getChildren().add(treeCategoryItem);
 				}
 				/*----------------------------------------------------------User-----------------------------------------------------------*/
