@@ -7,3 +7,6 @@ There are also many users and they can comment, rate and download every file. <b
 * Implement creating new categories and subcategories <br>
 * Make files from models contain real files as an attribute <br>
 * Add the attribute nickname tu the user <br>
+* Fix the cancelation of fileSelector in the view UpdateFile <br>
+* Implement the new window for Categories and Subcategories <br>
+* Implement the comentaries in the file <br>
