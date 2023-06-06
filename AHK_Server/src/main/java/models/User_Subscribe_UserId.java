@@ -13,6 +13,7 @@ public class User_Subscribe_UserId implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "SubscribedUserId")
 	private User userSubscribed;
+	
 	@ManyToOne
 	@JoinColumn(name = "SubscribedToUserId")
 	private User subscribedToUser;

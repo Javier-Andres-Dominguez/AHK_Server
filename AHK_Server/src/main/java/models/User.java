@@ -19,6 +19,9 @@ public class User implements Serializable {
 
 	@Column(name = "UserName")
 	private String userName;
+	
+	@Column(name = "UserNick")
+	private String userNick;
 
 	@Column(name = "UserPas")
 	private String userPas;
@@ -54,20 +57,22 @@ public class User implements Serializable {
 
 	}
 
-	public User(int userId, String userName, String userPas, String userGma) {
+	public User(int userId, String userName, String userNick, String userPas, String userGma) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
+		this.userNick = userNick;
 		this.userPas = userPas;
 		this.userGma = userGma;
 	}
 
-	public User(int userId, String userName, String userPas, String userGma, String userBio, String userImg,
+	public User(int userId, String userName, String userNick, String userPas, String userGma, String userBio, String userImg,
 			Set<Commentary> commentaries, Set<File> files, Set<Category> categories, Set<Subcategory> subcategories,
 			Set<User_Subscribe_User> subscribedUser, Set<User_Subscribe_User> subscribedToUser) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
+		this.userNick = userNick;
 		this.userPas = userPas;
 		this.userGma = userGma;
 		this.userBio = userBio;
@@ -94,6 +99,14 @@ public class User implements Serializable {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getUserNick() {
+		return userNick;
+	}
+
+	public void setUserNick(String userNick) {
+		this.userNick = userNick;
 	}
 
 	public String getUserPas() {
