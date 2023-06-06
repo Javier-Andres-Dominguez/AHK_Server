@@ -25,6 +25,7 @@ USE `AHK_Server` ;
 CREATE TABLE IF NOT EXISTS `AHK_Server`.`user` (
   `UserId` INT NOT NULL AUTO_INCREMENT,
   `UserName` VARCHAR(45) NOT NULL,
+  `UserNick` VARCHAR(50) NOT NULL,
   `UserPas` VARCHAR(45) NOT NULL,
   `UserGma` VARCHAR(100) NOT NULL,
   `UserBio` VARCHAR(500) NULL,
@@ -160,11 +161,11 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
 
-INSERT INTO user (UserName, UserPas, UserGma, UserImg)
-VALUES('xXAdminXx', 'xXAdminXx', 'xXAdminXx@gmail.com', null),
-('Dinosaur456', 'Dinosaur456', 'Dinosaur456@gmail.com', null),
-('Matrix69Master', 'Matrix69Master', 'Matrix69Master@hotmail.com', 'https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen-1200x675.jpg'),
-('Hogridder88', 'Hogridder88', 'Hogridder88@gmail.com', null);
+INSERT INTO user (UserName, UserNick, UserPas, UserGma, UserImg)
+VALUES('xXAdminXx', 'xXAdminXx', 'xXAdminXx', 'xXAdminXx@gmail.com', null),
+('Dinosaur456', 'Dinosaur456', 'Dinosaur456', 'Dinosaur456@gmail.com', null),
+('Matrix69Master', 'Matrix69Master', 'Matrix69Master', 'Matrix69Master@hotmail.com', 'https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen-1200x675.jpg'),
+('Hogridder88', 'Hogridder88', 'Hogridder88', 'Hogridder88@gmail.com', null);
 
 INSERT INTO category (CatName, UserId)
 VALUES ('Overwatch 2', 1),
