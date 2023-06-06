@@ -4,11 +4,11 @@ It is a server for [Autohotkey](https://www.autohotkey.com/) scripts files. They
 There are also many users and they can comment, rate and download every file. <br>
 # To Do List:<br>
 * Implement editable files <br>
-* Add the attribute nickname to the user <br>
 * Add the keyword search parameter in the search view <br>
 * Implement the new window for Categories and Subcategories <br>
 * Implement the comentaries in the file <br>
 * Add the documentation <br> <br> <br>
+* ~~Add the attribute nickname to the user~~ <br>
 * ~~Add function to the download button from FilePage~~ <br>
 * ~~Implement creating new categories and subcategories~~ <br>
 * ~~Make files from models contain real files as an attribute~~ <br>
