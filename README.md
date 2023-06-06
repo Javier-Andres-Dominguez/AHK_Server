@@ -8,7 +8,7 @@ There are also many users and they can comment, rate and download every file. <b
 * Add the keyword search parameter in the search view <br>
 * Implement the new window for Categories and Subcategories <br>
 * Implement the comentaries in the file <br>
-* Add the documentation
+* Add the documentation <br> <br> <br>
 * ~~Add function to the download button from FilePage~~ <br>
 * ~~Implement creating new categories and subcategories~~ <br>
 * ~~Make files from models contain real files as an attribute~~ <br>
