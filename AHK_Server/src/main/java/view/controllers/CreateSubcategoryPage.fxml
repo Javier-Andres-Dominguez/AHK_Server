@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.CreateSubcategoryPageController">
+	<children>
+		<VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+			<children>
+            <VBox alignment="CENTER" prefHeight="150.0" spacing="15.0">
+               <children>
+                  <Label text="Category name" />
+      						<TextField fx:id="subcategoryNameTextField" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="250.0" />
+                  <Label text="Please review the created Categories to make sure you do not repeat an existing one" />
+               </children>
+            </VBox>
+						<ScrollPane prefHeight="500.0" prefWidth="400.0">
+							<content>
+								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="1500.0">
+									<children>
+										<TreeView fx:id="categoriesTreeView" layoutX="20.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+									</children>
+								</AnchorPane>
+							</content>
+						</ScrollPane>
+            <VBox alignment="CENTER" prefHeight="75.0" spacing="15.0">
+               <children>
+                  <Label fx:id="errorLabel" />
+      				<Button fx:id="createButton" mnemonicParsing="false" onAction="#createSubcategory" text="Create" />
+               </children>
+            </VBox>
+			</children>
+		</VBox>
+	</children>
+</AnchorPane>

@@ -1,8 +1,38 @@
+/* Estilo para el TreeView */
+.tree-view {
+    -fx-background-color: #f5f5f5; /* Color de fondo del TreeView */
+    -fx-border-color: #cccccc; /* Color del borde del TreeView */
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
+}
+
+/* Estilo para los elementos del TreeView */
+.tree-cell {
+    -fx-padding: 2px;
+    -fx-text-fill: #333333; /* Color del texto del elemento del TreeView */
+}
+
+/* Estilo para el ScrollPane */
+.scroll-pane {
+    -fx-background-color: #f5f5f5; /* Color de fondo del ScrollPane */
+    -fx-border-color: #cccccc; /* Color del borde del ScrollPane */
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
+}
+
+/* Estilo para la barra de desplazamiento vertical del ScrollPane */
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: #e5e5e5; /* Color de fondo de la barra de desplazamiento */
+}
+
+/* Estilo para el pulgar de la barra de desplazamiento vertical del ScrollPane */
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #999999; /* Color del pulgar de la barra de desplazamiento */
+}
 /* Estilo de fondo */
 .root {
   -fx-background-color: #f5f5f5;
 }
-
 /* Estilo de los títulos */
 .label {
   -fx-font-size: 18.0px;
@@ -39,7 +69,7 @@
 
 /* Estilo de la barra de herramientas */
 .tool-bar {
-  -fx-background-color: #ffffff;
+  -fx-background-color: #FFC107; /*#673AB7*/ 
   -fx-border-color: #cccccc;
   -fx-border-width: 0.0 0.0 1.0px 0.0;
 }

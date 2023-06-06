@@ -72,6 +72,7 @@ public class RegisterPageController {
 					// Create a user and assign all the information
 					User user = new User();
 					user.setUserName(usernameField.getText());
+					user.setUserNick(usernameField.getText());
 					user.setUserPas(userPasswordField.getText());
 					user.setUserGma(userGmailField.getText());
 					// Define the loader

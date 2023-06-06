@@ -263,7 +263,7 @@ public class PrincipalPageController {
 			}
 			// Define the user treeview
 			for (int i = 0; i < MainApp.subscriptionUsers.size(); i++) {
-				treeUserItem = new TreeItem<>(MainApp.subscriptionUsers.get(i).getUserName(),
+				treeUserItem = new TreeItem<>(MainApp.subscriptionUsers.get(i).getUserNick(),
 						new ImageView(new Image(getClass().getResourceAsStream("user.png"))));
 				// Define the categories treeview
 				for (int n = 0; n < listOfListOfCategories.get(i).size(); n++) {
@@ -422,7 +422,7 @@ public class PrincipalPageController {
 				// Check all the files
 				for (int i = 0; i < subscriptionFiles.size(); i++) {
 					// If the user is the selected:
-					if (MainApp.subscriptionUsers.get(i).getUserName().equals(userSelected)) {
+					if (MainApp.subscriptionUsers.get(i).getUserNick().equals(userSelected)) {
 						MainApp.selectedUser = MainApp.subscriptionUsers.get(i);
 						MainApp.toolBarController.openUser();
 					}

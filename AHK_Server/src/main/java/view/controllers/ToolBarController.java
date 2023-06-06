@@ -109,7 +109,7 @@ public class ToolBarController {
 
 		user = (User) stage.getUserData();
 
-		usernameHyperlink.setText(user.getUserName());
+		usernameHyperlink.setText(user.getUserNick());
 		usernameHyperlink.setOnAction(e -> editProfile());
 		setFirstScene();
 	}
@@ -194,7 +194,7 @@ public class ToolBarController {
 	 * This method assigns the buttons
 	 */
 	private void buttons() {
-		buttons = new Hyperlink[3];
+		buttons = new Hyperlink[5];
 		for (int i = 0; i < buttons.length; i++) {
 			buttons[i] = new Hyperlink();
 		}
@@ -206,6 +206,10 @@ public class ToolBarController {
 		buttons[2].setText("Upload File");
 		buttons[2].addEventHandler(MouseEvent.MOUSE_CLICKED,
 				btnEventHandler("../view/controllers/UploadFilePage.fxml"));
+		buttons[3].setText("Create Category");
+		buttons[3].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("../view/controllers/CreateCategoryPage.fxml"));
+		buttons[4].setText("Create Subcategory");
+		buttons[4].addEventHandler(MouseEvent.MOUSE_CLICKED, btnEventHandler("../view/controllers/CreateSubcategoryPage.fxml"));
 	}
 
 	/**

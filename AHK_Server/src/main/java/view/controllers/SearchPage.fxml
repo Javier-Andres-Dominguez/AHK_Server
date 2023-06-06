@@ -32,6 +32,7 @@
 							<children>
 								<CheckBox fx:id="filesCheckBox" mnemonicParsing="false" text="Files" />
 								<CheckBox fx:id="usersCheckBox" mnemonicParsing="false" text="Users" />
+                        <CheckBox fx:id="keywordsCheckBox" mnemonicParsing="false" text="Keywords" />
 							</children>
 						</HBox>
 					</children>

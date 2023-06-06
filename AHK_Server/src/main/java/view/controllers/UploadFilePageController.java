@@ -57,7 +57,7 @@ public class UploadFilePageController {
 	 */
 	private void prepareElements() {
 		loggedUser = MainApp.loggedUser;
-		userNameLabel.setText(loggedUser.getUserName());
+		userNameLabel.setText(loggedUser.getUserNick());
 		publishButton.setText("Select Subcategory");
 		publishButton.setDisable(true);
 		publishButton.setVisible(false);
@@ -68,7 +68,6 @@ public class UploadFilePageController {
 	 */
 	@SuppressWarnings("unchecked")
 	private void fillCategoriesAndSubcategoriesItems() {
-
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 		try {

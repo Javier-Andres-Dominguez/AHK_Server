@@ -97,7 +97,7 @@ public class UserPageController {
 	 * This method fills the file top information
 	 */
 	private void fillUserInfo() {
-		userNameTextField.setText(user.getUserName());
+		userNameTextField.setText(user.getUserNick());
 		numberOfFilesLabel.setText("Files: " + userFiles.size());
 		userBiographyTextField.setText(user.getUserBio());
 		imageUrl = user.getUserImg();

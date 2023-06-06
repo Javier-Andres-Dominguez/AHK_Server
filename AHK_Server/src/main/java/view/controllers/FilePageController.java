@@ -67,7 +67,7 @@ public class FilePageController {
 	 * This method fills the file top information
 	 */
 	private void fillFileInfo() {
-		userNameHyperlink.setText(user.getUserName());
+		userNameHyperlink.setText(user.getUserNick());
 		fileNameLabel.setText("File: " + file.getFileName());
 		viewsLabel.setText("Number of views: " + file.getViews());
 		fileDescriptionTextField.setText(file.getFileDes());

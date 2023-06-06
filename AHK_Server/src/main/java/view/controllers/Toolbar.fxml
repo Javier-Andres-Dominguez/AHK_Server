@@ -8,30 +8,20 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<AnchorPane fx:id="root" maxHeight="1.7976931348623157E308"
-	maxWidth="1.7976931348623157E308" prefHeight="752.0" prefWidth="1164.0"
-	xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="view.controllers.ToolBarController">
+<AnchorPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="752.0" prefWidth="1164.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.ToolBarController">
 	<children>
-		<VBox fx:id="rootLayout" prefHeight="752.0" prefWidth="1164.0"
-			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-			AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+		<VBox fx:id="rootLayout" prefHeight="752.0" prefWidth="1164.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<children>
-				<ToolBar layoutX="10.0" layoutY="10.0" prefHeight="69.0"
-					prefWidth="1162.0">
+				<ToolBar layoutX="10.0" layoutY="10.0" prefHeight="69.0" prefWidth="1162.0">
 					<items>
-						<HBox alignment="CENTER" prefWidth="1150.0" spacing="500.0">
+						<HBox alignment="CENTER" prefWidth="1150.0" spacing="450.0">
 							<children>
-								<HBox fx:id="buttonHBox" alignment="CENTER_RIGHT"
-									spacing="15.0" />
+								<HBox fx:id="buttonHBox" alignment="CENTER_RIGHT" spacing="15.0" />
 								<HBox alignment="CENTER" spacing="15.0">
 									<children>
 										<Hyperlink fx:id="usernameHyperlink" text="Username" />
-										<Circle fx:id="userImageCircle" fill="DODGERBLUE"
-											radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-										<Button fx:id="logoutButton" alignment="CENTER"
-											contentDisplay="CENTER" mnemonicParsing="false"
-											onAction="#logout" />
+										<Circle fx:id="userImageCircle" fill="DODGERBLUE" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+										<Button fx:id="logoutButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#logout" />
 									</children>
 								</HBox>
 							</children>

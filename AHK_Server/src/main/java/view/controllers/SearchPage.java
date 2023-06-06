@@ -41,6 +41,8 @@ public class SearchPage {
 	@FXML
 	private CheckBox usersCheckBox;
 	@FXML
+	private CheckBox keywordsCheckBox;
+	@FXML
 	private TreeView<String> contentTreeView;
 	TreeItem<String> rootItem;
 
@@ -48,11 +50,15 @@ public class SearchPage {
 	private boolean categoryChecked = false;
 	private boolean subcategoryChecked = false;
 	private boolean fileChecked = false;
+	private boolean keywordChecked = false;
 
+	private String stringToSearch;
+	
 	private List<User> usersList;
 	private List<Category> categoriesList;
 	private List<Subcategory> subcategoriesList;
 	private List<File> filesList;
+	private List<File> keywordsFilesList;
 
 	private User userSelected;
 	/*
@@ -78,9 +84,11 @@ public class SearchPage {
 	private void search() {
 		if (!textFieldEmpty()) {
 			if (anyBoxesChecked()) {
+				errorLabel.setText("");
 				openButton.setVisible(true);
 				// Disable the button, as nothing is selected
 				openButton.setDisable(true);
+				stringToSearch = "%"+searchTextField.getText()+"%";
 				getInfoFromCheckedBoxes();
 				generateResults();
 			} else {
@@ -110,8 +118,9 @@ public class SearchPage {
 		categoryChecked = categoriesCheckBox.isSelected();
 		subcategoryChecked = subcategoriesCheckBox.isSelected();
 		fileChecked = filesCheckBox.isSelected();
+		keywordChecked = keywordsCheckBox.isSelected();
 
-		return userChecked || categoryChecked || subcategoryChecked || fileChecked;
+		return userChecked || categoryChecked || subcategoryChecked || fileChecked || keywordChecked;
 	}
 
 	/**
@@ -125,28 +134,34 @@ public class SearchPage {
 			session.getTransaction().begin();
 
 			if (categoriesCheckBox.isSelected()) {
-				Query query = session.createQuery("FROM Category c WHERE c.catName LIKE :searchTextField");
-				query.setParameter("searchTextField", searchTextField.getText());
+				Query query = session.createQuery("FROM Category c WHERE LOWER(c.catName) LIKE LOWER(:searchTextField)");
+				query.setParameter("searchTextField", stringToSearch);
 				// Save the result in a list
 				categoriesList = query.list();
 			}
 			if (subcategoriesCheckBox.isSelected()) {
-				Query query = session.createQuery("FROM Subcategory s WHERE s.subName LIKE :searchTextField");
-				query.setParameter("searchTextField", searchTextField.getText());
+				Query query = session.createQuery("FROM Subcategory s WHERE LOWER(s.subName) LIKE LOWER(:searchTextField)");
+				query.setParameter("searchTextField", stringToSearch);
 				// Save the result in a list
 				subcategoriesList = query.list();
 			}
 			if (filesCheckBox.isSelected()) {
-				Query query = session.createQuery("FROM File f WHERE f.fileName LIKE :searchTextField");
-				query.setParameter("searchTextField", searchTextField.getText());
+				Query query = session.createQuery("FROM File f WHERE LOWER(f.fileName) LIKE LOWER(:searchTextField)");
+				query.setParameter("searchTextField", stringToSearch);
 				// Save the result in a list
 				filesList = query.list();
 			}
 			if (usersCheckBox.isSelected()) {
-				Query query = session.createQuery("FROM User u WHERE u.userName LIKE :searchTextField");
-				query.setParameter("searchTextField", searchTextField.getText());
+				Query query = session.createQuery("FROM User u WHERE LOWER(u.userName) LIKE LOWER(:searchTextField)");
+				query.setParameter("searchTextField", stringToSearch);
 				// Save the result in a list
 				usersList = query.list();
+			}
+			if (keywordsCheckBox.isSelected()) {
+				Query query = session.createQuery("FROM File WHERE LOWER(fileKey1) LIKE LOWER(:searchTextField) OR LOWER(fileKey2) LIKE LOWER(:searchTextField) OR LOWER(fileKey3) LIKE LOWER(:searchTextField)");
+				query.setParameter("searchTextField", stringToSearch);
+				// Save the result in a list
+				keywordsFilesList = query.list();
 			}
 		}
 		// If there is any error Inform in the screen
@@ -171,7 +186,7 @@ public class SearchPage {
 			TreeItem<String> user = new TreeItem<String>("Users:",
 					new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 			for (int i = 0; i < usersList.size(); i++) {
-				user.getChildren().add(new TreeItem<String>(usersList.get(i).getUserName(),
+				user.getChildren().add(new TreeItem<String>(usersList.get(i).getUserNick(),
 						new ImageView(new Image(getClass().getResourceAsStream("user.png")))));
 			}
 			rootItem.getChildren().add(user);
@@ -203,6 +218,15 @@ public class SearchPage {
 			}
 			rootItem.getChildren().add(file);
 		}
+		if (keywordChecked) {
+			TreeItem<String> file = new TreeItem<String>("KeywordFiles:",
+					new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+			for (int i = 0; i < keywordsFilesList.size(); i++) {
+				file.getChildren().add(new TreeItem<String>(keywordsFilesList.get(i).getFileName(),
+						new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
+			}
+			rootItem.getChildren().add(file);
+		}
 		contentTreeView.setRoot(rootItem);
 	}
 
@@ -218,7 +242,7 @@ public class SearchPage {
 			openButton.setText("Open User");
 			openButton.setDisable(false);
 			for (int i = 0; i < usersList.size(); i++) {
-				if (usersList.get(i).getUserName().equals(item.getValue())) {
+				if (usersList.get(i).getUserNick().equals(item.getValue())) {
 					userSelected = usersList.get(i);
 					break;
 				}
@@ -253,6 +277,18 @@ public class SearchPage {
 			for (int i = 0; i < filesList.size(); i++) {
 				if (filesList.get(i).getFileName().equals(item.getValue())) {
 					fileSelected = filesList.get(i);
+					break;
+				}
+			}
+		}
+		if (item != null && !item.getValue().equals("Results:") && item.getParent().getValue().equals("KeywordFiles:")
+				&& !item.getValue().equals("Results:")) {
+			itemType = "File";
+			openButton.setText("Open File");
+			openButton.setDisable(false);
+			for (int i = 0; i < keywordsFilesList.size(); i++) {
+				if (keywordsFilesList.get(i).getFileName().equals(item.getValue())) {
+					fileSelected = keywordsFilesList.get(i);
 					break;
 				}
 			}
