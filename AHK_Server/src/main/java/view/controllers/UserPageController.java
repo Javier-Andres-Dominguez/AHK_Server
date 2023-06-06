@@ -308,7 +308,7 @@ public class UserPageController {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 		try {
-			user.setUserName(userNameTextField.getText());
+			user.setUserNick(userNameTextField.getText());
 			user.setUserBio(userBiographyTextField.getText());
 			session.update(user);
 		}
