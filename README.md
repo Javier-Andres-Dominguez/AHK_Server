@@ -4,6 +4,8 @@ It is a server for [Autohotkey](https://www.autohotkey.com/) scripts files. They
 There are also many users and they can comment, rate and download every file. <br>
 # To Do List:<br>
 * Implement editable files <br>
+* Make treeviews alredy extended <br>
+* Review the copy paste of subcategory <br>
 * Implement the new window for Categories and Subcategories <br>
 * Implement the comentaries in the file <br>
 * Add the documentation <br> <br> <br>
