@@ -5,6 +5,7 @@ There are also many users and they can comment, rate and download every file. <b
 # To Do List:<br>
 * Implement editable files <br>
 * In upload files add the keyword field <br>
+* Add tooltip to ahk elements <br>
 * Make treeviews alredy extended <br>
 * Review the copy paste of subcategory <br>
 * Implement the new window for Categories and Subcategories <br>
