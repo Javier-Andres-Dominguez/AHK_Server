@@ -8,7 +8,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import models.Category;
 import models.File;
+import models.Subcategory;
 import models.User;
 import view.controllers.ToolBarController;
 
@@ -18,6 +20,10 @@ public class MainApp extends Application {
 
 	// This is used to take account of the User selected to open a file page
 	public static File selectedFile;
+	// This is used to take account of the Category selected to open a category page
+	public static Category selectedCategory;
+	// This is used to take account of the Category selected to open a category page
+	public static Subcategory selectedSubcategory;
 	// This is used to take account of the User that logged in
 	public static User loggedUser;
 	// This is a list of the users that the logged user is subscribed to:
