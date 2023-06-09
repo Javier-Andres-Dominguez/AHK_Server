@@ -4,7 +4,7 @@ It is a server for [Autohotkey](https://www.autohotkey.com/) scripts files. They
 There are also many users and they can comment, rate and download every file. <br>
 # To Do List:<br>
 * Add tooltip to ahk elements <br>
-* Implement the new window for Categories and Subcategories <br>
+* Implement the new window for ~~Categories~~ and Subcategories <br>
 * Implement editable files <br>
 * Implement the comentaries in the file <br>
 * Add the documentation <br> <br> <br>
