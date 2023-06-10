@@ -114,6 +114,17 @@ public class FilePageController {
 	}
 
 	/**
+	 * This method is used to expand all the items from a treeview
+	 * @param item
+	 */
+	private void expandTreeView(TreeItem<?> item) {
+		item.setExpanded(true);
+	    for (TreeItem<?> child : item.getChildren()) {
+	        expandTreeView(child);
+	    }
+	}
+
+	/**
 	 * This method fills the treeview
 	 */
 	@SuppressWarnings("unchecked")
@@ -143,6 +154,7 @@ public class FilePageController {
 				}
 			}
 			otherFilesTreeView.setRoot(rootItem);
+			expandTreeView(rootItem);
 		}
 		// If there is any error Inform in the screen
 		catch (Exception e) {

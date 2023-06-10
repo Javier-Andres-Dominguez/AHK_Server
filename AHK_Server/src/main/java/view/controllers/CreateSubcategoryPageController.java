@@ -45,6 +45,17 @@ public class CreateSubcategoryPageController {
 		createButton.setDisable(true);
 		createButton.setVisible(false);
 	}
+
+	/**
+	 * This method is used to expand all the items from a treeview
+	 * @param item
+	 */
+	private void expandTreeView(TreeItem<?> item) {
+		item.setExpanded(true);
+	    for (TreeItem<?> child : item.getChildren()) {
+	        expandTreeView(child);
+	    }
+	}
 	
 	/**
 	 * This method fills the treeview with categories
@@ -83,6 +94,7 @@ public class CreateSubcategoryPageController {
 				rootItem.getChildren().add(categoryItem);
 			}
 			categoriesTreeView.setRoot(rootItem);
+			expandTreeView(rootItem);
 		}
 		// If there is any error Inform in the screen
 		catch (Exception e) {
@@ -102,9 +114,9 @@ public class CreateSubcategoryPageController {
 	private void selectCategory() {
 		TreeItem<String> selectedItem = (TreeItem<String>) categoriesTreeView.getSelectionModel().getSelectedItem();
 		// If the selected item is a category:
-		if (selectedItem != null && selectedItem.getParent().getValue().equals("Categories:")) {
+		if (selectedItem != null && selectedItem.getParent()!=null && selectedItem.getParent().getValue().equals("Categories:")) {
 			checkButtonState();
-			// Check with all subcategories:
+			// Check with all categories:
 			for (Category category : categoriesList) {
 				// Get the subcategory with that name selected
 				if (selectedItem.getValue().equals(category.getCatName())) {
@@ -112,7 +124,7 @@ public class CreateSubcategoryPageController {
 					break;
 				}
 			}
-			createButton.setText("Create Category");
+			createButton.setText("Create Subcategory");
 			createButton.setDisable(false);
 		}else {
 			checkButtonState();
@@ -162,8 +174,11 @@ public class CreateSubcategoryPageController {
 				sf.close();
 				clearFields();
 				errorLabel.setText("Subcategory registered successfully");
+				createButton.setDisable(false);
 			}
 
+		}else {
+			errorLabel.setText("Missing Subcategory name");
 		}
 	}
 

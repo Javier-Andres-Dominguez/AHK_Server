@@ -36,6 +36,17 @@ public class CreateCategoryPageController {
 	}
 
 	/**
+	 * This method is used to expand all the items from a treeview
+	 * @param item
+	 */
+	private void expandTreeView(TreeItem<?> item) {
+		item.setExpanded(true);
+	    for (TreeItem<?> child : item.getChildren()) {
+	        expandTreeView(child);
+	    }
+	}
+
+	/**
 	 * This method fills the treeview with categories
 	 */
 	private void fillCategories() {
@@ -63,6 +74,7 @@ public class CreateCategoryPageController {
 			}
 			// Add the parent to the root
 			categoriesTreeView.setRoot(rootItem);
+			expandTreeView(rootItem);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -104,6 +116,7 @@ public class CreateCategoryPageController {
 				sf.close();
 				clearFields();
 				errorLabel.setText("Category registered successfully");
+				createButton.setDisable(false);
 			}
 
 		}else {

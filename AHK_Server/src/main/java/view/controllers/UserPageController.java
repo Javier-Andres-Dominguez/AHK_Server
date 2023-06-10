@@ -125,6 +125,17 @@ public class UserPageController {
 	}
 
 	/**
+	 * This method is used to expand all the items from a treeview
+	 * @param item
+	 */
+	private void expandTreeView(TreeItem<?> item) {
+		item.setExpanded(true);
+	    for (TreeItem<?> child : item.getChildren()) {
+	        expandTreeView(child);
+	    }
+	}
+
+	/**
 	 * This method fills the treeview
 	 */
 	private void fillUserFileListTreeView() {
@@ -208,6 +219,7 @@ public class UserPageController {
 			rootItem.getChildren().add(treeCategory);
 		}
 		userFilesTreeView.setRoot(rootItem);
+		expandTreeView(rootItem);
 	}
 
 	/**

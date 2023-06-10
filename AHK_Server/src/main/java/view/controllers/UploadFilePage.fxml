@@ -38,6 +38,18 @@
 							</children>
 						</HBox>
 						<TextField fx:id="fileDescriptionTextField" prefHeight="100.0" prefWidth="900.0" />
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label text="Keywords:" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                           <children>
+                              <TextField fx:id="keyword1Label" />
+                              <TextField fx:id="keyword2Label" />
+                              <TextField fx:id="keyword3Label" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
 					</children>
 				</VBox>
 						<ScrollPane prefHeight="500.0" prefWidth="400.0">

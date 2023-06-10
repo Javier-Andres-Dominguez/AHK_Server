@@ -1,9 +1,8 @@
 package models;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,22 +35,22 @@ public class User implements Serializable {
 	private String userImg;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<Commentary> commentaries = new HashSet<Commentary>(0);
+	private List<Commentary> commentaries = new ArrayList<Commentary>(0);
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<File> files = new HashSet<File>(0);
+	private List<File> files = new ArrayList<File>(0);
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<Category> categories = new HashSet<Category>(0);
+	private List<Category> categories = new ArrayList<Category>(0);
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<Subcategory> subcategories = new HashSet<Subcategory>(0);
+	private List<Subcategory> subcategories = new ArrayList<Subcategory>(0);
 
 	@OneToMany(mappedBy = "id.userSubscribed", cascade = CascadeType.ALL)
-	private Set<User_Subscribe_User> subscribedUser = new HashSet<User_Subscribe_User>(0);
+	private List<User_Subscribe_User> subscribedUser = new ArrayList<User_Subscribe_User>(0);
 
 	@OneToMany(mappedBy = "id.subscribedToUser", cascade = CascadeType.ALL)
-	private Set<User_Subscribe_User> subscribedToUser = new HashSet<User_Subscribe_User>(0);
+	private List<User_Subscribe_User> subscribedToUser = new ArrayList<User_Subscribe_User>(0);
 
 	public User() {
 
@@ -67,8 +66,8 @@ public class User implements Serializable {
 	}
 
 	public User(int userId, String userName, String userNick, String userPas, String userGma, String userBio, String userImg,
-			Set<Commentary> commentaries, Set<File> files, Set<Category> categories, Set<Subcategory> subcategories,
-			Set<User_Subscribe_User> subscribedUser, Set<User_Subscribe_User> subscribedToUser) {
+			List<Commentary> commentaries, List<File> files, List<Category> categories, List<Subcategory> subcategories,
+			List<User_Subscribe_User> subscribedUser, List<User_Subscribe_User> subscribedToUser) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -141,51 +140,51 @@ public class User implements Serializable {
 		this.userImg = userImg;
 	}
 
-	public Set<Commentary> getCommentaries() {
+	public List<Commentary> getCommentaries() {
 		return commentaries;
 	}
 
-	public void setCommentaries(Set<Commentary> commentaries) {
+	public void setCommentaries(List<Commentary> commentaries) {
 		this.commentaries = commentaries;
 	}
 
-	public Set<File> getFiles() {
+	public List<File> getFiles() {
 		return files;
 	}
 
-	public void setFiles(Set<File> files) {
+	public void setFiles(List<File> files) {
 		this.files = files;
 	}
 
-	public Set<Category> getCategories() {
+	public List<Category> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(Set<Category> categories) {
+	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
 
-	public Set<Subcategory> getSubcategories() {
+	public List<Subcategory> getSubcategories() {
 		return subcategories;
 	}
 
-	public void setSubcategories(Set<Subcategory> subcategories) {
+	public void setSubcategories(List<Subcategory> subcategories) {
 		this.subcategories = subcategories;
 	}
 
-	public Set<User_Subscribe_User> getSubscribedUser() {
+	public List<User_Subscribe_User> getSubscribedUser() {
 		return subscribedUser;
 	}
 
-	public void setSubscribedUser(Set<User_Subscribe_User> subscribedUser) {
+	public void setSubscribedUser(List<User_Subscribe_User> subscribedUser) {
 		this.subscribedUser = subscribedUser;
 	}
 
-	public Set<User_Subscribe_User> getSubscribedToUser() {
+	public List<User_Subscribe_User> getSubscribedToUser() {
 		return subscribedToUser;
 	}
 
-	public void setSubscribedToUser(Set<User_Subscribe_User> subscribedToUser) {
+	public void setSubscribedToUser(List<User_Subscribe_User> subscribedToUser) {
 		this.subscribedToUser = subscribedToUser;
 	}
 }

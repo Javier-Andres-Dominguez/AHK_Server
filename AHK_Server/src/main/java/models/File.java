@@ -1,7 +1,9 @@
 package models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -46,7 +48,7 @@ public class File implements Serializable {
 	private Subcategory subcategory;
 
 	@OneToMany(mappedBy = "file", cascade = CascadeType.ALL)
-	private Set<Commentary> commentaries = new HashSet<Commentary>(0);
+	private List<Commentary> commentaries = new ArrayList<Commentary>(0);
 
 	public File() {
 	}
@@ -58,7 +60,7 @@ public class File implements Serializable {
 	}
 
 	public File(int fileId, String fileName, String fileDes, User user, Subcategory subcategory,
-			Set<Commentary> commentaries) {
+			List<Commentary> commentaries) {
 		this.fileId = fileId;
 		this.fileName = fileName;
 		this.fileDes = fileDes;
@@ -147,11 +149,11 @@ public class File implements Serializable {
 		this.subcategory = subcategory;
 	}
 
-	public Set<Commentary> getCommentaries() {
+	public List<Commentary> getCommentaries() {
 		return commentaries;
 	}
 
-	public void setCommentaries(Set<Commentary> commentaries) {
+	public void setCommentaries(List<Commentary> commentaries) {
 		this.commentaries = commentaries;
 	}
 

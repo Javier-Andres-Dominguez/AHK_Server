@@ -36,6 +36,12 @@ public class UploadFilePageController {
 	@FXML
 	private TextField fileDescriptionTextField;
 	@FXML
+	private TextField keyword1Label;
+	@FXML
+	private TextField keyword2Label;
+	@FXML
+	private TextField keyword3Label;
+	@FXML
 	private TreeView<String> subcategoriesTreeView;
 	@FXML
 	private Button publishButton;
@@ -61,6 +67,17 @@ public class UploadFilePageController {
 		publishButton.setText("Select Subcategory");
 		publishButton.setDisable(true);
 		publishButton.setVisible(false);
+	}
+
+	/**
+	 * This method is used to expand all the items from a treeview
+	 * @param item
+	 */
+	private void expandTreeView(TreeItem<?> item) {
+		item.setExpanded(true);
+	    for (TreeItem<?> child : item.getChildren()) {
+	        expandTreeView(child);
+	    }
 	}
 
 	/**
@@ -101,6 +118,7 @@ public class UploadFilePageController {
 				rootItem.getChildren().add(categoryItem);
 			}
 			subcategoriesTreeView.setRoot(rootItem);
+			expandTreeView(rootItem);
 		}
 		// If there is any error Inform in the screen
 		catch (Exception e) {
@@ -205,6 +223,9 @@ public class UploadFilePageController {
 				file.setSubcategory(subcategorySelected);
 				file.setUser(loggedUser);
 				file.setViews(0);
+				file.setFileKey1(keyword1Label.getText());
+				file.setFileKey2(keyword2Label.getText());
+				file.setFileKey3(keyword3Label.getText());
 				// Define the loader
 				FileDao fileDao = new FileDao(session);
 				// Save the loggedUser into the database

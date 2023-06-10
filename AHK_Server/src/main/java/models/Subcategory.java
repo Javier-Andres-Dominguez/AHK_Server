@@ -1,9 +1,8 @@
 package models;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,7 +30,7 @@ public class Subcategory implements Serializable {
 	private Category category;
 
 	@OneToMany(mappedBy = "subcategory", cascade = CascadeType.ALL)
-	private Set<File> files = new HashSet<File>(0);
+	private List<File> files = new ArrayList<File>(0);
 
 	public Subcategory() {
 
@@ -43,7 +42,7 @@ public class Subcategory implements Serializable {
 		this.subName = subName;
 	}
 
-	public Subcategory(int subId, String subName, User user, Category category, Set<File> files) {
+	public Subcategory(int subId, String subName, User user, Category category, List<File> files) {
 		super();
 		this.subId = subId;
 		this.subName = subName;
@@ -84,11 +83,11 @@ public class Subcategory implements Serializable {
 		this.category = category;
 	}
 
-	public Set<File> getFiles() {
+	public List<File> getFiles() {
 		return files;
 	}
 
-	public void setFiles(Set<File> files) {
+	public void setFiles(List<File> files) {
 		this.files = files;
 	}
 

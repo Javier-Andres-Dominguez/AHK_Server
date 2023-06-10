@@ -1,10 +1,7 @@
 package view.controllers;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -35,13 +32,19 @@ public class PrincipalPageController {
 	private Button openButton;
 
 	private User loggedUser;
+	private String categorySelected;
+	private String subcategorySelected;
 	private String fileSelected;
 	private String userSelected;
-	private String typeOfFile;
-	private String userOrFile;
+	private String treeViewSelected;
+	private String typeOfItem;
+	private List<Category> yourCategories;
+	private List<Subcategory> yourSubcategories;
 	private List<File> yourFiles;
 	private List<File> popularFiles;
-	private List<List<File>> subscriptionFiles = new ArrayList<>();;
+	private List<List<Category>> subscriptionCategories = new ArrayList<>();
+	private List<List<Subcategory>> subscriptionSubcategories = new ArrayList<>();
+	private List<List<File>> subscriptionFiles = new ArrayList<>();
 
 	public PrincipalPageController() {
 
@@ -62,6 +65,18 @@ public class PrincipalPageController {
 	}
 
 	/**
+	 * This method is used to expand all the items from a treeview
+	 * 
+	 * @param item
+	 */
+	private void expandTreeView(TreeItem<?> item) {
+		item.setExpanded(true);
+		for (TreeItem<?> child : item.getChildren()) {
+			expandTreeView(child);
+		}
+	}
+
+	/**
 	 * This method fills your files pane with files, subcategories and categories
 	 */
 	@SuppressWarnings("unchecked")
@@ -69,10 +84,10 @@ public class PrincipalPageController {
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 		try {
+			// Begin the transaction
 			session.getTransaction().begin();
-
-			String hql = "FROM File f WHERE f.user.userId = :userId";
-			Query query = session.createQuery(hql);
+			// Define the query
+			Query query = session.createQuery("FROM File f WHERE f.user.userId = :userId");
 			query.setParameter("userId", loggedUser.getUserId());
 			// Save the result in a list
 			yourFiles = (List<File>) query.list();
@@ -80,17 +95,17 @@ public class PrincipalPageController {
 			// Define the root item of treeview
 			TreeItem<String> rootItem = new TreeItem<>("Categories:",
 					new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
-			Set<Category> categories = new HashSet<>();
-			Set<Subcategory> subcategories = new HashSet<>();
+			List<Category> categories = new ArrayList<>();
+			List<Subcategory> subcategories = new ArrayList<>();
 			// If it is null make sure to be invalid
 			for (File file : yourFiles) {
 				subcategories.add(file.getSubcategory());
 			}
-
+			yourSubcategories = subcategories;
 			for (Subcategory subcategory : subcategories) {
 				categories.add(subcategory.getCategory());
 			}
-
+			yourCategories = categories;
 			for (Category category : categories) {
 				TreeItem<String> treeCategory = new TreeItem<>(category.getCatName(),
 						new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
@@ -112,6 +127,7 @@ public class PrincipalPageController {
 			}
 
 			yourFilesTree.setRoot(rootItem);
+			expandTreeView(rootItem);
 		}
 		// If there is any error Inform in the screen
 		catch (Exception e) {
@@ -153,6 +169,7 @@ public class PrincipalPageController {
 				rootItem.getChildren().add(new TreeItem<String>(i + 1 + "-." + popularFiles.get(i).getFileName(),
 						new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
 			}
+			expandTreeView(rootItem);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -298,6 +315,9 @@ public class PrincipalPageController {
 				// Add the item to the treeview root
 				rootItem.getChildren().add(treeUserItem);
 			}
+			expandTreeView(rootItem);
+			subscriptionCategories = listOfListOfCategories;
+			subscriptionSubcategories = listOfListOfSubcategories;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -314,10 +334,25 @@ public class PrincipalPageController {
 	 */
 	private void selectItemFromYourFiles() {
 		checkButtonState();
-		typeOfFile = "YourFiles";
+		treeViewSelected = "YourFiles";
 		TreeItem<String> item = yourFilesTree.getSelectionModel().getSelectedItem();
+		// If the selected item is a category:
+		if (item != null && item.getParent()!=null && item.getParent().getValue().equals("Categories:")) {
+			typeOfItem = "Category";
+			categorySelected = item.getValue();
+			openButton.setText("Open category");
+			openButton.setDisable(false);
+		}
+		// If the selected item is a subcategory:
+		else if (item != null  && item.getParent()!=null && item.getParent().getParent().getValue().equals("Categories:")) {
+			typeOfItem = "Subcategory";
+			subcategorySelected = item.getValue();
+			openButton.setText("Open subcategory");
+			openButton.setDisable(false);
+		}
 		// If the selected item is a file:
-		if (item != null && item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
+		else if (item != null  && item.getParent()!=null && item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
+			typeOfItem = "File";
 			fileSelected = item.getValue();
 			openButton.setText("Open file");
 			openButton.setDisable(false);
@@ -334,7 +369,7 @@ public class PrincipalPageController {
 	 */
 	private void selectItemFromPopularFiles() {
 		checkButtonState();
-		typeOfFile = "PopularFiles";
+		treeViewSelected = "PopularFiles";
 		TreeItem<String> item = popularFilesTree.getSelectionModel().getSelectedItem();
 		// If the selected item is a file:
 		if (item != null && item.getChildren().isEmpty() && !item.getValue().equals("Popular files:")) {
@@ -356,18 +391,32 @@ public class PrincipalPageController {
 	 */
 	private void selectItemFromSubscriptionFiles() {
 		checkButtonState();
-		typeOfFile = "SubscriptionFiles";
+		treeViewSelected = "SubscriptionFiles";
 		TreeItem<String> item = subscriptionFilesTree.getSelectionModel().getSelectedItem();
 		// If the selected item is a user:
 		if (item != null && item.getParent() != null && item.getParent().getValue().equals("Users:")) {
-			userOrFile = "User";
+			typeOfItem = "User";
 			userSelected = item.getValue();
 			openButton.setText("Open user");
 			openButton.setDisable(false);
 		}
 		// If the selected item is a file:
+		else if (item != null && !item.getValue().equals("Users:") && item.getParent().getParent().getValue().equals("Users:")) {
+			typeOfItem = "Category";
+			fileSelected = item.getValue();
+			openButton.setText("Open category");
+			openButton.setDisable(false);
+		}
+		// If the selected item is a file:
+		else if (item != null  && !item.getValue().equals("Users:") && item.getParent().getParent().getParent().getValue().equals("Users:")) {
+			typeOfItem = "Subcategory";
+			fileSelected = item.getValue();
+			openButton.setText("Open subcategory");
+			openButton.setDisable(false);
+		}
+		// If the selected item is a file:
 		else if (item != null && item.getChildren().isEmpty() && !item.getValue().equals("Users:")) {
-			userOrFile = "File";
+			typeOfItem = "File";
 			fileSelected = item.getValue();
 			openButton.setText("Open file");
 			openButton.setDisable(false);
@@ -386,26 +435,83 @@ public class PrincipalPageController {
 	 */
 	private void openItem() {
 		// If the item is 1 of your files:
-		if (typeOfFile.equals("YourFiles")) {
-			// Check all the files
-			for (int i = 0; i < yourFiles.size(); i++) {
-				// If the file is the selected:
-				if (yourFiles.get(i).getFileName().equals(fileSelected)) {
-					MainApp.selectedFile = yourFiles.get(i);
-					MainApp.toolBarController.openFile();
+		if (treeViewSelected.equals("YourFiles")) {
+			// Check the type of item selected
+			if (typeOfItem.equals("Category")) {
+				// Check all the categories
+				for (int i = 0; i < yourCategories.size(); i++) {
+					// If the category is the selected:
+					if (yourCategories.get(i).getCatName().equals(categorySelected)) {
+						MainApp.selectedCategory = yourCategories.get(i);
+						MainApp.toolBarController.openCategory();
+					}
+				}
+			} else if (typeOfItem.equals("Subcategory")) {
+				// Check all the subcategories
+				for (int i = 0; i < yourSubcategories.size(); i++) {
+					// If the subcategory is the selected:
+					if (yourSubcategories.get(i).getSubName().equals(subcategorySelected)) {
+						MainApp.selectedSubcategory = yourSubcategories.get(i);
+						MainApp.toolBarController.openSubcategory();
+					}
+				}
+			} else if (typeOfItem.equals("File")) {
+				// Check all the files
+				for (int i = 0; i < yourFiles.size(); i++) {
+					// If the file is the selected:
+					if (yourFiles.get(i).getFileName().equals(fileSelected)) {
+						MainApp.selectedFile = yourFiles.get(i);
+						MainApp.toolBarController.openFile();
+					}
 				}
 			}
 		}
 		// If the item is a popular file:
-		else if (typeOfFile.equals("PopularFiles")) {
-
+		else if (treeViewSelected.equals("PopularFiles")) {
 			MainApp.selectedFile = popularFiles.get(Integer.parseInt(fileSelected) - 1);
 			MainApp.toolBarController.openFile();
 		}
 		// If the item is a From subscription tree:
-		else if (typeOfFile.equals("SubscriptionFiles")) {
+		else if (treeViewSelected.equals("SubscriptionFiles")) {
+			// If the item is a User:
+			if (typeOfItem.equals("User")) {
+				// Check all the files
+				for (int i = 0; i < subscriptionFiles.size(); i++) {
+					// If the user is the selected:
+					if (MainApp.subscriptionUsers.get(i).getUserNick().equals(userSelected)) {
+						MainApp.selectedUser = MainApp.subscriptionUsers.get(i);
+						MainApp.toolBarController.openUser();
+					}
+				}
+			}
+			// If the item is a Category:
+			else if (typeOfItem.equals("Category")) {
+				// Check all the categorylists:
+				for (int i = 0; i < subscriptionCategories.size(); i++) {
+					// Check all the categories:
+					for (int n = 0; n < subscriptionCategories.get(i).size(); n++) {
+						if (subscriptionCategories.get(i).get(n).getCatName().equals(categorySelected)) {
+							MainApp.selectedCategory = subscriptionCategories.get(i).get(n);
+							MainApp.toolBarController.openCategory();
+						}
+					}
+				}
+			}
+			// If the item is a Subcategory:
+			else if (typeOfItem.equals("Subcategory")) {
+				// Check all the subcategorylists:
+				for (int i = 0; i < subscriptionSubcategories.size(); i++) {
+					// Check all the subcategories:
+					for (int n = 0; n < subscriptionSubcategories.get(i).size(); n++) {
+						if (subscriptionSubcategories.get(i).get(n).getSubName().equals(subcategorySelected)) {
+							MainApp.selectedSubcategory = subscriptionSubcategories.get(i).get(n);
+							MainApp.toolBarController.openSubcategory();
+						}
+					}
+				}
+			}
 			// If the item is a File:
-			if (userOrFile.equals("File")) {
+			else if (typeOfItem.equals("File")) {
 				// Check all the filelists:
 				for (int i = 0; i < subscriptionFiles.size(); i++) {
 					// Check all the files:
@@ -414,17 +520,6 @@ public class PrincipalPageController {
 							MainApp.selectedFile = subscriptionFiles.get(i).get(n);
 							MainApp.toolBarController.openFile();
 						}
-					}
-				}
-			}
-			// If the item is a User:
-			else if (userOrFile.equals("User")) {
-				// Check all the files
-				for (int i = 0; i < subscriptionFiles.size(); i++) {
-					// If the user is the selected:
-					if (MainApp.subscriptionUsers.get(i).getUserNick().equals(userSelected)) {
-						MainApp.selectedUser = MainApp.subscriptionUsers.get(i);
-						MainApp.toolBarController.openUser();
 					}
 				}
 			}

@@ -298,6 +298,22 @@ public class ToolBarController {
 	}
 
 	/**
+	 * This method is used when a category is opened
+	 */
+	public void openCategory() {
+		changeScene("../view/controllers/CategoryPage.fxml");
+		setButtonsEnabled();
+	}
+
+	/**
+	 * This method is used when a subcategory is opened
+	 */
+	public void openSubcategory() {
+		changeScene("../view/controllers/SubcategoryPage.fxml");
+		setButtonsEnabled();
+	}
+
+	/**
 	 * This method is used when a user is opened
 	 */
 	public void openUser() {

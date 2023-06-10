@@ -176,6 +176,17 @@ public class SearchPage {
 	}
 
 	/**
+	 * This method is used to expand all the items from a treeview
+	 * @param item
+	 */
+	private void expandTreeView(TreeItem<?> item) {
+		item.setExpanded(true);
+	    for (TreeItem<?> child : item.getChildren()) {
+	        expandTreeView(child);
+	    }
+	}
+
+	/**
 	 * This method is used to create the treeviews of the results from the query
 	 */
 	private void generateResults() {
@@ -226,6 +237,7 @@ public class SearchPage {
 						new ImageView(new Image(getClass().getResourceAsStream("ahk.png")))));
 			}
 			rootItem.getChildren().add(file);
+			expandTreeView(rootItem);
 		}
 		contentTreeView.setRoot(rootItem);
 	}
