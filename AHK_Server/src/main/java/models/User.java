@@ -18,7 +18,7 @@ public class User implements Serializable {
 
 	@Column(name = "UserName")
 	private String userName;
-	
+
 	@Column(name = "UserNick")
 	private String userNick;
 
@@ -65,9 +65,10 @@ public class User implements Serializable {
 		this.userGma = userGma;
 	}
 
-	public User(int userId, String userName, String userNick, String userPas, String userGma, String userBio, String userImg,
-			List<Commentary> commentaries, List<File> files, List<Category> categories, List<Subcategory> subcategories,
-			List<User_Subscribe_User> subscribedUser, List<User_Subscribe_User> subscribedToUser) {
+	public User(int userId, String userName, String userNick, String userPas, String userGma, String userBio,
+			String userImg, List<Commentary> commentaries, List<File> files, List<Category> categories,
+			List<Subcategory> subcategories, List<User_Subscribe_User> subscribedUser,
+			List<User_Subscribe_User> subscribedToUser) {
 		super();
 		this.userId = userId;
 		this.userName = userName;

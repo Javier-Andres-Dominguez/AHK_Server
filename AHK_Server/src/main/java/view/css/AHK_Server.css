@@ -1,3 +1,6 @@
+.button:hover {
+    -fx-cursor: hand;
+}
 /* Estilo para el TreeView */
 .tree-view {
     -fx-background-color: #f5f5f5; /* Color de fondo del TreeView */

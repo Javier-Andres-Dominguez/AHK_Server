@@ -19,6 +19,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import main.MainApp;
 import models.Category;
 import models.File;
@@ -30,6 +31,8 @@ import models.User_Subscribe_UserId;
 public class UserPageController {
 
 	@FXML
+	private Button editButton;
+	@FXML
 	private VBox userImageVBox;
 	@FXML
 	private TextField userNameTextField;
@@ -40,16 +43,39 @@ public class UserPageController {
 	@FXML
 	private TreeView<String> userFilesTreeView;
 	@FXML
+	private Button cancelChangesButton;
+	@FXML
 	private Button openButton;
 	@FXML
 	private Button saveChangesButton;
 	@FXML
 	private Button subscriptionButton;
 
+	// The list of Categories that the User used
+	private List<Category> userCategories;
+	// The selected Category
+	private Category selectedCategory;
+	// The list of Subcategories that the User used
+	private List<Subcategory> userSubcategories;
+	// The selected Subcategory
+	private Subcategory selectedSubcategory;
+	// The Files that the User uploaded
 	private List<File> userFiles;
-	private String selectedFile;
-	private User user;
+	// The selected File
+	private File selectedFile;
+	// The Item type
+	private String itemType;
+	private String selectedCategoryName;
+	private String subcategoryParentCategory;
+	private String selectedSubcategoryName;
+	private String fileParentSubcategory;
+	private String selectedFileName;
+	// The User opened
+	private User openedUser;
+	// The Userimage URL
 	private String imageUrl;
+	// To check the state of the Page
+	private boolean isEditing;
 
 	public UserPageController() {
 
@@ -57,28 +83,67 @@ public class UserPageController {
 
 	@FXML
 	private void initialize() {
-		user = MainApp.selectedUser;
-		openButton.setDisable(true);
-		openButton.setVisible(false);
-		isSubscribed();
+		getUserInfo();
 		getUserFiles();
 		fillUserInfo();
-		checkYourProfile();
+		isYourProfile();
 	}
 
 	/**
-	 * This method fills the user files list
+	 * This method gets information for the page
+	 */
+	private void getUserInfo() {
+		openedUser = MainApp.selectedUser;
+	}
+	
+	/**
+	 * This method setups the options in editing
+	 * @param isEditing
+	 */
+	private void setElementsDisponibility() {
+		// If the User is editing:
+		if(isEditing) {
+			saveChangesButton.setDisable(false);
+			saveChangesButton.setVisible(true);
+			cancelChangesButton.setDisable(false);
+			cancelChangesButton.setVisible(true);
+			openButton.setDisable(true);
+			openButton.setVisible(false);
+			editButton.setDisable(true);
+			editButton.setVisible(false);
+			subscriptionButton.setDisable(true);
+			openButton.setDisable(true);
+			userNameTextField.setEditable(true);
+			userBiographyTextField.setEditable(true);
+		}else {
+			saveChangesButton.setDisable(true);
+			saveChangesButton.setVisible(false);
+			cancelChangesButton.setDisable(true);
+			cancelChangesButton.setVisible(false);
+			openButton.setDisable(true);
+			openButton.setVisible(true);
+			editButton.setDisable(false);
+			editButton.setVisible(true);
+			subscriptionButton.setDisable(false);
+			openButton.setDisable(true);
+			userNameTextField.setEditable(false);
+			userBiographyTextField.setEditable(false);
+		}
+	}
+	
+	/**
+	 * This method fills the openedUser files list
 	 */
 	@SuppressWarnings("unchecked")
 	private void getUserFiles() {
+		// Define the session
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
-		Query query = null;
 		try {
+			// Begin transaction
 			session.getTransaction().begin();
-
-			String hql = "FROM File f WHERE f.user.userId=" + user.getUserId();
-			query = session.createQuery(hql);
+			// Define the query
+			Query query = session.createQuery("FROM File f WHERE f.user.userId=" + openedUser.getUserId());
 			// Save the result in a list
 			this.userFiles = query.list();
 		}
@@ -97,12 +162,12 @@ public class UserPageController {
 	 * This method fills the file top information
 	 */
 	private void fillUserInfo() {
-		userNameTextField.setText(user.getUserNick());
+		userNameTextField.setText(openedUser.getUserNick());
 		numberOfFilesLabel.setText("Files: " + userFiles.size());
-		userBiographyTextField.setText(user.getUserBio());
-		imageUrl = user.getUserImg();
+		userBiographyTextField.setText(openedUser.getUserBio());
+		imageUrl = openedUser.getUserImg();
 		ImageView imgView = null;
-		// Check if the user has an image for the profile or use the default one
+		// Check if the openedUser has an image for the profile or use the default one
 		if (imageUrl != null) {
 			// Define the image
 			Image img = new Image(imageUrl);
@@ -112,11 +177,11 @@ public class UserPageController {
 			}
 			// Else use the default:
 			else {
-				imgView = new ImageView(new Image(getClass().getResourceAsStream("user.png")));
+				imgView = new ImageView(new Image(getClass().getResourceAsStream("openedUser.png")));
 			}
 		} else {
 			// Assign the default image
-			imgView = new ImageView(new Image(getClass().getResourceAsStream("user.png")));
+			imgView = new ImageView(new Image(getClass().getResourceAsStream("openedUser.png")));
 		}
 		imgView.setFitHeight(200);
 		imgView.setFitWidth(200);
@@ -142,17 +207,17 @@ public class UserPageController {
 		// Define the root item of treeview
 		TreeItem<String> rootItem = new TreeItem<>("Categories:",
 				new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
-		ArrayList<Category> categories = new ArrayList<>();
-		ArrayList<Subcategory> subcategories = new ArrayList<>();
+		List<Category> categories = new ArrayList<>();
+		List<Subcategory> subcategories = new ArrayList<>();
 		boolean repeated = false;
-		// Get the subcategories
+		// Get the Subcategories
 		for (int i = 0; i < userFiles.size(); i++) {
-			// Do not check the first subcategory
+			// Do not check the first Subcategory
 			if (i == 0) {
-				// Add the subcategory
+				// Add the Subcategory
 				subcategories.add(userFiles.get(i).getSubcategory());
 			} else {
-				// Compare with all subcategories saved
+				// Compare with all Subcategories saved
 				for (int n = 0; n < subcategories.size(); n++) {
 					if (userFiles.get(i).getSubcategory().equals(subcategories.get(n))) {
 						repeated = true;
@@ -166,14 +231,15 @@ public class UserPageController {
 				repeated = false;
 			}
 		}
-		// Get the categories
+		userSubcategories = subcategories;
+		// Get the Categories
 		for (int i = 0; i < subcategories.size(); i++) {
-			// Do not check the first category
+			// Do not check the first Category
 			if (i == 0) {
-				// Add the category
+				// Add the Category
 				categories.add(subcategories.get(i).getCategory());
 			} else {
-				// Compare with all categories saved
+				// Compare with all Categories saved
 				for (int n = 0; n < categories.size(); n++) {
 					if (subcategories.get(i).getCategory().equals(categories.get(n))) {
 						repeated = true;
@@ -187,76 +253,108 @@ public class UserPageController {
 				repeated = false;
 			}
 		}
-
-		// For all categories:
+		userCategories = categories;
+		// For all Categories:
 		for (int i = 0; i < categories.size(); i++) {
-			// Create the tree category
+			// Create the tree Category
 			TreeItem<String> treeCategory = new TreeItem<String>(categories.get(i).getCatName(),
 					new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
-			// Check all the subcategories:
+			// Check all the Subcategories:
 			for (int n = 0; n < subcategories.size(); n++) {
-				// If any belongs to the current category:
+				// If any belongs to the current Category:
 				if (subcategories.get(n).getCategory().equals(categories.get(i))) {
-					// Create the tree subcategory
+					// Create the tree Subcategory
 					TreeItem<String> treeSubcategory = new TreeItem<String>(subcategories.get(n).getSubName(),
 							new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
-					// Check all the files:
+					// Check all the Files:
 					for (int j = 0; j < userFiles.size(); j++) {
-						// If any belongs to the current subcategory:
+						// If any belongs to the current Subcategory:
 						if (userFiles.get(j).getSubcategory().equals(subcategories.get(n))) {
-							// Create the tree file
+							// Create the tree File
 							TreeItem<String> treeFile = new TreeItem<String>(userFiles.get(j).getFileName(),
 									new ImageView(new Image(getClass().getResourceAsStream("ahk.png"))));
-							// Add the file to the subcategory
+							// Add the File to the Subcategory
 							treeSubcategory.getChildren().add(treeFile);
 						}
 					}
-					// Add the subcategory to the category
+					// Add the Subcategory to the Category
 					treeCategory.getChildren().add(treeSubcategory);
 				}
 			}
-			// Add the categories to the tree view
+			// Add the Categories to the tree view
 			rootItem.getChildren().add(treeCategory);
 		}
 		userFilesTreeView.setRoot(rootItem);
 		expandTreeView(rootItem);
 	}
+	
+	@FXML
+	/**
+	 * This method enables the editing mode
+	 */
+	private void editing() {
+		isEditing = true;
+		setElementsDisponibility();
+	}
+	
+	/**
+	 * This method is used to set the edit button
+	 */
+	private void setupEditButton() {
+		setElementsDisponibility();
+		// Define the button image
+		Image logoutImage = new Image(getClass().getResourceAsStream("../images/edit.png"));
+		// Define the ImageView to resize it
+		ImageView imageView = new ImageView(logoutImage);
+		imageView.setFitHeight(50);
+		imageView.setFitWidth(50);
+		// Load the image into the button
+		editButton.setGraphic(imageView);
+		// Resize the button
+		editButton.setMinSize(50, 50);
+		editButton.setMaxSize(50, 50);
+		editButton.setPrefSize(50, 50);
+		editButton.setShape(new Circle());
+	}
 
 	/**
-	 * This method checks if the user logged and selected is the same and
+	 * This method checks if the openedUser logged and selected is the same and
 	 * enables/disables buttons
 	 */
-	private void checkYourProfile() {
-		if (user.getUserId() == MainApp.loggedUser.getUserId()) {
-			userNameTextField.setEditable(true);
-			saveChangesButton.setDisable(false);
-			userBiographyTextField.setEditable(true);
+	private void isYourProfile() {
+		// If the opened User is the logged User:
+		if (openedUser.getUserId() == MainApp.loggedUser.getUserId()) {
+			setupEditButton();
+			setElementsDisponibility();
 			subscriptionButton.setDisable(true);
 			subscriptionButton.setVisible(false);
-		} else if (MainApp.loggedUser.getUserId() == 1) {
-			userNameTextField.setEditable(true);
-			saveChangesButton.setDisable(false);
-			userBiographyTextField.setEditable(true);
+		}
+		// If the logged User is the Admin:
+		else if (MainApp.loggedUser.getUserId() == 1) {
+			setupEditButton();
+			setElementsDisponibility();
 			subscriptionButton.setDisable(false);
 			subscriptionButton.setVisible(true);
-		} else {
-			userNameTextField.setEditable(false);
-			saveChangesButton.setDisable(true);
-			saveChangesButton.setVisible(false);
-			userBiographyTextField.setEditable(false);
+		}
+		// Default User:
+		else {
+			setElementsDisponibility();
+			editButton.setVisible(false);
 			subscriptionButton.setDisable(false);
 			subscriptionButton.setVisible(true);
 		}
 	}
 
 	/**
-	 * This method checks if the logged user is subscribed to the opened user
+	 * This method checks if the logged openedUser is subscribed to the opened openedUser
 	 * 
 	 * @return
 	 */
 	private boolean isSubscribed() {
-		for (int i = 0; i < MainApp.subscriptionUsers.size(); i++) {
-			if (user.getUserId() == MainApp.subscriptionUsers.get(i).getUserId()) {
+		// For every User in the subscription list:
+		for (User userFromSubscriptionList : MainApp.subscriptionUsers) {
+			// If it is the opened user:
+			if (openedUser.getUserId() == userFromSubscriptionList.getUserId()) {
 				subscriptionButton.setText("Unsubscribe");
 				return true;
 			}
@@ -267,36 +365,40 @@ public class UserPageController {
 
 	@FXML
 	private void subscribeAndUnsubscribe() {
+		// Define the session
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 
 		try {
+			// Begin transaction
 			session.getTransaction().begin();
 			User_Subscribe_UserId user_Subscribe_UserId = new User_Subscribe_UserId();
-			user_Subscribe_UserId.setSubscribedToUser(user);
+			user_Subscribe_UserId.setSubscribedToUser(openedUser);
 			user_Subscribe_UserId.setUserSubscribed(MainApp.loggedUser);
 
 			User_Subscribe_User user_Subscribe_User = new User_Subscribe_User();
 			user_Subscribe_User.setUser_Subscibre_UserId(user_Subscribe_UserId);
 			// Define the loader
 			User_Subscribe_UserDao user_Subscribe_UserDao = new User_Subscribe_UserDao(session);
-
+			// If it is subscribed-->Unsubscribe
 			if (isSubscribed()) {
 				session.delete(user_Subscribe_User);
 				session.flush();
 				for (int i = 0; i < MainApp.subscriptionUsers.size(); i++) {
-					if (MainApp.subscriptionUsers.get(i) == user) {
+					if (MainApp.subscriptionUsers.get(i) == openedUser) {
 						MainApp.subscriptionUsers.remove(i);
 						break;
 					}
 				}
 				subscriptionButton.setText("Subscribe");
-			} else {
+			}
+			// Else subscribe
+			else {
 				user_Subscribe_UserDao.insertUser_Subscribe_User(user_Subscribe_User);
 				session.flush();
 				for (int i = 0; i < MainApp.subscriptionUsers.size(); i++) {
-					if (MainApp.subscriptionUsers.get(i) == user) {
-						MainApp.subscriptionUsers.add(user);
+					if (MainApp.subscriptionUsers.get(i) == openedUser) {
+						MainApp.subscriptionUsers.add(openedUser);
 						break;
 					}
 				}
@@ -316,13 +418,23 @@ public class UserPageController {
 	}
 
 	@FXML
+	/**
+	 * This method upload the changes
+	 */
 	private void saveChanges() {
+		isEditing = false;
+		// Disable the button when used
+		editButton.setDisable(false);
+		editButton.setVisible(true);
+		setElementsDisponibility();
+		// Define the session
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 		try {
-			user.setUserNick(userNameTextField.getText());
-			user.setUserBio(userBiographyTextField.getText());
-			session.update(user);
+			// Save and update the info
+			openedUser.setUserNick(userNameTextField.getText());
+			openedUser.setUserBio(userBiographyTextField.getText());
+			session.update(openedUser);
 		}
 		// If there is any error Inform in the screen
 		catch (Exception e) {
@@ -335,23 +447,55 @@ public class UserPageController {
 			sf.close();
 		}
 	}
+	
+	@FXML
+	private void cancelChanges() {
+		isEditing = false;
+		setElementsDisponibility();
+		userNameTextField.setText(openedUser.getUserNick());
+		userBiographyTextField.setText(openedUser.getUserBio());
+	}
 
 	@FXML
 	/**
 	 * This method is called when you select an item from your files
 	 */
 	private void selectItemFromYourFiles() {
-		checkButtonState();
-		TreeItem<String> item = (TreeItem<String>) userFilesTreeView.getSelectionModel().getSelectedItem();
-		// If the selected item is a file:
-		if (item != null && item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
-			selectedFile = item.getValue();
-			openButton.setText("Open file");
-			openButton.setDisable(false);
-		}
-		// Else is a folder
-		else {
-			openButton.setDisable(true);
+		// If the User is not being edited:
+		if(!isEditing) {
+			checkButtonState();
+			// Define the Item selected
+			TreeItem<String> item = (TreeItem<String>) userFilesTreeView.getSelectionModel().getSelectedItem();
+			// If the selected item is a Category:
+			if(item != null && item.getParent()!=null && item.getParent().getValue().equals("Categories:")) {
+				// Save the info
+				selectedCategoryName = item.getValue();
+				openButton.setText("Open category");
+				itemType = "Category";
+				openButton.setDisable(false);
+			}
+			// If the selected item is a Subcategory:
+			else if(item != null && item.getParent().getParent()!=null && item.getParent().getParent().getValue().equals("Categories:")) {
+				// Save the info
+				subcategoryParentCategory = item.getParent().getValue();
+				selectedSubcategoryName = item.getValue();
+				openButton.setText("Open subcategory");
+				itemType = "Subcategory";
+				openButton.setDisable(false);
+			}
+			// If the selected item is a File:
+			else if (item != null && item.getChildren().isEmpty() && !item.getValue().equals("Categories:")) {
+				// Save the info
+				fileParentSubcategory = item.getParent().getValue();
+				selectedFileName = item.getValue();
+				openButton.setText("Open file");
+				itemType = "File";
+				openButton.setDisable(false);
+			}
+			else {
+				openButton.setText("Select an Item");
+				openButton.setDisable(true);
+			}
 		}
 	}
 
@@ -362,18 +506,49 @@ public class UserPageController {
 	 * @param event
 	 */
 	private void openItem(ActionEvent event) {
-		boolean matched = false;
-		for (int i = 0; i < userFiles.size() || !matched; i++) {
-			if (userFiles.get(i).getFileName().equals(selectedFile)) {
-				MainApp.selectedFile = userFiles.get(i);
-				matched = true;
+		// If the item type is a Category
+		if(itemType.equals("Category")) {
+			// Check the Category name with all the Categories
+			for(Category category : userCategories) {
+				if(category.getCatName().equals(selectedCategoryName)) {
+					selectedCategory = category;
+					break;
+				}
 			}
+			MainApp.selectedCategory = selectedCategory;
+			MainApp.toolBarController.openCategory();
 		}
-		MainApp.toolBarController.openFile();
+		// If the item type is a Subcategory
+		else if(itemType.equals("Subcategory")) {
+			// Check the Subcategory name with all the Subcategory
+			for(Subcategory subcategory : userSubcategories) {
+				if(subcategory.getSubName().equals(selectedSubcategoryName) && subcategoryParentCategory.equals(subcategory.getCategory().getCatName())) {
+					selectedSubcategory = subcategory;
+					break;
+				}
+			}
+			MainApp.selectedSubcategory = selectedSubcategory;
+			MainApp.toolBarController.openSubcategory();
+		}
+		// If the item type is a File
+		else if(itemType.equals("File")) {
+			// Check the File name with all the File
+			for(File file : userFiles) {
+				if(file.getFileName().equals(selectedFileName) && fileParentSubcategory.equals(file.getSubcategory().getSubName())) {
+					selectedFile = file;
+					break;
+				}
+			}
+			MainApp.selectedFile = selectedFile;
+			MainApp.toolBarController.openFile();
+		}
 	}
 
+	/**
+	 * Makes visible the open button if it is not editing and it is not already visible
+	 */
 	private void checkButtonState() {
-		if (!openButton.isVisible()) {
+		if (!isEditing && !openButton.isVisible()) {
 			openButton.setVisible(true);
 		}
 	}

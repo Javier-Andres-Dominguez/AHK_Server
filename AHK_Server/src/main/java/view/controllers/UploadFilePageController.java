@@ -46,11 +46,16 @@ public class UploadFilePageController {
 	@FXML
 	private Button publishButton;
 
+	// The list of Categories to select a Subcategory
 	List<Category> categoriesList;
+	// The list of Subcategories to select
 	List<Subcategory> subcategoriesList;
 
+	// The real file
 	private java.io.File fileUploaded;
+	// The logged User
 	private User loggedUser;
+	// The selected Subcategory to pusblish the File
 	private Subcategory subcategorySelected;
 
 	@FXML
@@ -85,31 +90,33 @@ public class UploadFilePageController {
 	 */
 	@SuppressWarnings("unchecked")
 	private void fillCategoriesAndSubcategoriesItems() {
+		// Define the session
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 		try {
-			// Execute the query and get the result
+			// Begin the transaction
 			session.getTransaction().begin();
+			// Define the query
 			Query query = session.createQuery("FROM Subcategory");
 			// Save the result in a list
 			subcategoriesList = query.list();
-
+			// Redefine the query
 			query = session.createQuery("FROM Category");
 			// Save the result in a list
 			categoriesList = query.list();
 			// Define the root item of treeview
 			TreeItem<String> rootItem = new TreeItem<>("Select your subcategory:",
 					new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
-			// For all the categories:
+			// For all the Categories:
 			for (Category category : categoriesList) {
-				// Create the category treeitem
+				// Create the Category treeitem
 				TreeItem<String> categoryItem = new TreeItem<>(category.getCatName(),
 						new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
-				// Add the correspondent subcategories to it
+				// Add the correspondent Subcategories to it
 				for (Subcategory subcategory : subcategoriesList) {
-					// Make sure that the subcategory corresponds to the category
+					// Make sure that the Subcategory corresponds to the category
 					if (subcategory.getCategory().getCatId() == category.getCatId()) {
-						// Create the subcategory treeitem
+						// Create the Subcategory treeitem
 						TreeItem<String> subcategoryItem = new TreeItem<>(subcategory.getSubName(),
 								new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 						categoryItem.getChildren().add(subcategoryItem);
@@ -157,7 +164,7 @@ public class UploadFilePageController {
 	}
 
 	/**
-	 * This method fills the file top information
+	 * This method fills the File top information
 	 */
 	private void fillFileInfo() {
 		fileNameLabel.setText(fileUploaded.getName());
@@ -167,17 +174,17 @@ public class UploadFilePageController {
 
 	@FXML
 	/**
-	 * This method is called when you select an item from your files
+	 * This method is called when you select an item from your Files
 	 */
 	private void selectSubcategoryForFile() {
 		TreeItem<String> selectedItem = (TreeItem<String>) subcategoriesTreeView.getSelectionModel().getSelectedItem();
-		// If the selected item is a subcategory:
+		// If the selected item is a Subcategory:
 		if (selectedItem != null && selectedItem.getChildren().isEmpty()
 				&& !selectedItem.getValue().equals("Categories:")) {
 			checkButtonState();
-			// Check with all subcategories:
+			// Check with all Subcategories:
 			for (Subcategory subcategory : subcategoriesList) {
-				// Get the subcategory with that name selected
+				// Get the Subcategory with that name selected
 				if (selectedItem.getValue().equals(subcategory.getSubName())) {
 					subcategorySelected = subcategory;
 					break;
@@ -205,7 +212,7 @@ public class UploadFilePageController {
 
 	@FXML
 	/**
-	 * This method is used to open an item
+	 * This method is used to open an Item
 	 * 
 	 * @param event
 	 */
@@ -253,7 +260,7 @@ public class UploadFilePageController {
 	 */
 	private boolean filledFields() {
 		if (fileNameLabel.getText().equals(null)
-				|| fileNameLabel.getText().equals("")/* || fileNameLabel.getText().matches("\\s*") */) {
+				|| fileNameLabel.getText().equals("")) {
 			return false;
 		} else {
 			return true;

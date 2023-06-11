@@ -62,12 +62,17 @@ public class RegisterPageController {
 	private void register() {
 		// If all fields are filled :
 		if (filledFields()) {
+			// Define the session
 			SessionFactory sf = new Configuration().configure().buildSessionFactory();
 			Session session = sf.openSession();
 			try {
+				// Begin the transaction
 				session.getTransaction().begin();
+				// Define the query
 				Query query = session.createQuery("FROM User u WHERE u.userName LIKE :userName");
+				// Set the parameter for the query
 				query.setParameter("userName", usernameField.getText());
+				// If the Username is valid:
 				if (validUsername()) {
 					// Create a user and assign all the information
 					User user = new User();
@@ -101,14 +106,20 @@ public class RegisterPageController {
 
 	@SuppressWarnings("unchecked")
 	private boolean validUsername() {
+		// Define the session
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 		boolean existingUsername = false;
 		try {
+			// Begin the transaction
 			session.getTransaction().begin();
+			// Define the query
 			Query query = session.createQuery("FROM User u WHERE u.userName LIKE :userName");
+			// Set the parameter to the query
 			query.setParameter("userName", usernameField.getText());
+			// Save the result into a list
 			List<User> usernamesList = query.list();
+			// If the result is more than 0 means that alredy exists
 			if (usernamesList.size() > 0) {
 				errorLabel.setText("User name alredy exists");
 				existingUsername = false;
@@ -161,16 +172,23 @@ public class RegisterPageController {
 	 * @return
 	 */
 	private boolean filledFields() {
+		// If the Username field is empty:
 		if (usernameField.getText().equals("")) {
 			errorLabel.setText("Username is empty");
 			return false;
-		} else if (userPasswordField.getText().equals("")) {
+		}
+		// If the userPasswordField field is empty:
+		else if (userPasswordField.getText().equals("")) {
 			errorLabel.setText("Password is empty");
 			return false;
-		} else if (userGmailField.getText().equals("")) {
+		}
+		// If the userGmailField field is empty:
+		else if (userGmailField.getText().equals("")) {
 			errorLabel.setText("Gmail is empty");
 			return false;
-		} else {
+		}
+		// Else everything is ok
+		else {
 			return true;
 		}
 	}

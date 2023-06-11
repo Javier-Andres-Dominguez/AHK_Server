@@ -36,9 +36,11 @@ public class LoginController {
 	private Button loginButton;
 	@FXML
 	private Button createUserButton;
-	// Define this cod user to prove if the credentials are correct
+	
+	// Define this cod loggedUser to prove if the credentials are correct
 	private int userId = -1;
-	private User user;
+	// The logged User
+	private User loggedUser;
 
 	public LoginController() {
 
@@ -56,13 +58,14 @@ public class LoginController {
 	 * This method verifies the credentials
 	 */
 	private void login(ActionEvent event) {
-		// If the fields are fill
+		// If the fields are filled:
 		if (filledFields()) {
 			// And the credentials are good:
 			if (checkCredentials()) {
 				errorLabel.setText("Wellcome back");
-				// Save the user into the main
-				MainApp.loggedUser = user;
+				// Save the loggedUser into the main
+				MainApp.loggedUser = loggedUser;
+				// Load the next view
 				changeView(event);
 			}
 			// If the credentials don´t match
@@ -74,7 +77,7 @@ public class LoginController {
 
 	@FXML
 	/**
-	 * This method verifies the credentials
+	 * This method changes the view to the RegisterPage
 	 */
 	private void createUser(ActionEvent event) {
 		signUpView(event);
@@ -121,12 +124,12 @@ public class LoginController {
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("../css/AHK_Server.css").toExternalForm());
 
-			stage.setUserData(user);
+			stage.setUserData(loggedUser);
 			MainApp.toolBarController = loader.getController();
 			MainApp.toolBarController.recoverUserInfo(stage);
 
 			// Load the app
-			stage.setTitle("PrincipalPage");
+			stage.setTitle("AHK Server");
 			stage.setScene(scene);
 			stage.show();
 		} catch (Exception e) {
@@ -185,8 +188,8 @@ public class LoginController {
 				userId = 0;
 			} else {
 				// Assign the list information
-				user = queryResult.get(0);
-				userId = user.getUserId();
+				loggedUser = queryResult.get(0);
+				userId = loggedUser.getUserId();
 			}
 		}
 		// If there is any error Inform in the screen

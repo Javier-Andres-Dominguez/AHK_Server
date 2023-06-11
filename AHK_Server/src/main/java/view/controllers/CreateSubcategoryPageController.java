@@ -31,8 +31,11 @@ public class CreateSubcategoryPageController {
 	@FXML
 	private Button createButton;
 	
+	// This is a list for all the Categories
 	private List<Category> categoriesList;
+	// This is the Category selected
 	private Category categorySelected;
+	private ImageView folderImage = new ImageView(new Image(getClass().getResourceAsStream("folder.png")));
 
 	@FXML
 	private void initialize() {
@@ -40,6 +43,9 @@ public class CreateSubcategoryPageController {
 		fillCategoriesAndSubcategories();
 	}
 
+	/**
+	 * This method is used to prepare the create button
+	 */
 	private void prepareButton() {
 		createButton.setText("Select a Category");
 		createButton.setDisable(true);
@@ -61,36 +67,38 @@ public class CreateSubcategoryPageController {
 	 * This method fills the treeview with categories
 	 */
 	private void fillCategoriesAndSubcategories() {
+		// Define the session
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 		try {
 			// Execute the query and get the result
 			session.getTransaction().begin();
+			// Define the query
 			Query query = session.createQuery("FROM Subcategory");
 			// Save the result in a list
 			List<Subcategory> subcategoriesList = query.list();
 
+			// Redefine the query
 			query = session.createQuery("FROM Category");
 			// Save the result in a list
 			categoriesList = query.list();
 			// Define the root item of treeview
-			TreeItem<String> rootItem = new TreeItem<>("Categories:",
-					new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+			TreeItem<String> rootItem = new TreeItem<>("Categories:", folderImage);
 			// For all the categories:
 			for (Category category : categoriesList) {
 				// Create the category treeitem
-				TreeItem<String> categoryItem = new TreeItem<>(category.getCatName(),
-						new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+				TreeItem<String> categoryItem = new TreeItem<>(category.getCatName(), folderImage);
 				// Add the correspondent subcategories to it
 				for (Subcategory subcategory : subcategoriesList) {
 					// Make sure that the subcategory corresponds to the category
 					if (subcategory.getCategory().getCatId() == category.getCatId()) {
 						// Create the subcategory treeitem
-						TreeItem<String> subcategoryItem = new TreeItem<>(subcategory.getSubName(),
-								new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
+						TreeItem<String> subcategoryItem = new TreeItem<>(subcategory.getSubName(), folderImage);
+						// Add the subcategory item to the category
 						categoryItem.getChildren().add(subcategoryItem);
 					}
 				}
+				// Add the category item to the rootItem
 				rootItem.getChildren().add(categoryItem);
 			}
 			categoriesTreeView.setRoot(rootItem);
@@ -152,7 +160,9 @@ public class CreateSubcategoryPageController {
 			SessionFactory sf = new Configuration().configure().buildSessionFactory();
 			Session session = sf.openSession();
 			try {
+				// Begin the transaction
 				session.getTransaction().begin();
+				// Define the Subcategory
 				Subcategory subcategory = new Subcategory();
 				subcategory.setCategory(categorySelected);
 				subcategory.setSubName(subcategoryNameTextField.getText());
@@ -188,6 +198,7 @@ public class CreateSubcategoryPageController {
 	 * @return
 	 */
 	private boolean filledFields() {
+		// If the field is null or the field is filled with an empty string:
 		if (subcategoryNameTextField.getText().equals("") || subcategoryNameTextField.getText() == null) {
 			return false;
 		} else {

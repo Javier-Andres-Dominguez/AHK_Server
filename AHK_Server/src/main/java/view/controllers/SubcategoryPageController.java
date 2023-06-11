@@ -1,6 +1,5 @@
 package view.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -16,7 +15,6 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import main.MainApp;
-import models.Category;
 import models.File;
 import models.Subcategory;
 
@@ -29,13 +27,18 @@ public class SubcategoryPageController {
 	@FXML
 	private Button openButton;
 
+	// The opened Subcategory
 	private Subcategory openedSubcategory;
+	// The Subcategory name
 	private String subcategoryName;
+	// The selected File
 	private File selectedFile;
+	// The Files from the Subcategory
 	private List<File> filesList;
 
 	@FXML
 	private void initialize() {
+		openButton.setDisable(true);
 		fillSubInfo();
 	}
 
@@ -113,11 +116,11 @@ public class SubcategoryPageController {
 	 */
 	private void selectItem() {
 		TreeItem<String> selectedItem = (TreeItem<String>) subcategoryTreeView.getSelectionModel().getSelectedItem();
-		// If the selected item is a file:
+		// If the selected item is a File:
 		if (selectedItem != null && selectedItem.getChildren().isEmpty()){
 			checkButtonState();
 			for(File file : filesList) {
-				// Check with all files:
+				// Check with all Files:
 				if (selectedItem.getValue().equals(file.getFileName())) {
 					selectedFile = file;
 					break;
@@ -127,7 +130,7 @@ public class SubcategoryPageController {
 			openButton.setDisable(false);
 		}else {
 			checkButtonState();
-			openButton.setText("Select a File to open it");
+			openButton.setText("Select a Item");
 			openButton.setDisable(true);
 		}
 	}
@@ -137,7 +140,9 @@ public class SubcategoryPageController {
 	 * This method is used to open the items
 	 */
 	private void openItem() {
+		// Asign the File
 		MainApp.selectedFile = selectedFile;
+		// Change the view
 		MainApp.toolBarController.openFile();
 	}
 	

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
@@ -18,7 +19,7 @@
 					<children>
 						<HBox alignment="CENTER" prefHeight="75.0" prefWidth="900.0" spacing="100.0">
 							<children>
-								<VBox alignment="CENTER" prefHeight="75.0" prefWidth="900.0" spacing="10.0">
+								<VBox alignment="CENTER_RIGHT" prefHeight="75.0" prefWidth="900.0">
 									<children>
 										<HBox alignment="CENTER" spacing="15.0">
 											<children>
@@ -26,18 +27,36 @@
 												<Hyperlink fx:id="userNameHyperlink" onAction="#openUser" text="Hyperlink" />
 												<Label fx:id="fileNameLabel" text="FileNameExample" />
 											</children>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
 										</HBox>
+                              <Button fx:id="editButton" mnemonicParsing="false" onAction="#edit">
+                                 <VBox.margin>
+                                    <Insets right="100.0" />
+                                 </VBox.margin>
+                              </Button>
 										<HBox alignment="CENTER" spacing="15.0">
 											<children>
 												<Button fx:id="downloadButton" mnemonicParsing="false" onAction="#openDirectoryChooser" text="Download" />
 												<Label fx:id="viewsLabel" text="Views" />
 											</children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
 										</HBox>
 									</children>
 								</VBox>
 							</children>
 						</HBox>
 						<TextField fx:id="fileDescriptionTextField" prefHeight="100.0" prefWidth="900.0" />
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                     <children>
+                        <TextField fx:id="keyword1TextField" />
+                        <TextField fx:id="keyword2TextField" />
+                        <TextField fx:id="keyword3TextField" />
+                     </children>
+                  </HBox>
 					</children>
 				</VBox>
 				<HBox prefHeight="500.0" prefWidth="900.0">
@@ -59,7 +78,13 @@
 					</children>
 				</HBox>
             <Label fx:id="errorLabel" />
-				<Button fx:id="openButton" mnemonicParsing="false" onAction="#openItem" text="Open" />
+            <HBox alignment="CENTER" spacing="20.0">
+               <children>
+      				<Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelChanges" text="Cancel" />
+                  <Button fx:id="openButton" mnemonicParsing="false" onAction="#openItem" text="Open" />
+                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveChanges" text="Save" />
+               </children>
+            </HBox>
 			</children>
 		</VBox>
 	</children>

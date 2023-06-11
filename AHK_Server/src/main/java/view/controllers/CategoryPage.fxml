@@ -27,7 +27,7 @@
 						</ScrollPane>
             <VBox alignment="CENTER" prefHeight="75.0" spacing="15.0">
                <children>
-      				<Button fx:id="openButton" mnemonicParsing="false" onAction="#openItem" text="Open" />
+      				<Button fx:id="openButton" mnemonicParsing="false" onAction="#openItem" text="Select an Item" />
                </children>
             </VBox>
 			</children>

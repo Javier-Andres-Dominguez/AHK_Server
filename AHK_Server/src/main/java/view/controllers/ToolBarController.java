@@ -43,10 +43,12 @@ public class ToolBarController {
 	@FXML
 	private Button logoutButton;
 
+	// The Toolbar loggedUser options
 	private Hyperlink buttons[];
+	// The css path
 	private String cssFile = MainApp.class.getResource("../view/css/AHK_Server.css").toExternalForm();
-
-	private static User user;
+	// The logged User
+	private static User loggedUser;
 
 	public void initialize() {
 		loadUserImage();
@@ -54,10 +56,10 @@ public class ToolBarController {
 	}
 
 	/**
-	 * This method checks if the user has an image, else it will have the default
+	 * This method checks if the loggedUser has an image, else it will have the default
 	 */
 	private void loadUserImage() {
-		// If the user has an image:
+		// If the loggedUser has an image:
 		if (MainApp.loggedUser.getUserImg() != null) {
 			// Define the image
 			Image img = new Image(MainApp.loggedUser.getUserImg());
@@ -67,13 +69,13 @@ public class ToolBarController {
 			}
 			// Else use the default:
 			else {
-				userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("user.png"))));
+				userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("loggedUser.png"))));
 			}
 
 		}
 		// Else use the default
 		else {
-			userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("user.png"))));
+			userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("loggedUser.png"))));
 		}
 	}
 
@@ -99,7 +101,7 @@ public class ToolBarController {
 	}
 
 	/**
-	 * This method gets the user information
+	 * This method gets the loggedUser information
 	 * 
 	 * @param event
 	 */
@@ -107,9 +109,9 @@ public class ToolBarController {
 
 		Stage stage = event;
 
-		user = (User) stage.getUserData();
+		loggedUser = (User) stage.getUserData();
 
-		usernameHyperlink.setText(user.getUserNick());
+		usernameHyperlink.setText(loggedUser.getUserNick());
 		usernameHyperlink.setOnAction(e -> editProfile());
 		setFirstScene();
 	}
@@ -120,17 +122,17 @@ public class ToolBarController {
 	 * @return
 	 */
 	private void editProfile() {
-		MainApp.selectedUser = user;
+		MainApp.selectedUser = loggedUser;
 		changeScene("../view/controllers/UserPage.fxml");
 		setButtonsEnabled();
 		usernameHyperlink.setDisable(true);
 	}
 
 	/**
-	 * This method gives the user information
+	 * This method gives the loggedUser information
 	 */
 	public User getUserInfo() {
-		return user;
+		return loggedUser;
 	}
 
 	/**
@@ -270,6 +272,7 @@ public class ToolBarController {
 		for (int i = 0; i < buttonHBox.getChildren().size(); i++) {
 			buttonHBox.getChildren().get(i).setDisable(false);
 		}
+		usernameHyperlink.setDisable(false);
 	}
 
 	/**
@@ -314,7 +317,7 @@ public class ToolBarController {
 	}
 
 	/**
-	 * This method is used when a user is opened
+	 * This method is used when a loggedUser is opened
 	 */
 	public void openUser() {
 		changeScene("../view/controllers/UserPage.fxml");

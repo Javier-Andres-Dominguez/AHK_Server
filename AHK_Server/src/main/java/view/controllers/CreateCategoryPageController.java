@@ -37,29 +37,29 @@ public class CreateCategoryPageController {
 
 	/**
 	 * This method is used to expand all the items from a treeview
+	 * 
 	 * @param item
 	 */
 	private void expandTreeView(TreeItem<?> item) {
 		item.setExpanded(true);
-	    for (TreeItem<?> child : item.getChildren()) {
-	        expandTreeView(child);
-	    }
+		for (TreeItem<?> child : item.getChildren()) {
+			expandTreeView(child);
+		}
 	}
 
 	/**
 	 * This method fills the treeview with categories
 	 */
 	private void fillCategories() {
+		// Define a session
 		SessionFactory sf = new Configuration().configure().buildSessionFactory();
 		Session session = sf.openSession();
 
 		try {
 			// Begin the transaction
 			session.getTransaction().begin();
-			// Define the query phrase
-			String hql = "FROM Category c";
 			// Define the query
-			Query query = session.createQuery(hql);
+			Query query = session.createQuery("FROM Category c");
 			// Save the result in a variable to access it from another method later
 			List<Category> categoriesList = query.list();
 
@@ -90,18 +90,21 @@ public class CreateCategoryPageController {
 	 * This method is used to create a category
 	 */
 	private void createCategory() {
-		// If all fields are filled :
-		if (filledFields()) {
+		// If all fields are filled:
+		if (categoryNameFilled()) {
+			// Define the session
 			SessionFactory sf = new Configuration().configure().buildSessionFactory();
 			Session session = sf.openSession();
 			try {
+				// Begin the transaction
 				session.getTransaction().begin();
+				// Define the category
 				Category category = new Category();
 				category.setCatName(categoryNameTextFields.getText());
 				category.setUser(MainApp.loggedUser);
 				// Define the loader
 				CategoryDao categoryDao = new CategoryDao(session);
-				// Save the user into the database
+				// Update the Category into the database
 				categoryDao.insertCategory(category);
 			}
 			// If there is any error Inform in the screen
@@ -118,8 +121,7 @@ public class CreateCategoryPageController {
 				errorLabel.setText("Category registered successfully");
 				createButton.setDisable(false);
 			}
-
-		}else {
+		} else {
 			errorLabel.setText("Missing Category name");
 		}
 	}
@@ -129,7 +131,8 @@ public class CreateCategoryPageController {
 	 * 
 	 * @return
 	 */
-	private boolean filledFields() {
+	private boolean categoryNameFilled() {
+		// If the field is null or the field is filled with an empty string:
 		if (categoryNameTextFields.getText().equals("") || categoryNameTextFields.getText() == null) {
 			return false;
 		} else {
