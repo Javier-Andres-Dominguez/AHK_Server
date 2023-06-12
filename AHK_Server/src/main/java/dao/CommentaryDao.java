@@ -15,7 +15,7 @@ public class CommentaryDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Commentary> getAllCategory() {
+	public List<Commentary> getAllCommentary() {
 		return session.createQuery("FROM Commentary").list();
 	}
 
