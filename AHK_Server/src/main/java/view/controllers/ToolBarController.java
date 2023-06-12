@@ -95,8 +95,6 @@ public class ToolBarController {
 		logoutButton.setMinSize(50, 50);
 		logoutButton.setMaxSize(50, 50);
 		logoutButton.setPrefSize(50, 50);
-		// Source help:
-		// https://www.naidoprograms.com/2020/10/botones-e-imagenes-circulares-con-javafx.html#:~:text=Agregamos%20una%20imagen%20al%20bot%C3%B3n,de%20MediaView%20un%20objeto%20Image.&text=Y%20ahora%20si%20le%20agregamos,Circle%20el%20valor%20de%20radio.
 		logoutButton.setShape(userImageCircle);
 	}
 

@@ -123,7 +123,6 @@ public class FilePageController {
 	/**
 	 * This method downloads the openedFile to the directory selected
 	 */
-	// https://stackoverflow.com/questions/1146153/copying-files-from-one-directory-to-another-in-java
 	private void download(String originalFilePath, String destinationFilePath) {
 		// Use the information that we got:
 		Path sourceFile = Paths.get(originalFilePath);

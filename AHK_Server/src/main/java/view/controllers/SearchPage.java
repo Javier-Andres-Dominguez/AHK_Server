@@ -53,7 +53,7 @@ public class SearchPage {
 	private boolean fileChecked = false;
 	private boolean keywordChecked = false;
 
-	// This is the text from the text field prepared for the low comparisong mode
+	// This is the text from the text field prepared for the low comparison mode
 	private String stringToSearch;
 	
 	// Lists for the results

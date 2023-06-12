@@ -30,7 +30,6 @@ public class CreateSubcategoryPageController {
 	private Label errorLabel;
 	@FXML
 	private Button createButton;
-	
 	// This is a list for all the Categories
 	private List<Category> categoriesList;
 	// This is the Category selected
@@ -76,7 +75,6 @@ public class CreateSubcategoryPageController {
 			Query query = session.createQuery("FROM Subcategory");
 			// Save the result in a list
 			List<Subcategory> subcategoriesList = query.list();
-
 			// Redefine the query
 			query = session.createQuery("FROM Category");
 			// Save the result in a list
