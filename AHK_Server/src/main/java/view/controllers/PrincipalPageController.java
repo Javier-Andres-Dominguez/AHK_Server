@@ -183,7 +183,7 @@ public class PrincipalPageController {
 			// Define the query
 			Query query = session.createQuery("FROM File f ORDER BY f.views DESC");
 			// Set the max results for the query
-			query.setMaxResults(10);
+			query.setMaxResults(20);
 			// Save the result in a variable to access it from another method later
 			popularFiles = query.list();
 
