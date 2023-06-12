@@ -48,9 +48,6 @@ public class LoginPageController {
 
 	@FXML
 	private void initialize() {
-		loginImage.setFitWidth(425);
-		loginImage.setFitHeight(300);
-		loginImage.setPreserveRatio(false);
 	}
 
 	@FXML
