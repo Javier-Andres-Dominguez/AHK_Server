@@ -21,8 +21,8 @@
 			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
 			AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<children>
-				<ImageView fx:id="loginImage" fitHeight="150.0"
-					fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
+				<ImageView fx:id="loginImage" fitHeight="300.0"
+					fitWidth="425.0" pickOnBounds="true" preserveRatio="false">
 					<image>
 						<Image url="@../images/logo.jpg" />
 					</image>
