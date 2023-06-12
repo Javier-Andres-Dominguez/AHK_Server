@@ -69,13 +69,13 @@ public class ToolBarController {
 			}
 			// Else use the default:
 			else {
-				userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("loggedUser.png"))));
+				userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("user.png"))));
 			}
 
 		}
 		// Else use the default
 		else {
-			userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("loggedUser.png"))));
+			userImageCircle.setFill(new ImagePattern(new Image(getClass().getResourceAsStream("user.png"))));
 		}
 	}
 

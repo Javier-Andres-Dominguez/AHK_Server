@@ -35,7 +35,6 @@ public class CreateSubcategoryPageController {
 	private List<Category> categoriesList;
 	// This is the Category selected
 	private Category categorySelected;
-	private ImageView folderImage = new ImageView(new Image(getClass().getResourceAsStream("folder.png")));
 
 	@FXML
 	private void initialize() {
@@ -83,17 +82,17 @@ public class CreateSubcategoryPageController {
 			// Save the result in a list
 			categoriesList = query.list();
 			// Define the root item of treeview
-			TreeItem<String> rootItem = new TreeItem<>("Categories:", folderImage);
+			TreeItem<String> rootItem = new TreeItem<>("Categories:", new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 			// For all the categories:
 			for (Category category : categoriesList) {
 				// Create the category treeitem
-				TreeItem<String> categoryItem = new TreeItem<>(category.getCatName(), folderImage);
+				TreeItem<String> categoryItem = new TreeItem<>(category.getCatName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 				// Add the correspondent subcategories to it
 				for (Subcategory subcategory : subcategoriesList) {
 					// Make sure that the subcategory corresponds to the category
 					if (subcategory.getCategory().getCatId() == category.getCatId()) {
 						// Create the subcategory treeitem
-						TreeItem<String> subcategoryItem = new TreeItem<>(subcategory.getSubName(), folderImage);
+						TreeItem<String> subcategoryItem = new TreeItem<>(subcategory.getSubName(), new ImageView(new Image(getClass().getResourceAsStream("folder.png"))));
 						// Add the subcategory item to the category
 						categoryItem.getChildren().add(subcategoryItem);
 					}

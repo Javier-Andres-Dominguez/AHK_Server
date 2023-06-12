@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -7,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.CategoryPageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="683.0" prefWidth="1164.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.CategoryPageController">
 	<children>
 		<VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<children>
@@ -27,7 +28,10 @@
 						</ScrollPane>
             <VBox alignment="CENTER" prefHeight="75.0" spacing="15.0">
                <children>
-      				<Button fx:id="openButton" mnemonicParsing="false" onAction="#openItem" text="Select an Item" />
+      				<Button fx:id="openButton" mnemonicParsing="false" onAction="#openItem" text="Select an Item">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin></Button>
                </children>
             </VBox>
 			</children>

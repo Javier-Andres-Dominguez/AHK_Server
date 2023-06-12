@@ -227,6 +227,7 @@ public class FilePageController {
 			keyword1TextField.setEditable(true);
 			keyword2TextField.setEditable(true);
 			keyword3TextField.setEditable(true);
+			downloadButton.setDisable(true);
 		}else {
 			editButton.setVisible(true);
 			fileDescriptionTextField.setEditable(false);
@@ -239,6 +240,7 @@ public class FilePageController {
 			keyword1TextField.setEditable(false);
 			keyword2TextField.setEditable(false);
 			keyword3TextField.setEditable(false);
+			downloadButton.setDisable(false);
 		}
 	}
 

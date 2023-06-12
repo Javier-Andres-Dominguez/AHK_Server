@@ -32,30 +32,18 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="600.0" prefWidth="900.0"
-	xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="view.controllers.PrincipalPageController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.controllers.PrincipalPageController">
 	<children>
-		<SplitPane dividerPositions="0.33, 0.67"
-			focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0"
-			VBox.vgrow="ALWAYS">
+		<SplitPane dividerPositions="0.33, 0.67" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
 			<items>
 				<VBox prefHeight="200.0" prefWidth="100.0">
 					<children>
 						<Label minHeight="50.0" text="Your files" />
 						<ScrollPane prefHeight="1000.0" prefWidth="200.0">
 							<content>
-								<AnchorPane minHeight="0.0" minWidth="0.0"
-									prefHeight="1200.0" prefWidth="900.0"
-									styleClass="principalPagePane"
-									stylesheets="@../css/AHK_Server.css">
+								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1200.0" prefWidth="900.0" styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css">
 									<children>
-										<TreeView fx:id="yourFilesTree"
-											onContextMenuRequested="#selectItemFromYourFiles"
-											onMouseClicked="#selectItemFromYourFiles" prefHeight="200.0"
-											prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
-											AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-											AnchorPane.topAnchor="0.0" />
+										<TreeView fx:id="yourFilesTree" onContextMenuRequested="#selectItemFromYourFiles" onMouseClicked="#selectItemFromYourFiles" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 									</children>
 								</AnchorPane>
 							</content>
@@ -67,17 +55,9 @@
 						<Label minHeight="50.0" text="Most Popular" />
 						<ScrollPane prefHeight="1000.0" prefWidth="200.0">
 							<content>
-								<AnchorPane minHeight="0.0" minWidth="0.0"
-									prefHeight="1000.0" prefWidth="900.0"
-									styleClass="principalPagePane"
-									stylesheets="@../css/AHK_Server.css">
+								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="900.0" styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css">
 									<children>
-										<TreeView fx:id="popularFilesTree" layoutX="-14.0"
-											onContextMenuRequested="#selectItemFromPopularFiles"
-											onMouseClicked="#selectItemFromPopularFiles"
-											prefHeight="200.0" prefWidth="200.0"
-											AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-14.0"
-											AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0" />
+										<TreeView fx:id="popularFilesTree" layoutX="-14.0" onContextMenuRequested="#selectItemFromPopularFiles" onMouseClicked="#selectItemFromPopularFiles" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0" />
 									</children>
 								</AnchorPane>
 							</content>
@@ -89,17 +69,9 @@
 						<Label minHeight="50.0" text="Subscription" />
 						<ScrollPane prefHeight="1000.0" prefWidth="200.0">
 							<content>
-								<AnchorPane minHeight="0.0" minWidth="0.0"
-									prefHeight="1000.0" prefWidth="900.0"
-									styleClass="principalPagePane"
-									stylesheets="@../css/AHK_Server.css">
+								<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="900.0" styleClass="principalPagePane" stylesheets="@../css/AHK_Server.css">
 									<children>
-										<TreeView fx:id="subscriptionFilesTree"
-											onContextMenuRequested="#selectItemFromSubscriptionFiles"
-											onMouseClicked="#selectItemFromSubscriptionFiles"
-											prefHeight="200.0" prefWidth="200.0"
-											AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-											AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+										<TreeView fx:id="subscriptionFilesTree" onContextMenuRequested="#selectItemFromSubscriptionFiles" onMouseClicked="#selectItemFromSubscriptionFiles" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 									</children>
 								</AnchorPane>
 							</content>
@@ -108,14 +80,15 @@
 				</VBox>
 			</items>
 		</SplitPane>
-		<HBox id="HBox" alignment="CENTER" spacing="5.0"
-			VBox.vgrow="NEVER">
+		<HBox id="HBox" alignment="CENTER" spacing="5.0" VBox.vgrow="NEVER">
 			<padding>
 				<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
 			</padding>
 			<children>
-				<Button fx:id="openButton" mnemonicParsing="false"
-					onAction="#openItem" text="Open" />
+				<Button fx:id="openButton" mnemonicParsing="false" onAction="#openItem" text="Open">
+               <HBox.margin>
+                  <Insets top="20.0" />
+               </HBox.margin></Button>
 			</children>
 		</HBox>
 	</children>

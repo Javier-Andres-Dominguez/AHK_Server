@@ -177,11 +177,11 @@ public class UserPageController {
 			}
 			// Else use the default:
 			else {
-				imgView = new ImageView(new Image(getClass().getResourceAsStream("openedUser.png")));
+				imgView = new ImageView(new Image(getClass().getResourceAsStream("user.png")));
 			}
 		} else {
 			// Assign the default image
-			imgView = new ImageView(new Image(getClass().getResourceAsStream("openedUser.png")));
+			imgView = new ImageView(new Image(getClass().getResourceAsStream("user.png")));
 		}
 		imgView.setFitHeight(200);
 		imgView.setFitWidth(200);
