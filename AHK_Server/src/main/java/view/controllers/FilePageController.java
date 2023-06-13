@@ -148,7 +148,7 @@ public class FilePageController {
 		// Set the title in the window
 		directoryChooser.setTitle("Choose your download destiny");
 		// Set the default path when opening
-		directoryChooser.setInitialDirectory(new java.io.File(System.getProperty("userOwner.home")));
+		directoryChooser.setInitialDirectory(new java.io.File(System.getProperty("user.home")));
 	}
 
 	/**

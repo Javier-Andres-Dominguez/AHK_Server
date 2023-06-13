@@ -331,6 +331,7 @@ public class UserPageController {
 		}
 		// If the logged User is the Admin:
 		else if (MainApp.loggedUser.getUserId() == 1) {
+			isSubscribed();
 			setupEditButton();
 			setElementsDisponibility();
 			subscriptionButton.setDisable(false);
@@ -338,6 +339,7 @@ public class UserPageController {
 		}
 		// Default User:
 		else {
+			isSubscribed();
 			setElementsDisponibility();
 			editButton.setVisible(false);
 			subscriptionButton.setDisable(false);
